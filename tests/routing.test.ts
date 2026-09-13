@@ -6,6 +6,7 @@ describe("routing", () => {
     expect(parseHash("")).toEqual({ name: "home" });
     expect(parseHash("#")).toEqual({ name: "home" });
     expect(parseHash("#/")).toEqual({ name: "home" });
+    expect(parseHash("#level-1")).toEqual({ name: "home" });
   });
 
   it("parses the summary", () => {

@@ -1,31 +1,29 @@
 <script lang="ts">
-  import { content, t, instructionText } from "../content";
-  import { progress, isQuestionChecked, resetAll } from "../state.svelte";
+  import { content, t } from "../content";
+  import { resetAll } from "../state.svelte";
+  import { sectionHash, LEVEL_HASH } from "../routing";
   import { format } from "../format";
 
-  function answeredCount(sectionId: string): number {
-    const section = content.sections.find((candidate) => candidate.id === sectionId);
-    if (!section) return 0;
-    return section.questions.filter((question) => {
-      const values = progress.answers[question.id];
-      return values && Object.values(values).some((value) => value.trim() !== "");
-    }).length;
-  }
+  const totalQuestions = content.sections.reduce(
+    (total, section) => total + section.questions.length,
+    0,
+  );
+  const totalSections = content.sections.length;
 
-  function sectionTotal(sectionId: string): number {
-    return (
-      content.sections.find((candidate) => candidate.id === sectionId)?.questions
-        .length ?? 0
-    );
-  }
+  let expanded = $state(
+    typeof window !== "undefined" && window.location.hash === LEVEL_HASH,
+  );
 
-  function allChecked(sectionId: string): boolean {
-    const section = content.sections.find((candidate) => candidate.id === sectionId);
-    return (
-      !!section &&
-      section.questions.length > 0 &&
-      section.questions.every((question) => isQuestionChecked(question.id))
-    );
+  $effect(() => {
+    const onHashChange = () => {
+      if (window.location.hash === LEVEL_HASH) expanded = true;
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  });
+
+  function onToggle(): void {
+    expanded = !expanded;
   }
 
   function onReset(): void {
@@ -35,38 +33,68 @@
   }
 </script>
 
-<header class="page-header">
-  <h1>{content.test.title}</h1>
-  <p class="muted">{t("sections_intro")}</p>
+<header class="hero">
+  <h1>{t("home_hero")}</h1>
 </header>
 
-<nav aria-label="Разделы">
-  <ol class="section-list">
-    {#each content.sections as section (section.id)}
+<button
+  class="button-primary lvl-btn"
+  id="level-1"
+  type="button"
+  aria-expanded={expanded}
+  aria-controls="level-1-panel"
+  onclick={onToggle}
+>
+  <span>
+    {format(t("level_summary"), {
+      level: 1,
+      sections: totalSections,
+      questions: totalQuestions,
+    })}
+  </span>
+  <svg
+    class="chev"
+    width="18"
+    height="18"
+    viewBox="0 0 20 20"
+    aria-hidden="true"
+  >
+    <path
+      d="M5 8l5 5 5-5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
+
+<div id="level-1-panel" hidden={!expanded}>
+  <ol class="lvl-grid">
+    {#each content.sections as section, index (section.id)}
       <li>
-        <a class="section-link" href={`#/s/${section.id}`}>
-          <span>
-            <span class="section-title">{section.title}</span>
-            <span class="muted"> — {instructionText(section.instruction)}</span>
-          </span>
-          <span class="section-meta">
-            {#if allChecked(section.id)}
-              <span class="badge">{t("section_checked")}</span>
-            {/if}
-            <span>
-              {format(t("section_progress"), {
-                answered: answeredCount(section.id),
-                total: sectionTotal(section.id),
-              })}
-            </span>
-          </span>
+        <a class="sec-tile" href={sectionHash(section.id)}>
+          <span class="sec-n">{String(index + 1).padStart(2, "0")}</span>
+          <span class="sec-t">{section.title}</span>
         </a>
       </li>
     {/each}
   </ol>
-</nav>
+</div>
 
-<footer class="page-footer">
-  <a class="button" href="#/summary">{t("summary_title")}</a>
-  <button type="button" onclick={onReset}>{t("reset")}</button>
-</footer>
+<!-- level-2: следующий уровень добавить здесь. level-chip станет кликабельным переключателем уровня (список уровней, текущий отмечен). См. design-spec.md -->
+
+<button class="reset-button" type="button" onclick={onReset}>
+  <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
+    <path
+      d="M16 10a6 6 0 1 1-1.8-4.3M16 3v4h-4"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+  <span>{t("reset")}</span>
+</button>

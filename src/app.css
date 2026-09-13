@@ -487,12 +487,97 @@ header.page-header {
   margin-bottom: 12px;
 }
 
-.section-list {
+/* — home — */
+
+.hero h1 {
+  margin: 0;
+}
+
+.lvl-btn {
+  width: 100%;
+  font-size: var(--text-lg);
+  padding: 16px;
+  margin: 16px 0 0;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.lvl-btn .chev {
+  flex: none;
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+.lvl-btn[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+#level-1-panel {
+  margin-top: 12px;
+}
+
+.lvl-grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sec-tile {
+  min-height: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  box-shadow: var(--elev-raised);
+  transition:
+    transform var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
+}
+
+.sec-tile:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.sec-tile:focus-visible {
+  box-shadow: var(--focus-ring), var(--elev-raised);
+}
+
+.sec-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--accent), transparent 88%);
+  color: var(--accent-active);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.sec-t {
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: 1.3;
+}
+
+.reset-button {
+  width: 100%;
+  margin-top: 12px;
 }
 
 .section-link {
@@ -524,11 +609,6 @@ header.page-header {
   text-align: right;
   display: grid;
   gap: 2px;
-}
-
-.badge {
-  color: var(--ok);
-  font-weight: 600;
 }
 
 .questions {
@@ -725,13 +805,6 @@ header.page-header {
 .nav-row .button,
 .nav-row button {
   flex: 1;
-}
-
-.page-footer {
-  margin-top: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .summary-counts {
