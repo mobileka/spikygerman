@@ -562,12 +562,13 @@ above where they disagree:
 
 ## 19. Copyright / repository hygiene
 
-- `resources/sample_test.pdf` and the images extracted from it
-  (`public/img/*.webp`) are **not** part of the git repository. They stay on
-  the teacher's machine and are ignored by git.
-- The app and its tests need those files locally. A fresh clone shows
-  missing images until they are copied back; `npm run check` names every
-  missing file and says where it belongs.
+- The project is licensed under **MIT** (see `LICENSE`). It used to be
+  CC BY-SA 4.0; the switch was made together with committing the images.
+- `resources/sample_test.pdf` is **not** part of the git repository. It stays
+  on the teacher's machine and is ignored by git.
+- The images extracted from it (`public/img/*.webp`) are now committed, so a
+  fresh clone can run the app, the tests and the build without copying files
+  by hand.
 
 ---
 

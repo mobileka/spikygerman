@@ -21,4 +21,4 @@ guided by two hedgehog mascots: **der Igel** (the big one) and **die Igli** (the
 
 ## License
 
-[CC BY-SA 4.0](LICENSE)
+[MIT](LICENSE)

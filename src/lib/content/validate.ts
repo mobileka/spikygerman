@@ -118,7 +118,7 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
     }
     if (!existsSync(join(ctx.publicDir, String(q.photo)))) {
       err(
-        `${label}: photo = "${q.photo}" was not found in public/. The test images are not part of the repository — copy them into public/img/.`,
+        `${label}: photo = "${q.photo}" was not found in public/. Check the file name.`,
       );
     }
   } else if (q.alt || q.sr_data) {
@@ -302,7 +302,7 @@ function validateSectionAssets(
     }
     if (!existsSync(join(publicDir, String(section.example_photo)))) {
       err(
-        `${label}: example_photo = "${section.example_photo}" was not found in public/. The test images are not part of the repository — copy them into public/img/.`,
+        `${label}: example_photo = "${section.example_photo}" was not found in public/. Check the file name.`,
       );
     }
   } else if (section.example_alt) {
@@ -318,7 +318,7 @@ function validateSectionAssets(
     }
     if (!existsSync(join(publicDir, String(section.photo)))) {
       err(
-        `${label}: photo = "${section.photo}" was not found in public/. The test images are not part of the repository — copy them into public/img/.`,
+        `${label}: photo = "${section.photo}" was not found in public/. Check the file name.`,
       );
     }
   } else if (section.alt || section.sr_data) {
