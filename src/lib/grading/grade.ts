@@ -80,9 +80,10 @@ function exactLoose(
 }
 
 function aggregate(fields: FieldResult[]): Status {
-  if (fields.every((f) => f.status === "empty")) return "empty";
+  if (!fields.length || fields.every((f) => f.status === "empty")) return "empty";
   if (fields.some((f) => f.status === "incorrect")) return "incorrect";
   if (fields.some((f) => f.status === "almost")) return "almost";
+  if (fields.some((f) => f.status === "empty")) return "almost";
   return "correct";
 }
 

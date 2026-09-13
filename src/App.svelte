@@ -1,15 +1,9 @@
 <script lang="ts">
-  import { content } from "./lib/content";
+  import { content, t } from "./lib/content";
+  import { parseHash, type Route } from "./lib/routing";
   import Home from "./lib/components/Home.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
-
-  type Route = { name: "home" } | { name: "section"; id: string };
-
-  function parseHash(hash: string): Route | null {
-    if (hash === "" || hash === "#" || hash === "#/") return { name: "home" };
-    const match = hash.match(/^#\/s\/([a-z0-9-]+)/i);
-    return match ? { name: "section", id: match[1] } : null;
-  }
+  import SummaryView from "./lib/components/SummaryView.svelte";
 
   let route = $state<Route>(parseHash(window.location.hash) ?? { name: "home" });
 
@@ -31,7 +25,8 @@
   });
 
   $effect(() => {
-    document.title = `${content.test.title} — SpikyGerman`;
+    const prefix = route.name === "summary" ? `${t("summary_title")} — ` : "";
+    document.title = `${prefix}${content.test.title} — SpikyGerman`;
   });
 </script>
 
@@ -40,8 +35,13 @@
 <main id="content" tabindex="-1">
   {#if section}
     {#key section.id}
-      <SectionView {section} />
+      <SectionView
+        {section}
+        questionId={route.name === "section" ? route.questionId : undefined}
+      />
     {/key}
+  {:else if route.name === "summary"}
+    <SummaryView />
   {:else}
     <Home />
   {/if}

@@ -67,5 +67,6 @@
 </nav>
 
 <footer class="page-footer">
+  <a class="button" href="#/summary">{t("summary_title")}</a>
   <button type="button" onclick={onReset}>{t("reset")}</button>
 </footer>

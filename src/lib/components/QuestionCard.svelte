@@ -34,6 +34,8 @@
 
 <article
   class="question"
+  id={question.id}
+  tabindex="-1"
   data-status={result?.status ?? ""}
   aria-label={format(t("question_label"), { n: number })}
 >

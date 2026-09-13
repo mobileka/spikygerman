@@ -568,3 +568,19 @@ above where they disagree:
 - The app and its tests need those files locally. A fresh clone shows
   missing images until they are copied back; `npm run check` names every
   missing file and says where it belongs.
+
+---
+
+## 20. Grill 1.5 — summary screen
+
+- The last section's «Дальше» leads to **«Итоги»** (`#/summary`); the home
+  screen links there as well.
+- The summary grades every answer as it stands; unanswered counts as
+  «Без ответа». Counts only — no percentage, no praise.
+- It shows the four counts, every section with «верно X из Y», and a list of
+  almost/wrong questions. Each item deep-links to the card
+  (`#/s/<section>/<question>`), scrolls to it, focuses it, and marks just
+  that question checked so the feedback is visible on arrival.
+- «Повторить ошибки» is deliberately not built yet.
+- Bug found on the way: a half-filled answer (some gaps filled, some empty)
+  used to count as correct. It is now «Почти!» and never counts as correct.
