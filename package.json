@@ -1,0 +1,30 @@
+{
+  "name": "spikygerman",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run content && vite",
+    "build": "npm run check && npm run content && vite build",
+    "preview": "vite preview",
+    "content": "tsx scripts/build-content.ts",
+    "check": "tsx scripts/check-content.ts",
+    "pretest": "npm run content",
+    "test": "vitest run",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "@types/node": "^26.5.1",
+    "smol-toml": "^1.4.2",
+    "svelte": "^5.43.2",
+    "svelte-check": "^4.3.3",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.13",
+    "vitest": "^3.2.4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

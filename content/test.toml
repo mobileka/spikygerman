@@ -1,0 +1,482 @@
+# ============================================================================
+# SpikyGerman — Test 1 (für den Lehrer)
+# ============================================================================
+#
+# Diese Datei ist der ganze Test. Du kannst sie in Zed öffnen und ändern.
+#
+# So ist die Datei aufgebaut:
+#   [[section]]          = ein Abschnitt (z. B. „Dialoge“)
+#   [[section.question]] = eine Frage in diesem Abschnitt
+#
+# Ein Abschnitt hat:
+#   id          = kurzer Name, z. B. "dialoge"
+#   title       = Überschrift auf Deutsch
+#   instruction = Aufgabe auf Russisch (Text steht in strings.ru.toml)
+#   example     = Beispiel, das immer sichtbar ist (freiwillig)
+#   example_photo / example_alt = Bild zum Beispiel (freiwillig)
+#   photo / alt / sr_data / table = Bild und Text für die ganze Aufgabe
+#
+# Jede Frage hat:
+#   type    = die Art der Aufgabe (siehe Liste unten)
+#   ask     = die Aufgabe auf Deutsch (so wie auf dem Papier)
+#   answer  = die Lösung (je nach type)
+#   example = nur wenn die Frage eine eigene Aufgabe hat (z. B. Übersetzen);
+#             Beispiele stehen sonst oben im Abschnitt, nicht in der Frage.
+#
+# ----------------------------------------------------------------------------
+# Die sieben Aufgabentypen mit Beispiel
+# ----------------------------------------------------------------------------
+#
+# 1) type = "sentence" — der Lernende schreibt einen ganzen Satz.
+#    Du prüfst den Satzanfang, der Rest ist frei.
+#
+#      starts_with = "Ich heiße"        # so muss der Satz anfangen
+#      ends_with   = "Jahre alt"        # nur wenn nötig
+#      country     = true               # nur bei „Ich komme aus …“
+#
+#    „country = true“ bedeutet: Der App schaut in content/countries.toml nach.
+#    Schreibt jemand „Ich komme aus Ukraine“, kommt ein gelber Hinweis:
+#    „Почти! die Ukraine → aus der Ukraine.“
+#
+# 2) type = "gaps" — Lücken im Satz.
+#    Schreibe ___ (drei Unterstriche) für das GANZE fehlende Wort.
+#    answers löst die Lücken der Reihe nach auf. Mehrere Varianten gehen auch:
+#    dann schreibe eine kleine Liste. Die erste Variante ist die Musterlösung.
+#
+#      answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+#
+#    Für Formen (z. B. Konjugation) kannst du gap_choices ergänzen: eine
+#    Zeile pro Lücke. Leere Zeile ("") = der Lernende schreibt selbst.
+#    Sonst werden die mit | getrennten Wörter als Auswahl angezeigt; die
+#    richtige Antwort (jede Variante) muss dabei sein.
+#
+#      ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
+#      answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+#      gap_choices = ["kommen|kommst|komme", "", ""]
+#
+# 3) type = "person" — über eine Person schreiben (er / sie / sie-Plural).
+#    Der Lernende wählt das Pronomen und füllt die Felder:
+#    name, from, residence, city, street.
+#    Das Verb (kommt/kommen, wohnt/wohnen) ergibt sich aus dem Pronomen.
+#
+# 4) type = "choice" — Auswahl (Radio-Knöpfe).
+#
+#      options = ["der", "die", "das"]
+#      answer  = "der"
+#
+# 5) type = "yesno" — Antwort mit „Ja …“ oder „Nein …“ als ganzer Satz.
+#    Groß/klein, Kommas und Punkte sind egal. Endungen sind wichtig.
+#
+#      answer = "Ja, das ist eine Tomate."
+#
+# 6) type = "price" — ganzer Satz mit Preis, die Zahl in Worten.
+#    „ein Euro und elf Cent“ und „ein Euro elf Cent“ sind beide richtig.
+#
+#      answer = "Der Käse kostet sechsundsechzig Cent."
+#
+# 7) type = "translate" — Übersetzung Russisch → Deutsch.
+#    Geprüft wird: die Konstruktion (frame) und alle Stichwörter.
+#    Die Reihenfolge der Wörter ist frei.
+#
+#      frame           = "wir brauchen"
+#      answer_keywords = ["Paprika", "Eier", "Fisch"]
+#      answer          = "Wir brauchen Paprika, Eier und Fisch."   # Musterlösung
+#
+# ----------------------------------------------------------------------------
+# Bilder
+# ----------------------------------------------------------------------------
+#
+#   photo   = "img/tomate.webp"   # Datei in public/img/
+#   alt     = "Одна фраза для тех, у кого картинка не загрузилась."
+#   sr_data = "Что слышит незрячий ученик вместо картинки. Пиши так, чтобы
+#              по описанию можно было ответить на вопросы: что видно,
+#              сколько предметов, какого цвета, чего нет."
+#
+# Bilder für eine ganze Aufgabe stehen am Abschnitt (z. B. der Kühlschrank),
+# Bilder für eine einzelne Frage stehen an der Frage (z. B. das Foto).
+# photo + alt + sr_data stehen immer zusammen, damit sie nicht auseinander
+# laufen. Bei sr_data lieber einen Satz zu viel als zu wenig: der Text ist
+# die Augen der nicht sehenden Lernenden. Für die Preistabelle genügt
+# table = "rewe": die Tabelle liest nur der Screenreader, die anderen sehen
+# das Flyer-Bild.
+#
+# ----------------------------------------------------------------------------
+# Erklärungen auf Russisch
+# ----------------------------------------------------------------------------
+#
+# Erklärungen stehen in content/strings.ru.toml im Abschnitt [explanation],
+# nach Frage-ID sortiert:
+#
+#   q06 = "du → -st; формальное Sie → -en"
+#
+# Die Datei heißt strings.ru.toml, weil sie russisch ist. Eine ukrainische
+# Version wäre strings.uk.toml — an dieser Testdatei ändert sich nichts.
+#
+# ----------------------------------------------------------------------------
+# Prüfen
+# ----------------------------------------------------------------------------
+#
+# Nach jeder Änderung:  npm run check
+# Die Prüfung spricht klar: „q22: … did you mean one of der/die/das?“
+#
+# ============================================================================
+
+
+[test]
+id = "sample-test-1"
+title = "Test 1"
+
+
+# ── Abschnitt 1 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "sich-vorstellen"
+title = "Sich vorstellen"
+instruction = "sich_vorstellen"
+example = "Wie heißen Sie? — Ich heiße Anna.\nWoher kommen Sie? — Ich komme aus Syrien.\nWo wohnen Sie? — Ich wohne in Berlin.\nWas sprechen Sie? — Ich spreche Russisch.\nWie alt sind Sie? — Ich bin 30 Jahre alt."
+
+[[section.question]]
+id = "q01"
+type = "sentence"
+ask = "Wie heißen Sie?"
+starts_with = "Ich heiße"
+
+[[section.question]]
+id = "q02"
+type = "sentence"
+ask = "Woher kommen Sie?"
+starts_with = "Ich komme aus"
+country = true
+
+[[section.question]]
+id = "q03"
+type = "sentence"
+ask = "Wo wohnen Sie?"
+starts_with = "Ich wohne in"
+
+[[section.question]]
+id = "q04"
+type = "sentence"
+ask = "Was sprechen Sie?"
+starts_with = "Ich spreche"
+
+[[section.question]]
+id = "q05"
+type = "sentence"
+ask = "Wie alt sind Sie?"
+starts_with = "Ich bin"
+ends_with = "Jahre alt"
+
+
+# ── Abschnitt 2 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "dialoge"
+title = "Dialoge"
+instruction = "dialoge"
+example = "Herr Ali, woher kommst du?\nIch komme aus Syrien."
+
+[[section.question]]
+id = "q06"
+type = "gaps"
+ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
+answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+gap_choices = ["kommen|kommst|komme", "", ""]
+
+[[section.question]]
+id = "q07"
+type = "gaps"
+ask = "Petro, woher ___ du?\nIch ___ aus ___ Ukraine."
+answers = ["kommst", "komme", "der"]
+gap_choices = ["kommen|kommst|komme", "kommen|kommst|komme", ""]
+
+[[section.question]]
+id = "q08"
+type = "gaps"
+ask = "Frau Saccon, woher ___ ___?\nAus Italien."
+answers = [["kommen", "kommst"], ["Sie", "du"]]
+gap_choices = ["kommen|kommst|komme", ""]
+
+
+# ── Abschnitt 3 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "einkaufen"
+title = "Einkaufen"
+instruction = "einkaufen"
+photo = "img/fridge.webp"
+alt = "Рисунок: холодильник с продуктами."
+sr_data = "На рисунке холодильник. В холодильнике лежат бананы и помидоры. Яиц в холодильнике нет. Перца (Paprika) в холодильнике тоже нет."
+example = "Haben wir Milch?\nJa, wir haben Milch. / Nein, wir haben keine Milch."
+
+[[section.question]]
+id = "q13"
+type = "yesno"
+ask = "Haben wir Bananen?"
+answer = "Ja, wir haben Bananen."
+
+[[section.question]]
+id = "q14"
+type = "yesno"
+ask = "Haben wir Eier?"
+answer = "Nein, wir haben keine Eier."
+
+[[section.question]]
+id = "q15"
+type = "yesno"
+ask = "Haben wir Paprika?"
+answer = "Nein, wir haben keine Paprika."
+
+[[section.question]]
+id = "q16"
+type = "yesno"
+ask = "Haben wir Tomaten?"
+answer = "Ja, wir haben Tomaten."
+
+[[section.question]]
+id = "q17"
+type = "translate"
+ask = "Нам нужны перец, яйца и рыба."
+instruction = "translate"
+frame = "wir brauchen"
+answer_keywords = ["Paprika", "Eier", "Fisch"]
+answer = "Wir brauchen Paprika, Eier und Fisch."
+example = "Нам нужен сыр. → Wir brauchen Käse."
+
+
+# ── Abschnitt 4 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "was-ist-das"
+title = "Was ist das?"
+instruction = "was_ist_das"
+example = "Ist das eine Birne? — Ja, das ist eine Birne.\nIst das ein Apfel? — Nein, das ist kein Apfel. Das ist eine Birne."
+
+[[section.question]]
+id = "q18"
+type = "yesno"
+ask = "Ist das eine Tomate?"
+answer = "Ja, das ist eine Tomate."
+photo = "img/food-tomate.webp"
+alt = "Фотография: помидор."
+sr_data = "На фотографии помидор: красный, круглый, с зелёной плодоножкой."
+
+[[section.question]]
+id = "q19"
+type = "yesno"
+ask = "Ist das ein Brötchen?"
+answer = "Nein, das ist kein Brötchen. Das ist ein Fisch."
+photo = "img/food-fisch.webp"
+alt = "Фотография: рыба."
+sr_data = "На фотографии рыба на тарелке. Это не хлеб и не булочка."
+
+[[section.question]]
+id = "q20"
+type = "yesno"
+ask = "Ist das ein Kuchen?"
+answer = "Ja, das ist ein Kuchen."
+photo = "img/food-kuchen.webp"
+alt = "Фотография: пирог."
+sr_data = "На фотографии пирог (Kuchen) — сладкая выпечка."
+
+[[section.question]]
+id = "q21"
+type = "yesno"
+ask = "Ist das eine Banane?"
+answer = "Nein, das ist keine Banane. Das ist eine Paprika."
+photo = "img/food-paprika.webp"
+alt = "Фотография: красный перец."
+sr_data = "На фотографии красный болгарский перец. Это не банан."
+
+
+# ── Abschnitt 5 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "preise"
+title = "Preise"
+instruction = "preise"
+photo = "img/rewe.webp"
+alt = "Фотография: рекламный проспект REWE с ценами."
+table = "rewe"
+example = "Wie viel kosten die Pringles? — Die Pringles kosten ein Euro vierunddreißig Cent.\nWie viel kostet der Wirsing? — Der Wirsing kostet fünfundsiebzig Cent."
+
+[[section.question]]
+id = "q22"
+type = "price"
+ask = "Wie viel kosten Tomaten?"
+answer = "Die Tomaten kosten ein Euro elf Cent."
+
+[[section.question]]
+id = "q23"
+type = "price"
+ask = "Wie viel kostet der Käse?"
+answer = "Der Käse kostet sechsundsechzig Cent."
+
+[[section.question]]
+id = "q24"
+type = "price"
+ask = "Wie viel kostet der Joghurt?"
+answer = "Der Joghurt kostet achtundzwanzig Cent."
+
+[[section.question]]
+id = "q25"
+type = "price"
+ask = "Wie viel kostet der Kaffee?"
+answer = "Der Kaffee kostet drei Euro zweiundvierzig Cent."
+
+
+# ── Abschnitt 6 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "artikel-und-verben"
+title = "Artikel und Verben"
+instruction = "artikel_und_verben"
+example = "Ich möchte eine Orange. Ich habe keine Orange.\nHunger (haben) → Ich habe Hunger."
+
+[[section.question]]
+id = "q26"
+type = "choice"
+ask = "___ Käse ist gelb."
+instruction = "choice_der_die_das"
+options = ["der", "die", "das"]
+answer = "der"
+
+[[section.question]]
+id = "q27"
+type = "choice"
+ask = "Ist das ___ Tomate?"
+instruction = "choice_ein_eine"
+options = ["ein", "eine"]
+answer = "eine"
+
+[[section.question]]
+id = "q28"
+type = "gaps"
+ask = "Ich möchte ___ Apfel."
+instruction = "akkusativ"
+answers = ["einen"]
+
+[[section.question]]
+id = "q29"
+type = "gaps"
+ask = "Ich brauche ___ Joghurt."
+instruction = "akkusativ"
+answers = ["einen"]
+
+[[section.question]]
+id = "q30"
+type = "gaps"
+ask = "a) Das ist ___ Apfel.\nb) Ich habe ___ Apfel."
+instruction = "kein_keinen"
+answers = ["kein", "keinen"]
+
+[[section.question]]
+id = "q31"
+type = "gaps"
+ask = "Ich brauche Milch, aber ich habe ___ Milch."
+instruction = "negation"
+answers = ["keine"]
+
+[[section.question]]
+id = "q32"
+type = "gaps"
+ask = "Ich ___ (sein) müde."
+instruction = "verb_sein"
+answers = ["bin"]
+gap_choices = ["bin|bist|ist|sind"]
+
+[[section.question]]
+id = "q33"
+type = "gaps"
+ask = "Wir ___ (haben) keine Tomaten."
+instruction = "verb_haben"
+answers = ["haben"]
+gap_choices = ["habe|hast|hat|haben"]
+
+[[section.question]]
+id = "q34"
+type = "gaps"
+ask = "Er ___ (wohnen) in Berlin."
+instruction = "verb_wohnen"
+answers = ["wohnt"]
+gap_choices = ["wohne|wohnst|wohnt|wohnen"]
+
+[[section.question]]
+id = "q35"
+type = "gaps"
+ask = "Du ___ (kommen) aus Polen?"
+instruction = "verb_kommen"
+answers = ["kommst"]
+gap_choices = ["komme|kommst|kommt|kommen"]
+
+[[section.question]]
+id = "q36"
+type = "gaps"
+ask = "Ich ___ (möchten) einen Apfel."
+instruction = "verb_moechten"
+answers = ["möchte"]
+gap_choices = ["möchte|möchtest|möchten"]
+
+[[section.question]]
+id = "q37"
+type = "gaps"
+ask = "Wir ___ (brauchen) Milch."
+instruction = "verb_brauchen"
+answers = ["brauchen"]
+gap_choices = ["brauche|brauchst|braucht|brauchen"]
+
+[[section.question]]
+id = "q38"
+type = "gaps"
+ask = "Sie (она) ___ (essen) gern Obst."
+instruction = "verb_essen"
+answers = ["isst"]
+gap_choices = ["esse|isst|esst|essen"]
+
+[[section.question]]
+id = "q39"
+type = "choice"
+ask = "___ Äpfel sind rot."
+instruction = "choice_plural"
+options = ["der", "die", "das"]
+answer = "die"
+
+[[section.question]]
+id = "q40"
+type = "translate"
+ask = "Мне нужен йогурт, но у меня нет молока."
+instruction = "translate"
+frame = "ich brauche"
+answer_keywords = ["Joghurt", "einen", "keine", "Milch"]
+answer = "Ich brauche einen Joghurt, aber ich habe keine Milch."
+example = "Мне нужен сок, но у меня нет воды. → Ich brauche einen Saft, aber ich habe kein Wasser."
+
+
+# ── Preistabelle (nur für den Screenreader) ─────────────────────────────────
+
+[table.rewe]
+title = "REWE"
+
+[[table.rewe.row]]
+item = "Tomaten"
+price = "1,11 €"
+
+[[table.rewe.row]]
+item = "Käse"
+price = "66 Cent"
+
+[[table.rewe.row]]
+item = "Joghurt"
+price = "28 Cent"
+
+[[table.rewe.row]]
+item = "Kaffee"
+price = "3,42 €"
+
+[[table.rewe.row]]
+item = "Pringles"
+price = "1,34 €"
+
+[[table.rewe.row]]
+item = "Wirsing"
+price = "75 Cent"

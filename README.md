@@ -17,10 +17,7 @@ guided by two hedgehog mascots: **der Igel** (the big one) and **die Igli** (the
   planned for later versions.
 - **Accessible — this is a must.** We have blind learners, and our most promising student
   is blind. The site must be fully usable with screen readers.
-
-## Status
-
-Skeleton only — no learning content or app code yet.
+- **Mobile-first**
 
 ## License
 

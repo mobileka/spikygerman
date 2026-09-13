@@ -1,0 +1,15 @@
+node_modules
+dist
+src/generated
+.playwright-mcp
+.DS_Store
+*.local
+
+# Copyrighted sample-test material: stays local, never in the repository.
+/resources/sample_test.pdf
+/public/img/food-fisch.webp
+/public/img/food-kuchen.webp
+/public/img/food-paprika.webp
+/public/img/food-tomate.webp
+/public/img/fridge.webp
+/public/img/rewe.webp

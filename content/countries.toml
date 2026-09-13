@@ -1,0 +1,176 @@
+# Länder-Tabelle (P0) — die gemeinsame Quelle für „aus …“-Formen.
+#
+# article: "" (kein Artikel), "die", "der" oder "plural"
+# aus:     fertige Form nach „Ich komme aus …“
+# ru:      russische Bezeichnung (für Hinweise)
+#
+# Neue Länder einfach unten anhängen.
+# P1 (später): die vollständige Liste des Auswärtigen Amts.
+
+[[country]]
+name = "Deutschland"
+article = ""
+aus = "aus Deutschland"
+ru = "Германия"
+
+[[country]]
+name = "Ukraine"
+article = "die"
+aus = "aus der Ukraine"
+ru = "Украина"
+
+[[country]]
+name = "Türkei"
+article = "die"
+aus = "aus der Türkei"
+ru = "Турция"
+
+[[country]]
+name = "Polen"
+article = ""
+aus = "aus Polen"
+ru = "Польша"
+
+[[country]]
+name = "Russland"
+article = ""
+aus = "aus Russland"
+ru = "Россия"
+
+[[country]]
+name = "Vietnam"
+article = ""
+aus = "aus Vietnam"
+ru = "Вьетнам"
+
+[[country]]
+name = "Togo"
+article = ""
+aus = "aus Togo"
+ru = "Того"
+
+[[country]]
+name = "Österreich"
+article = ""
+aus = "aus Österreich"
+ru = "Австрия"
+
+[[country]]
+name = "Italien"
+article = ""
+aus = "aus Italien"
+ru = "Италия"
+
+[[country]]
+name = "Frankreich"
+article = ""
+aus = "aus Frankreich"
+ru = "Франция"
+
+[[country]]
+name = "Syrien"
+article = ""
+aus = "aus Syrien"
+ru = "Сирия"
+
+[[country]]
+name = "Schweiz"
+article = "die"
+aus = "aus der Schweiz"
+ru = "Швейцария"
+
+[[country]]
+name = "Slowakei"
+article = "die"
+aus = "aus der Slowakei"
+ru = "Словакия"
+
+[[country]]
+name = "USA"
+article = "plural"
+aus = "aus den USA"
+ru = "США"
+
+[[country]]
+name = "Niederlande"
+article = "plural"
+aus = "aus den Niederlanden"
+ru = "Нидерланды"
+
+[[country]]
+name = "Iran"
+article = "der"
+aus = "aus dem Iran"
+ru = "Иран"
+
+[[country]]
+name = "Irak"
+article = "der"
+aus = "aus dem Irak"
+ru = "Ирак"
+
+[[country]]
+name = "Jemen"
+article = "der"
+aus = "aus dem Jemen"
+ru = "Йемен"
+
+[[country]]
+name = "Sudan"
+article = "der"
+aus = "aus dem Sudan"
+ru = "Судан"
+
+[[country]]
+name = "Rumänien"
+article = ""
+aus = "aus Rumänien"
+ru = "Румыния"
+
+[[country]]
+name = "Bulgarien"
+article = ""
+aus = "aus Bulgarien"
+ru = "Болгария"
+
+[[country]]
+name = "Ungarn"
+article = ""
+aus = "aus Ungarn"
+ru = "Венгрия"
+
+[[country]]
+name = "Tschechien"
+article = ""
+aus = "aus Tschechien"
+ru = "Чехия"
+
+[[country]]
+name = "Belarus"
+article = ""
+aus = "aus Belarus"
+ru = "Беларусь"
+
+[[country]]
+name = "Georgien"
+article = ""
+aus = "aus Georgien"
+ru = "Грузия"
+
+[[country]]
+name = "Afghanistan"
+article = ""
+aus = "aus Afghanistan"
+ru = "Афганистан"
+
+[[country]]
+name = "Albanien"
+article = ""
+aus = "aus Albanien"
+ru = "Албания"
+
+[[country]]
+name = "Kosovo"
+article = "der"
+aus = "aus dem Kosovo"
+ru = "Косово"
