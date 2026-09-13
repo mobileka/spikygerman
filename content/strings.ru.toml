@@ -13,6 +13,16 @@
 # {n}, {correct}, {total}, {answered} — их заполняет приложение.
 
 [ui]
+# Оболочка приложения: шапка, нижняя навигация, пропуск к содержанию.
+skip_link = "К содержанию"
+logo_home_label = "SpikyGerman — на главную"
+brand_subtitle = "Немецкий без острых углов · Deutsch A0"
+level_chip = "Уровень 1"
+progress_saved = "Прогресс сохраняется на Вашем устройстве"
+main_nav_label = "Основная навигация"
+tab_home = "Главная"
+tab_continue = "Продолжить"
+
 check = "Проверить"
 back = "Назад"
 next = "Дальше"

@@ -31,6 +31,14 @@ const QUESTION_TYPES = [
 const PRONOUNS = ["er", "sie", "sie-plural"];
 
 const REQUIRED_UI_KEYS = [
+  "skip_link",
+  "logo_home_label",
+  "brand_subtitle",
+  "level_chip",
+  "progress_saved",
+  "main_nav_label",
+  "tab_home",
+  "tab_continue",
   "check",
   "back",
   "next",

@@ -13,7 +13,6 @@
   import ImageBlock from "./ImageBlock.svelte";
   import PriceTable from "./PriceTable.svelte";
   import QuestionCard from "./QuestionCard.svelte";
-  import UmlautRow from "./UmlautRow.svelte";
 
   let {
     section,
@@ -78,7 +77,6 @@
 </ol>
 
 <div class="bottom-bar">
-  <UmlautRow />
   <div class="nav-row">
     <a class="button" href={previous ? `#/s/${previous.id}` : "#/"}>{t("back")}</a>
     <a class="button" href={next ? `#/s/${next.id}` : "#/summary"}>

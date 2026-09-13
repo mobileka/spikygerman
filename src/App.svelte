@@ -4,6 +4,9 @@
   import Home from "./lib/components/Home.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
   import SummaryView from "./lib/components/SummaryView.svelte";
+  import TopBar from "./lib/components/TopBar.svelte";
+  import TabBar from "./lib/components/TabBar.svelte";
+  import UmlautRow from "./lib/components/UmlautRow.svelte";
 
   let route = $state<Route>(parseHash(window.location.hash) ?? { name: "home" });
 
@@ -30,19 +33,28 @@
   });
 </script>
 
-<a class="skip-link" href="#content">К содержанию</a>
+<a class="skip-link" href="#content">{t("skip_link")}</a>
 
-<main id="content" tabindex="-1">
-  {#if section}
-    {#key section.id}
-      <SectionView
-        {section}
-        questionId={route.name === "section" ? route.questionId : undefined}
-      />
-    {/key}
-  {:else if route.name === "summary"}
-    <SummaryView />
-  {:else}
-    <Home />
-  {/if}
-</main>
+<div class="app">
+  <TopBar />
+
+  <main id="content" tabindex="-1">
+    {#if section}
+      {#key section.id}
+        <SectionView
+          {section}
+          questionId={route.name === "section" ? route.questionId : undefined}
+        />
+      {/key}
+    {:else if route.name === "summary"}
+      <SummaryView />
+    {:else}
+      <Home />
+    {/if}
+  </main>
+
+  <footer class="app-footer">
+    <UmlautRow />
+    <TabBar current={route.name} />
+  </footer>
+</div>

@@ -92,7 +92,7 @@
 </script>
 
 {#if active}
-  <div class="umlaut-row" role="group" aria-label="Немецкие буквы" bind:this={row}>
+  <div class="umlaut" role="group" aria-label="Немецкие буквы" bind:this={row}>
     {#each upper ? UPPER : LOWER as character (character)}
       <button
         type="button"
