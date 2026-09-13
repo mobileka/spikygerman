@@ -2,6 +2,7 @@
   import type { Question, Section } from "../content/types";
   import type { QuestionResult as Result } from "../grading/grade";
   import { content, instructionText, t } from "../content";
+  import { sectionHash } from "../routing";
   import {
     getValues,
     isQuestionChecked,
@@ -28,6 +29,13 @@
       ? content.sections[sectionIndex + 1]
       : null;
 
+  function onPick(event: Event): void {
+    const target = event.currentTarget as HTMLSelectElement;
+    if (target.value && target.value !== section.id) {
+      window.location.hash = sectionHash(target.value);
+    }
+  }
+
   function resultFor(question: Question): Result | undefined {
     if (!isQuestionChecked(question.id)) return undefined;
     return gradeQuestion(question, getValues(question.id), content.countries);
@@ -47,13 +55,33 @@
   });
 </script>
 
-<header class="page-header">
-  <h2>{section.title}</h2>
-  <p class="muted">{instructionText(section.instruction)}</p>
+<header class="hero">
+  <h1 class="sr-only">{section.title}</h1>
+  <div class="title-pick">
+    <select
+      class="title-select"
+      aria-label={t("section_picker_label")}
+      value={section.id}
+      onchange={onPick}
+    >
+      {#each content.sections as candidate (candidate.id)}
+        <option value={candidate.id}>{candidate.title}</option>
+      {/each}
+    </select>
+  </div>
+  <p>{instructionText(section.instruction)}</p>
 </header>
 
 {#if section.photo}
-  <ImageBlock photo={section.photo} alt={section.alt} srData={section.sr_data} />
+  <div class="panel">
+    <div class="panel-b">
+      <ImageBlock
+        photo={section.photo}
+        alt={section.alt}
+        srData={section.sr_data}
+      />
+    </div>
+  </div>
 {/if}
 {#if section.table}
   <div class="sr-only">
@@ -71,16 +99,28 @@
 <ol class="questions">
   {#each section.questions as question (question.id)}
     <li>
-      <QuestionCard {question} values={getValues(question.id)} result={resultFor(question)} />
+      <QuestionCard
+        {question}
+        values={getValues(question.id)}
+        result={resultFor(question)}
+      />
     </li>
   {/each}
 </ol>
 
-<div class="bottom-bar">
-  <div class="nav-row">
-    <a class="button" href={previous ? `#/s/${previous.id}` : "#/"}>{t("back")}</a>
-    <a class="button" href={next ? `#/s/${next.id}` : "#/summary"}>
-      {next ? t("next") : t("summary_title")}
-    </a>
+<div class="panel section-nav">
+  <div class="panel-b">
+    <div class="nav-row">
+      <a
+        class="btn btn-secondary"
+        href={previous ? sectionHash(previous.id) : "#/"}>{t("back")}</a
+      >
+      <a
+        class="btn btn-secondary"
+        href={next ? sectionHash(next.id) : "#/summary"}
+      >
+        {next ? t("next") : t("summary_title")}
+      </a>
+    </div>
   </div>
 </div>

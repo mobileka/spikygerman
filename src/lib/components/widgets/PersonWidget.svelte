@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Question } from "../../content/types";
   import type { QuestionResult } from "../../grading/grade";
   import { PRONOUN_FIELD, fieldStatus } from "../../grading/grade";
@@ -10,10 +11,12 @@
     question,
     values,
     result,
+    media,
   }: {
     question: Question;
     values: Record<string, string>;
     result?: QuestionResult;
+    media?: Snippet;
   } = $props();
 
   const pronoun = $derived(values[PRONOUN_FIELD] ?? "");
@@ -36,6 +39,8 @@
     return fieldStatus(result, field);
   }
 </script>
+
+{@render media?.()}
 
 <div class="field">
   <label class="field-label" for={`${question.id}-${PRONOUN_FIELD}`}>

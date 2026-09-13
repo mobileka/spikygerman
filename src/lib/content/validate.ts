@@ -45,6 +45,8 @@ const REQUIRED_UI_KEYS = [
   "back",
   "next",
   "home",
+  "section_picker_label",
+  "select_placeholder",
   "example_label",
   "model_answer",
   "explanation_label",

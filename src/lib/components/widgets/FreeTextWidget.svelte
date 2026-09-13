@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Question } from "../../content/types";
   import type { QuestionResult } from "../../grading/grade";
   import { ANSWER_FIELD, fieldStatus } from "../../grading/grade";
@@ -11,11 +12,13 @@
     number,
     values,
     result,
+    media,
   }: {
     question: Question;
     number: number;
     values: Record<string, string>;
     result?: QuestionResult;
+    media?: Snippet;
   } = $props();
 
   const askId = $derived(`${question.id}-ask`);
@@ -26,13 +29,15 @@
 </script>
 
 <p
-  class="ask-text"
+  class="q-ask"
   id={askId}
   lang={question.type === "translate" ? "ru" : "de"}
 >
-  <span class="question-number">{number}.</span>
+  <span class="qn">{number}.</span>
   {question.ask}
 </p>
+
+{@render media?.()}
 
 <AnswerInput
   id={`${question.id}-answer`}

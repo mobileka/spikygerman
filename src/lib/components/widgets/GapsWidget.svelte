@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Question } from "../../content/types";
   import type { QuestionResult } from "../../grading/grade";
   import { fieldStatus, gapField } from "../../grading/grade";
@@ -11,11 +12,13 @@
     number,
     values,
     result,
+    media,
   }: {
     question: Question;
     number: number;
     values: Record<string, string>;
     result?: QuestionResult;
+    media?: Snippet;
   } = $props();
 
   const askId = $derived(`${question.id}-ask`);
@@ -30,8 +33,8 @@
   }
 </script>
 
-<p class="ask-text" id={askId} lang="de">
-  <span class="question-number">{number}.</span>
+<p class="q-ask" id={askId} lang="de">
+  <span class="qn">{number}.</span>
   {#each parts as part, index (index)}
     <span>{part}</span>{#if index < parts.length - 1}<span class="blank-chip"
         ><span aria-hidden="true">{index + 1}</span
@@ -39,6 +42,8 @@
       >{/if}
   {/each}
 </p>
+
+{@render media?.()}
 
 {#each answers as _answer, index (index)}
   {@const field = gapField(index)}
@@ -56,7 +61,7 @@
         aria-describedby={describedBy}
         onchange={(event) => setAnswer(question.id, field, event.currentTarget.value)}
       >
-        <option value="">—</option>
+        <option value="">{t("select_placeholder")}</option>
         {#each choices as choice (choice)}
           <option value={choice} lang="de">{choice}</option>
         {/each}

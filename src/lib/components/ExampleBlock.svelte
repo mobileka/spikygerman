@@ -15,8 +15,8 @@
   } = $props();
 </script>
 
-<div class="task-example">
-  <p class="example-label">{t("example_label")}</p>
+<div class="example">
+  <p class="ex-k">{t("example_label")}</p>
   {#if photo}
     <ImageBlock {photo} {alt} />
   {/if}
