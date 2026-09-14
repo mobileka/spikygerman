@@ -28,8 +28,13 @@
   });
 
   $effect(() => {
-    const prefix = route.name === "summary" ? `${t("summary_title")} — ` : "";
-    document.title = `${prefix}${content.test.title} — SpikyGerman`;
+    const screen =
+      route.name === "summary"
+        ? t("summary_title")
+        : route.name === "section"
+          ? (section?.title ?? content.test.title)
+          : `${t("tab_home")} · ${content.test.title}`;
+    document.title = `${screen} — SpikyGerman`;
   });
 
   $effect(() => {
