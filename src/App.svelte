@@ -57,7 +57,7 @@
 <a class="skip-link" href="#content">{t("skip_link")}</a>
 
 <div class="app">
-  <TopBar />
+  <TopBar current={route.name} />
 
   <main id="content" tabindex="-1">
     {#if section}

@@ -2,7 +2,10 @@
   import { content, t } from "../content";
   import { format } from "../format";
   import { countAnswered, progressPercent, totalQuestions } from "../progress";
+  import type { Route } from "../routing";
   import { progress } from "../state.svelte";
+
+  let { current }: { current: Route["name"] } = $props();
 
   const total = totalQuestions(content.sections);
   const answered = $derived(countAnswered(content.sections, progress.answers));
@@ -36,11 +39,13 @@
       </span>
       <span class="level-chip">{t("level_chip")}</span>
     </div>
-    <div class="progress-line" aria-hidden="true">
-      <span class="progress-fill" style={`width: ${percent}%`}></span>
-    </div>
-    <p class="progress-text" role="status">
-      {format(t("progress_answered"), { answered, total })}
-    </p>
+    {#if current !== "home"}
+      <div class="progress-line" aria-hidden="true">
+        <span class="progress-fill" style={`width: ${percent}%`}></span>
+      </div>
+      <p class="progress-text" role="status">
+        {format(t("progress_answered"), { answered, total })}
+      </p>
+    {/if}
   </div>
 </header>

@@ -6,11 +6,11 @@ Design source of truth: `designs/00001 - Blue/index.html` (home topbar without p
 
 **Blocked by:** 01 (needs the shell topbar), 05 (needs the live progress bar). Supersedes the ticket-05 bullet "the same state is visible on home" for the home screen.
 
-**Status:** ready-for-agent
+**Status:** in-review
 
-- [ ] On `#/` and `#level-1` the topbar shows the brand row and level chip but no progress line and no progress text.
-- [ ] On section screens and summary the live bar and «Отвечено: X из 36» are unchanged and keep updating as the learner types, picks, checks or resets.
-- [ ] The topbar does not jump or leave an empty gap on home when navigating between screens.
-- [ ] Keyboard and screen-reader check: nothing focusable or announced is lost on home; the progress `role="status"` is simply absent there.
-- [ ] `npm test`, `npm run typecheck` and `npm run check` pass.
-- [ ] Visual check of home (collapsed and expanded) against the design at 390×844 and 360×800, no horizontal overflow on wider viewports.
+- [x] On `#/` and `#level-1` the topbar shows the brand row and level chip but no progress line and no progress text.
+- [x] On section screens and summary the live bar and «Отвечено: X из 36» are unchanged and keep updating as the learner types, picks, checks or resets.
+- [x] The topbar does not jump or leave an empty gap on home when navigating between screens.
+- [x] Keyboard and screen-reader check: nothing focusable or announced is lost on home; the progress `role="status"` is simply absent there.
+- [x] `npm test`, `npm run typecheck` and `npm run check` pass.
+- [x] Visual check of home (collapsed and expanded) against the design at 390×844 and 360×800, no horizontal overflow on wider viewports.
