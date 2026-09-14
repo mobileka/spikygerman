@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Настройки — SpikyGerman</title>
+<script>(function(){try{var t=localStorage.getItem("spiky-theme");if(t!=="dark"&&t!=="light"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+/* ============================================================
+   od-layout primitives (device shell, safe areas, canvas)
+   ============================================================ */
+*{box-sizing:border-box}
+html,
+body{margin:0;padding:0}
+body{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:32px 16px;
+  background:var(--stage-base);
+  color:var(--fg);
+  font-family:var(--font-sans);
+  font-size:var(--text-base);
+  line-height:var(--lh-base);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+</style>
+<style>
+/* ============================================================
+   KUMO — token layer + phone shell + app base
+   ============================================================ */
+:root{
+  --font-sans:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --text-xs:0.75rem;
+  --text-sm:0.8125rem;
+  --text-base:0.9375rem;
+  --text-md:1rem;
+  --text-lg:1.125rem;
+  --text-xl:1.375rem;
+  --text-2xl:1.75rem;
+  --lh-tight:1.18;
+  --lh-base:1.45;
+  --lh-relaxed:1.6;
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:20px;
+  --space-6:24px;
+  --radius-sm:8px;
+  --radius-md:10px;
+  --radius-lg:14px;
+  --radius-xl:20px;
+  --radius-full:999px;
+  --duration-fast:120ms;
+  --duration-base:220ms;
+  --ease-standard:cubic-bezier(.2,.8,.3,1);
+  --ease-emphasized:cubic-bezier(.2,1,.3,1);
+  --focus-ring:0 0 0 2px var(--stage-base),0 0 0 4px var(--accent);
+  --motion-fast:120ms;
+  --motion-base:220ms;
+}
+:root[data-theme="light"],
+:root{
+  --stage-base:#eef1f6;
+  --stage-glow:#f8fafc;
+  --paper:#ffffff;
+  --surface:#ffffff;
+  --surface-warm:#f5f8ff;
+  --surface-muted:#f1f4fa;
+  --fg:#111827;
+  --fg-2:#3f4653;
+  --muted:#6b7280;
+  --border:#d8dee8;
+  --border-soft:#e9edf4;
+  --accent:#2563eb;
+  --accent-hover:#1d4ed8;
+  --accent-active:#1e40af;
+  --accent-soft:#dbe7ff;
+  --success:#15803d;
+  --success-soft:#dcfce7;
+  --warn:#b45309;
+  --warn-soft:#fef3c7;
+  --danger:#b91c1c;
+  --danger-soft:#fee2e2;
+  --shadow-sm:0 1px 2px rgba(17,24,39,.06),0 1px 3px rgba(17,24,39,.04);
+  --shadow-md:0 8px 20px rgba(17,24,39,.08),0 2px 6px rgba(17,24,39,.04);
+  --shadow-lg:0 18px 40px rgba(17,24,39,.12),0 4px 12px rgba(17,24,39,.06);
+}
+:root[data-theme="dark"]{
+  --stage-base:#0d1017;
+  --stage-glow:#151a24;
+  --paper:#151a24;
+  --surface:#1a2030;
+  --surface-warm:#1e2637;
+  --surface-muted:#1b2231;
+  --fg:#eef2f9;
+  --fg-2:#c8cfdd;
+  --muted:#9aa3b4;
+  --border:#2c3546;
+  --border-soft:#232b3a;
+  --accent:#7aa2ff;
+  --accent-hover:#93b4ff;
+  --accent-active:#a9c4ff;
+  --accent-soft:#1e2c4d;
+  --success:#4ade80;
+  --success-soft:#123322;
+  --warn:#fbbf24;
+  --warn-soft:#332611;
+  --danger:#f87171;
+  --danger-soft:#3a1a1c;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:0 10px 24px rgba(0,0,0,.45);
+  --shadow-lg:0 20px 44px rgba(0,0,0,.55);
+}
+/* ---------- device shell ---------- */
+.phone-frame{
+  position:relative;
+  width:min(390px,100%);
+  padding:12px;
+  border-radius:52px;
+  background:var(--phone-body);
+  box-shadow:var(--shadow-lg);
+}
+:root[data-theme="light"],
+:root{
+  --phone-body:#1f2530;
+}
+:root[data-theme="dark"]{
+  --phone-body:#0a0d13;
+}
+.phone-screen{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  height:844px;
+  border-radius:42px;
+  overflow:hidden;
+  background:var(--paper);
+}
+.phone-content{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+.status-bar{
+  order:-1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:12px 24px 0;
+  font-size:var(--text-xs);
+  font-weight:600;
+  color:var(--fg);
+}
+.status-icons{display:inline-flex;align-items:center;gap:5px;opacity:.85}
+.hardware-button{
+  position:absolute;
+  width:3px;
+  border-radius:2px;
+  background:#39404d;
+}
+.hardware-button.volume{left:-2px;top:186px;height:56px}
+.hardware-button.power{right:-2px;top:206px;height:76px}
+.camera-dot{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#0b0e14;
+}
+.gesture-indicator{
+  position:absolute;
+  bottom:8px;
+  left:50%;
+  transform:translateX(-50%);
+  width:132px;
+  height:5px;
+  border-radius:3px;
+  background:var(--fg);
+  opacity:.28;
+}
+/* ---------- app frame ---------- */
+.app{
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  height:100%;
+  background:var(--paper);
+}
+.topbar{
+  padding:10px 16px 8px;
+  background:var(--paper);
+  border-bottom:1px solid var(--border-soft);
+}
+.brand-row{display:flex;align-items:center;gap:10px}
+.brand-row>*{min-width:0}
+.mark-link{flex:none;border-radius:var(--radius-md);text-decoration:none;line-height:0}
+.mark{
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  border-radius:var(--radius-md);
+  background:var(--surface-warm);
+  border:1px solid var(--border-soft);
+}
+.mark svg{width:30px;height:30px}
+.brand-name{display:block;font-size:var(--text-base);font-weight:700;letter-spacing:-.01em;color:var(--fg)}
+.brand-sub{display:block;font-size:var(--text-xs);color:var(--muted);line-height:1.3}
+.level-chip{
+  flex:none;
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:44px;
+  padding:0 12px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-full);
+  background:var(--surface-warm);
+  font-size:var(--text-xs);
+  font-weight:600;
+  color:var(--fg-2);
+  white-space:nowrap;
+}
+.screen{
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:14px 16px 22px;
+  background:var(--paper);
+}
+.hero{margin:0 0 12px}
+.hero h1{margin:0;font-size:var(--text-2xl);line-height:var(--lh-tight);letter-spacing:-.02em}
+.hero .hint{margin:6px 0 0;color:var(--muted);font-size:var(--text-sm)}
+.screen :focus-visible{outline:none;box-shadow:var(--focus-ring);border-radius:var(--radius-sm)}
+.panel{
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  box-shadow:var(--shadow-sm);
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.panel-h{padding:14px 14px 10px;border-bottom:1px solid var(--border-soft)}
+.panel-h h2{margin:0;font-size:var(--text-md);letter-spacing:-.01em}
+.panel-h p{margin:4px 0 0;font-size:var(--text-xs);color:var(--muted);line-height:1.4}
+.panel-b{padding:14px}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:48px;
+  padding:0 16px;
+  border:1px solid transparent;
+  border-radius:var(--radius-lg);
+  font:inherit;
+  font-size:var(--text-base);
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
+  transition:background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard);
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:var(--surface);border-color:var(--border);color:var(--fg)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 9px;
+  border-radius:var(--radius-full);
+  background:var(--success-soft);
+  color:var(--success);
+  font-size:var(--text-xs);
+  font-weight:600;
+  white-space:nowrap;
+}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.8}
+/* choice rows (radio) */
+.choice{display:grid;gap:8px;margin:0;padding:0;border:0}
+.choice label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:48px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  cursor:pointer;
+  font-size:var(--text-base);
+}
+.choice label:hover{border-color:var(--muted)}
+.choice label:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--paper));color:var(--accent-active);font-weight:600}
+.choice input{flex:none;width:20px;height:20px;accent-color:var(--accent);margin:0}
+.tabbar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:4px;
+  padding:8px 12px 14px;
+  border-top:1px solid var(--border-soft);
+  background:var(--paper);
+}
+.tab{
+  display:grid;
+  justify-items:center;
+  gap:3px;
+  padding:8px 4px;
+  border-radius:var(--radius-md);
+  color:var(--muted);
+  font-size:var(--text-xs);
+  font-weight:600;
+  text-decoration:none;
+}
+.tab svg{width:20px;height:20px}
+.tab:hover{background:var(--surface-warm);color:var(--fg-2)}
+.tab[aria-current="page"]{color:var(--accent);background:var(--surface-warm)}
+</style>
+<style>
+/* ============================================================
+   v2 overflow fixes + brand/tabbar tweaks
+   ============================================================ */
+.mark-link{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;flex:none;border-radius:var(--radius-sm);margin-left:-6px;text-decoration:none;line-height:0}
+.brand-row{flex-wrap:nowrap;overflow:hidden}
+.brand-name,.brand-sub{overflow-wrap:anywhere}
+.panel-b>*:last-child{margin-bottom:0}
+@media (max-width:420px){.phone-frame{padding:0;border-radius:0;box-shadow:none;width:100%}.phone-screen{height:100vh;height:100dvh;border-radius:0}}
+</style>
+<style>
+/* ============================================================
+   THEME LAYER — surfaces, focus, topbar icon button
+   ============================================================ */
+:root[data-theme="light"]{--halo:0 0 0 1px rgba(17,24,39,.04),0 10px 30px rgba(17,24,39,.06)}
+:root[data-theme="dark"]{--halo:0 0 0 1px rgba(255,255,255,.05),0 12px 32px rgba(0,0,0,.5)}
+:root{--paper-fixed:#ffffff;--ink-fixed:#111827}
+:root[data-theme="light"],:root{--body-bg:var(--stage-base)}
+:root[data-theme="dark"]{--body-bg:var(--stage-base)}
+body{background:radial-gradient(circle at 50% 0%,var(--stage-glow),var(--stage-base) 60%);transition:background var(--motion-base) var(--ease-standard)}
+.phone-frame,.phone-screen,.app,.topbar,.screen,.tabbar,.panel,.choice label{transition:background-color var(--motion-base) var(--ease-standard),border-color var(--motion-base) var(--ease-standard),color var(--motion-base) var(--ease-standard)}
+/* — topbar icon button: settings entry (theme selection moved into Настройки) — */
+.topbar-icon{
+  flex:none;
+  margin-left:auto;
+  display:inline-grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  color:var(--fg);
+  text-decoration:none;
+  transition:background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard),color var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard);
+}
+.topbar-icon:hover{border-color:var(--accent);background:var(--surface-warm);color:var(--accent)}
+.topbar-icon:active{transform:translateY(1px)}
+.topbar-icon[aria-current="page"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-active)}
+.topbar-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.brand-row>.level-chip+.topbar-icon{margin-left:8px}
+</style>
+<style>
+/* ============================================================
+   SETTINGS SCREEN — groups, rows, segmented control, danger
+   ============================================================ */
+.set-note{margin:10px 0 0;color:var(--muted);font-size:var(--text-xs);line-height:1.45}
+.set-reset{margin:12px 0 0}
+.set-status{margin:10px 0 0;font-size:var(--text-sm);font-weight:600;color:var(--success)}
+.set-status:empty{display:none}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* language rows */
+.choice .ch{display:grid;gap:1px;flex:1;min-width:0}
+.choice .ch-t{font-size:var(--text-base);font-weight:600;color:var(--fg)}
+.choice .ch-s{font-size:var(--text-xs);color:var(--muted);line-height:1.35}
+.choice label:has(input:checked) .ch-t{color:var(--accent-active)}
+.choice .badge{margin-left:auto;flex:none}
+/* segmented control (theme) */
+.seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0;padding:0;border:0}
+.seg legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.seg label{
+  position:relative;
+  display:grid;
+  justify-items:center;
+  gap:7px;
+  min-height:74px;
+  padding:10px 4px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  font-size:var(--text-xs);
+  font-weight:600;
+  color:var(--fg-2);
+  cursor:pointer;
+  text-align:center;
+}
+.seg label:hover{border-color:var(--muted)}
+.seg label:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--paper));color:var(--accent-active)}
+.seg label:has(input:focus-visible){box-shadow:var(--focus-ring)}
+.seg input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.swatch{
+  display:block;
+  width:100%;
+  height:24px;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+}
+.sw-system{background:linear-gradient(90deg,#ffffff 0 50%,#1a2030 50% 100%)}
+.sw-light{background:#ffffff}
+.sw-dark{background:#1a2030}
+/* progress summary */
+.kv{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin:0 0 12px;font-size:var(--text-sm)}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.progress-line{height:8px;border-radius:var(--radius-full);background:var(--surface-muted);overflow:hidden}
+.progress-line span{display:block;height:100%;width:0;border-radius:var(--radius-full);background:var(--accent);transition:width var(--motion-base) var(--ease-standard)}
+.empty-note{margin:10px 0 0;font-size:var(--text-sm);color:var(--muted)}
+/* danger block */
+.danger{border:1px solid color-mix(in srgb,var(--danger) 40%,var(--border));border-radius:var(--radius-lg);padding:14px;background:color-mix(in srgb,var(--danger) 5%,var(--paper))}
+.danger p{margin:0 0 12px;font-size:var(--text-sm);color:var(--fg-2);line-height:1.45}
+.danger strong{display:block;margin-bottom:4px;font-size:var(--text-base);color:var(--fg)}
+.btn-danger{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:var(--surface);color:var(--danger)}
+.btn-danger:hover{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 8%,var(--paper))}
+.btn-danger-solid{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn-danger-solid:hover{background:color-mix(in srgb,var(--danger) 88%,#000)}
+.confirm-actions{display:flex;flex-wrap:wrap;gap:8px}
+.confirm-actions .btn{flex:1 1 140px}
+/* coming-soon rows */
+.set-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-soft)}
+.set-row:last-child{border-bottom:0;padding-bottom:0}
+.set-row:first-child{padding-top:0}
+.set-row .sr-i{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:var(--radius-md);background:var(--surface-warm);color:var(--fg-2)}
+.set-row .sr-i svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.set-row .sr-t{display:grid;gap:2px;flex:1;min-width:0}
+.set-row .sr-t b{font-size:var(--text-sm);font-weight:600}
+.set-row .sr-t span{font-size:var(--text-xs);color:var(--muted);line-height:1.35}
+.set-row .badge{margin-left:auto;flex:none}
+.badge-soon{background:var(--surface-muted);color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="phone-frame" data-phone-shell data-platform="neutral">
+<span class="hardware-button volume" aria-hidden="true"></span>
+<span class="hardware-button power" aria-hidden="true"></span>
+<section class="phone-screen" data-phone-screen>
+<main class="phone-content" data-phone-content>
+<!-- APP CONTENT START -->
+<a class="skip-link" href="#screens">К содержанию</a>
+<div class="app">
+
+<header class="topbar"><div class="brand-row"><a class="mark-link" href="index.html" aria-label="SpikyGerman — на главную"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 20 4 14l3 1V9l3 4 2-6 2 5 3-5 1 5 3-4v5l3-2-1 5Z" fill="#4a3520"/><ellipse cx="14" cy="21" rx="9" ry="6.5" fill="#6b4f2e"/><ellipse cx="21" cy="22.5" rx="3.6" ry="2.8" fill="#d9b98a"/><circle cx="23.8" cy="21.8" r="1" fill="#2b2118"/><circle cx="18.5" cy="19.5" r="1.2" fill="#241c12"/><circle cx="18.5" cy="19.5" r="2.6" fill="none" stroke="#ffffff" stroke-width="1.2"/><path d="M21 19l2.5-1" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/><path d="M20 26v-5l2 1.5L23 18.5l2 3 2-3 .5 4 2.5-.5-1 3.5Z" fill="#3c2d1b"/><ellipse cx="24.5" cy="25.5" rx="5" ry="3.8" fill="#7d5c33"/><ellipse cx="28" cy="26" rx="2" ry="1.6" fill="#e3c893"/><circle cx="26" cy="24.3" r=".9" fill="#241c12"/><circle cx="29.6" cy="25.6" r=".7" fill="#2b2118"/></svg></span></a><span><span class="brand-name">SpikyGerman</span><span class="brand-sub">Немецкий без острых углов · Deutsch A0</span></span><span class="level-chip" data-od-id="level-badge">Уровень 1</span><a class="topbar-icon" href="einstellungen.html" data-od-id="settings-entry" aria-current="page" aria-label="Настройки" title="Настройки"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.1 14.4a1.5 1.5 0 0 0 .3 1.65l.05.06a1.8 1.8 0 1 1-2.55 2.55l-.06-.06a1.5 1.5 0 0 0-1.65-.3 1.5 1.5 0 0 0-.9 1.37v.17a1.8 1.8 0 1 1-3.6 0v-.09a1.5 1.5 0 0 0-.98-1.37 1.5 1.5 0 0 0-1.65.3l-.06.06a1.8 1.8 0 1 1-2.55-2.55l.06-.06a1.5 1.5 0 0 0 .3-1.65 1.5 1.5 0 0 0-1.37-.9H4.2a1.8 1.8 0 1 1 0-3.6h.09a1.5 1.5 0 0 0 1.37-.98 1.5 1.5 0 0 0-.3-1.65l-.06-.06A1.8 1.8 0 1 1 7.85 4.59l.06.06a1.5 1.5 0 0 0 1.65.3h.07a1.5 1.5 0 0 0 .9-1.37V3.4a1.8 1.8 0 1 1 3.6 0v.09a1.5 1.5 0 0 0 .9 1.37 1.5 1.5 0 0 0 1.65-.3l.06-.06a1.8 1.8 0 1 1 2.55 2.55l-.06.06a1.5 1.5 0 0 0-.3 1.65v.07a1.5 1.5 0 0 0 1.37.9h.17a1.8 1.8 0 1 1 0 3.6h-.09a1.5 1.5 0 0 0-1.37.9Z"/></svg></a></div></header>
+
+<div class="screen" id="screens" tabindex="-1">
+<header class="hero" data-od-id="settings-hero"><h1>Настройки</h1><p class="hint">Всё хранится на этом телефоне — аккаунт не нужен.</p></header>
+
+<!-- ── 1. Язык ────────────────────────────────────────────── -->
+<section class="panel" aria-labelledby="set-lang-h" data-od-id="settings-language">
+<div class="panel-h"><h2 id="set-lang-h">Язык</h2><p>Язык подписей и объяснений в заданиях.</p></div>
+<div class="panel-b">
+<fieldset class="choice" id="langChoice">
+<legend class="sr-only">Выберите язык интерфейса</legend>
+<label><input type="radio" name="lang" value="ru" data-label="Русский" checked><span class="ch"><span class="ch-t">Русский</span><span class="ch-s">Объяснения и подписи на русском</span></span></label>
+<label><input type="radio" name="lang" value="de" data-label="Deutsch"><span class="ch"><span class="ch-t">Deutsch</span><span class="ch-s">Erklärungen auf Deutsch</span></span><span class="badge badge-soon">бета</span></label>
+<label><input type="radio" name="lang" value="en" data-label="English"><span class="ch"><span class="ch-t">English</span><span class="ch-s">Explanations in English</span></span><span class="badge badge-soon">бета</span></label>
+</fieldset>
+<p class="set-note">Немецкие фразы в заданиях остаются немецкими — меняются только объяснения и подписи. Deutsch и English переводим постепенно, выбор уже сохраняется.</p>
+<p class="set-status" id="langStatus" role="status" aria-live="polite"></p>
+</div>
+</section>
+
+<!-- ── 2. Внешний вид ─────────────────────────────────────── -->
+<section class="panel" aria-labelledby="set-theme-h" data-od-id="settings-appearance">
+<div class="panel-h"><h2 id="set-theme-h">Внешний вид</h2><p>Тема приложения — переключатель переехал сюда с верхней панели.</p></div>
+<div class="panel-b">
+<fieldset class="seg" id="themeChoice">
+<legend>Тема оформления</legend>
+<label><input type="radio" name="theme" value="system"><span class="swatch sw-system" aria-hidden="true"></span>Системная</label>
+<label><input type="radio" name="theme" value="light"><span class="swatch sw-light" aria-hidden="true"></span>Светлая</label>
+<label><input type="radio" name="theme" value="dark"><span class="swatch sw-dark" aria-hidden="true"></span>Тёмная</label>
+</fieldset>
+<p class="set-note" id="themeHint">«Системная» следует настройкам телефона и меняется вместе с ними.</p>
+<p class="set-status" id="themeStatus" role="status" aria-live="polite"></p>
+</div>
+</section>
+
+<!-- ── 3. Прогресс ────────────────────────────────────────── -->
+<section class="panel" aria-labelledby="set-progress-h" data-od-id="settings-progress">
+<div class="panel-h"><h2 id="set-progress-h">Прогресс</h2><p>Уровень 1 · 6 разделов · 36 заданий.</p></div>
+<div class="panel-b">
+<dl class="kv">
+<dt>Отвечено</dt><dd id="pAnswered">0 из 36</dd>
+<dt>Проверено</dt><dd id="pChecked">0 из 36</dd>
+</dl>
+<div class="progress-line" aria-hidden="true"><span id="pFill"></span></div>
+<p class="empty-note" id="pEmpty">Ответов пока нет. Начните с любого раздела на главной.</p>
+<div class="danger set-reset">
+<strong>Сбросить прогресс</strong>
+<p>Удаляет все ответы и пометки «проверено» на этом устройстве. Язык и тему настройка не затрагивает.</p>
+<button class="btn btn-danger" id="resetBtn" type="button">
+<svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.8-4.3M16 3v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<span>Сбросить прогресс</span>
+</button>
+<div id="resetConfirm" hidden role="group" aria-labelledby="resetQ">
+<p id="resetQ"><strong>Точно удалить?</strong>Это нельзя отменить — ответы придётся вводить заново.</p>
+<div class="confirm-actions">
+<button class="btn btn-danger-solid" id="resetYes" type="button">Да, сбросить</button>
+<button class="btn btn-secondary" id="resetNo" type="button">Отмена</button>
+</div>
+</div>
+</div>
+<p class="set-status" id="resetStatus" role="status" aria-live="polite"></p>
+</div>
+</section>
+
+<!-- ── 4. Скоро ───────────────────────────────────────────── -->
+<section class="panel" aria-labelledby="set-soon-h" data-od-id="settings-soon">
+<div class="panel-h"><h2 id="set-soon-h">Скоро</h2><p>Добавляем по одной функции — старые настройки при этом не ломаются.</p></div>
+<div class="panel-b" role="list" aria-label="Функции в разработке">
+<div class="set-row" role="listitem" aria-disabled="true">
+<span class="sr-i" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 8v4h3l4 3V5L7 8H4Z"/><path d="M14 7.5a4 4 0 0 1 0 5"/></svg></span>
+<span class="sr-t"><b>Звук и произношение</b><span>Прослушать фразу и повторить за диктором</span></span>
+<span class="badge badge-soon">скоро</span>
+</div>
+<div class="set-row" role="listitem" aria-disabled="true">
+<span class="sr-i" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M4 4h9l3 3v9H4z"/><path d="M7 9h6M7 12.5h4"/></svg></span>
+<span class="sr-t"><b>Свои списки слов</b><span>Складывать фразы из заданий в личную колоду</span></span>
+<span class="badge badge-soon">скоро</span>
+</div>
+<div class="set-row" role="listitem" aria-disabled="true">
+<span class="sr-i" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 6h10M5 10h10M5 14h6"/></svg></span>
+<span class="sr-t"><b>Уровень 2 · A1</b><span>Следующие шесть разделов с новыми темами</span></span>
+<span class="badge badge-soon">скоро</span>
+</div>
+<div class="set-row" role="listitem" aria-disabled="true">
+<span class="sr-i" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 5a5 5 0 0 0-5 5v3l-1.5 2h13L15 13v-3a5 5 0 0 0-5-5Z"/><path d="M8.5 15.5a1.6 1.6 0 0 0 3 0"/></svg></span>
+<span class="sr-t"><b>Напоминания</b><span>Короткая тренировка раз в день, время выбираете сами</span></span>
+<span class="badge badge-soon">скоро</span>
+</div>
+<div class="set-row" role="listitem" aria-disabled="true">
+<span class="sr-i" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 3v8m0 0 3-3m-3 3L7 8"/><path d="M4 13v3h12v-3"/></svg></span>
+<span class="sr-t"><b>Экспорт прогресса</b><span>Выгрузить ответы файлом, чтобы перенести на новый телефон</span></span>
+<span class="badge badge-soon">скоро</span>
+</div>
+</div>
+</section>
+
+<!-- ── 5. На этом устройстве ──────────────────────────────── -->
+<section class="panel" aria-labelledby="set-data-h" data-od-id="settings-data">
+<div class="panel-h"><h2 id="set-data-h">На этом устройстве</h2><p>Никаких аккаунтов и отправки данных наружу.</p></div>
+<div class="panel-b">
+<dl class="kv">
+<dt>Ответы и проверки</dt><dd>локально</dd>
+<dt>Тема и язык</dt><dd>локально</dd>
+<dt>Аккаунт</dt><dd>не нужен</dd>
+</dl>
+<p class="set-note">Если очистить данные браузера или сайта, прогресс удалится вместе с ними. Кнопка «Сбросить прогресс» выше делает то же самое, но только для ответов.</p>
+</div>
+</section>
+</div>
+
+<footer><nav class="tabbar" aria-label="Основная навигация"><a class="tab" href="index.html"><svg viewBox="0 0 20 20"><path d="M3 10.5 10 3.5l7 7M5 9.5V16h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Главная</span></a><a class="tab" href="sich-vorstellen.html"><svg viewBox="0 0 20 20"><path d="M4 5h12v7H9l-3 3v-3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Продолжить</span></a><a class="tab" href="summary.html"><svg viewBox="0 0 20 20"><path d="M4 16V9m4 7V5m4 11v-6m4 6V7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Итоги</span></a></nav></footer>
+</div>
+<!-- APP CONTENT END -->
+</main>
+<div class="status-bar" aria-hidden="true"><span class="status-time">9:41</span><span class="status-cutout-zone"></span><span class="status-icons"><svg width="15" height="12" viewBox="0 0 15 12"><path d="M1.5 10.5v-2m4 2v-4.5m4 4.5v-7m4 7v-9" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg><svg width="15" height="12" viewBox="0 0 16 12"><path d="M1.5 4.7a9.2 9.2 0 0 1 13 0M4.2 7.3a5.4 5.4 0 0 1 7.6 0M6.9 10a1.55 1.55 0 0 1 2.2 0" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg><svg width="19" height="11" viewBox="0 0 20 11"><rect x=".75" y="1.25" width="16.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span></div>
+<div class="camera-dot" aria-hidden="true"></div>
+<div class="gesture-indicator" aria-hidden="true"></div>
+</section>
+</div>
+<script>
+"use strict";
+(function(){
+  var LS_PROGRESS="spiky-redesign-v1", LS_THEME="spiky-theme", LS_LANG="spiky-lang";
+  var IDS=["q01","q02","q03","q04","q05","q06","q07","q08","q13","q14","q15","q16","q17","q18","q19","q20","q21","q22","q23","q24","q25","q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40"];
+  var TOTAL=IDS.length;
+
+  /* ---------- прогресс: счётчики + сброс ---------- */
+  function readProgress(){try{return JSON.parse(localStorage.getItem(LS_PROGRESS)||"{}");}catch(e){return {};}}
+  function tally(){
+    var r=readProgress(),A=r.answers||{},C=r.checked||{},ans=0,chk=0;
+    IDS.forEach(function(id){
+      var v=A[id];
+      if(v&&Object.keys(v).some(function(k){return (v[k]||"").trim()!=="";}))ans++;
+      if(C[id])chk++;
+    });
+    return {ans:ans,chk:chk};
+  }
+  function paintProgress(){
+    var t=tally();
+    document.getElementById("pAnswered").textContent=t.ans+" из "+TOTAL;
+    document.getElementById("pChecked").textContent=t.chk+" из "+TOTAL;
+    document.getElementById("pFill").style.width=Math.round(t.ans/TOTAL*100)+"%";
+    document.getElementById("pEmpty").hidden=t.ans>0;
+  }
+  var resetBtn=document.getElementById("resetBtn"),
+      resetBox=document.getElementById("resetConfirm"),
+      resetYes=document.getElementById("resetYes"),
+      resetNo=document.getElementById("resetNo"),
+      resetStatus=document.getElementById("resetStatus");
+  resetBtn.addEventListener("click",function(){
+    resetBox.hidden=false;
+    resetBtn.hidden=true;
+    resetStatus.textContent="";
+    resetYes.focus();
+  });
+  resetNo.addEventListener("click",function(){
+    resetBox.hidden=true;
+    resetBtn.hidden=false;
+    resetBtn.focus();
+  });
+  resetYes.addEventListener("click",function(){
+    try{localStorage.removeItem(LS_PROGRESS);}catch(e){}
+    resetBox.hidden=true;
+    resetBtn.hidden=false;
+    setStatus(resetStatus,"Прогресс сброшен: ответов и проверок нет.");
+    paintProgress();
+    resetBtn.focus();
+  });
+
+  /* ---------- язык ---------- */
+  var langField=document.getElementById("langChoice"),
+      langStatus=document.getElementById("langStatus"),
+      LANG_NAMES={ru:"Русский",de:"Deutsch",en:"English"};
+  function readLang(){try{return localStorage.getItem(LS_LANG)||"ru";}catch(e){return "ru";}}
+  function paintLang(){
+    var v=readLang();
+    Array.prototype.forEach.call(langField.querySelectorAll("input[name=lang]"),function(el){el.checked=(el.value===v);});
+  }
+  langField.addEventListener("change",function(e){
+    if(e.target.name!=="lang")return;
+    try{localStorage.setItem(LS_LANG,e.target.value);}catch(err){}
+    setStatus(langStatus,"Язык сохранён: "+LANG_NAMES[e.target.value]+". Пояснения появятся после следующей сборки.");
+  });
+
+  /* ---------- тема ---------- */
+  var themeField=document.getElementById("themeChoice"),
+      themeStatus=document.getElementById("themeStatus"),
+      THEME_NAMES={system:"Системная",light:"Светлая",dark:"Тёмная"};
+  function mq(){return window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;}
+  function storedTheme(){try{var v=localStorage.getItem(LS_THEME);return (v==="dark"||v==="light")?v:null;}catch(e){return null;}}
+  function currentMode(){return storedTheme()||"system";}
+  function resolve(mode){if(mode==="system")return (mq()&&mq().matches)?"dark":"light";return mode;}
+  function paintTheme(){
+    var m=currentMode();
+    Array.prototype.forEach.call(themeField.querySelectorAll("input[name=theme]"),function(el){el.checked=(el.value===m);});
+    var hint=document.getElementById("themeHint");
+    hint.textContent=(m==="system")
+      ? "«Системная» следует настройкам телефона и меняется вместе с ними. Сейчас в системе: "+(resolve("system")==="dark"?"тёмная":"светлая")+"."
+      : "Тема выбрана вручную и не зависит от настроек телефона.";
+  }
+  function setMode(mode){
+    document.documentElement.setAttribute("data-theme",resolve(mode));
+    try{if(mode==="system")localStorage.removeItem(LS_THEME);else localStorage.setItem(LS_THEME,mode);}catch(e){}
+    paintTheme();
+    setStatus(themeStatus,"Тема сохранена: "+THEME_NAMES[mode]+".");
+  }
+  themeField.addEventListener("change",function(e){
+    if(e.target.name!=="theme")return;
+    setMode(e.target.value);
+  });
+  var media=mq();
+  if(media){
+    var onSystemChange=function(){if(!storedTheme())document.documentElement.setAttribute("data-theme",resolve("system"));paintTheme();};
+    if(media.addEventListener)media.addEventListener("change",onSystemChange);
+    else if(media.addListener)media.addListener(onSystemChange);
+  }
+
+  function setStatus(el,text){el.textContent=text;}
+
+  paintLang();
+  paintTheme();
+  paintProgress();
+})();
+</script>
+</body>
+</html>
+e);
+  }
+
+  function setStatus(el,text){el.textContent=text;}
+
+  paintLang();
+  paintTheme();
+  paintProgress();
+})();
+</script>
+</body>
+</html>

@@ -1,28 +1,13 @@
 {
   "schema": "open-design.design-manifest.v1",
-  "title": "8225c5fd-187a-4fd1-925d-0b3e785c7174",
-  "entryFile": "backups/index.html",
+  "title": "38c38188-edbe-4a30-b120-2e5c7d3a5ab2",
+  "entryFile": "index.html",
   "sourceFiles": {
     "all": [
       "artikel-und-verben.html",
-      "backups/artikel-und-verben.html",
-      "backups/dialoge.html",
-      "backups/einkaufen.html",
-      "backups/index.html",
-      "backups/preise.html",
-      "backups/sich-vorstellen.html",
-      "backups/summary.html",
-      "backups/was-ist-das.html",
-      "design-spec.md",
       "dialoge.html",
       "einkaufen.html",
       "index.html",
-      "logos/index.html",
-      "logos/logo-1-nose-to-nose.svg",
-      "logos/logo-2-nestled.svg",
-      "logos/logo-3-looking-up.svg",
-      "logos/logo-4-hug.svg",
-      "logos/logo-5-piggyback.svg",
       "preise.html",
       "sich-vorstellen.html",
       "summary.html",
@@ -30,18 +15,9 @@
     ],
     "html": [
       "artikel-und-verben.html",
-      "backups/artikel-und-verben.html",
-      "backups/dialoge.html",
-      "backups/einkaufen.html",
-      "backups/index.html",
-      "backups/preise.html",
-      "backups/sich-vorstellen.html",
-      "backups/summary.html",
-      "backups/was-ist-das.html",
       "dialoge.html",
       "einkaufen.html",
       "index.html",
-      "logos/index.html",
       "preise.html",
       "sich-vorstellen.html",
       "summary.html",
@@ -49,58 +25,11 @@
     ],
     "css": [],
     "scriptsAndComponents": [],
-    "assets": [
-      "design-spec.md",
-      "logos/logo-1-nose-to-nose.svg",
-      "logos/logo-2-nestled.svg",
-      "logos/logo-3-looking-up.svg",
-      "logos/logo-4-hug.svg",
-      "logos/logo-5-piggyback.svg"
-    ]
+    "assets": []
   },
   "screens": [
     {
       "file": "artikel-und-verben.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/artikel-und-verben.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/dialoge.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/einkaufen.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/index.html",
-      "role": "launcher-overview",
-      "implementationNote": "Use this as the navigation/overview entry only; implement each linked screen file as its own route/surface."
-    },
-    {
-      "file": "backups/preise.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/sich-vorstellen.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/summary.html",
-      "role": "screen",
-      "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
-    },
-    {
-      "file": "backups/was-ist-das.html",
       "role": "screen",
       "implementationNote": "Preserve visual hierarchy, responsive behavior, and interactive states from this screen."
     },
@@ -116,11 +45,6 @@
     },
     {
       "file": "index.html",
-      "role": "launcher-overview",
-      "implementationNote": "Use this as the navigation/overview entry only; implement each linked screen file as its own route/surface."
-    },
-    {
-      "file": "logos/index.html",
       "role": "launcher-overview",
       "implementationNote": "Use this as the navigation/overview entry only; implement each linked screen file as its own route/surface."
     },
@@ -176,7 +100,7 @@
   },
   "tokens": {
     "source": [
-      "backups/index.html"
+      "index.html"
     ],
     "required": [
       "background",
@@ -195,7 +119,7 @@
   },
   "interactions": {
     "source": [
-      "backups/index.html"
+      "index.html"
     ],
     "requiredStates": [
       "default",
