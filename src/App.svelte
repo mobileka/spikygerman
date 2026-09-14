@@ -31,6 +31,31 @@
     const prefix = route.name === "summary" ? `${t("summary_title")} — ` : "";
     document.title = `${prefix}${content.test.title} — SpikyGerman`;
   });
+
+  $effect(() => {
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" || event.isComposing) return;
+      if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+      const target = event.target;
+      if (
+        !(target instanceof HTMLElement) ||
+        target.matches("textarea") ||
+        target.closest("button")
+      ) {
+        return;
+      }
+      const check = target
+        .closest(".qcard")
+        ?.querySelector<HTMLButtonElement>(".check-button");
+      if (!check) return;
+      event.preventDefault();
+      check.click();
+    };
+    document.addEventListener("keydown", onKeydown);
+    return () => document.removeEventListener("keydown", onKeydown);
+  });
 </script>
 
 <a class="skip-link" href="#content">{t("skip_link")}</a>

@@ -6,12 +6,12 @@ Design source of truth: `designs/00001 - Blue/` shared `keydown` handler (presen
 
 **Blocked by:** 03 (needs the question cards on screen).
 
-**Status:** in-progress
+**Status:** in-review
 
-- [ ] Enter inside a question card (text field, gap, or select) triggers that card's «Проверить», same as tapping it.
-- [ ] Enter with Shift, Ctrl, Meta or Alt is ignored.
-- [ ] Multi-line answers keep Enter for newlines and are never checked by the shortcut.
-- [ ] Nothing changes when focus is outside a question card.
-- [ ] Checking twice in a row stays safe: feedback is not duplicated and focus moves exactly as it does today.
-- [ ] Keyboard and screen-reader walkthrough: answering with Enter announces the feedback as before.
-- [ ] `npm test`, `npm run typecheck` and `npm run check` pass.
+- [x] Enter inside a question card (text field, gap, or select) triggers that card's «Проверить», same as tapping it.
+- [x] Enter with Shift, Ctrl, Meta or Alt is ignored.
+- [x] Multi-line answers keep Enter for newlines and are never checked by the shortcut.
+- [x] Nothing changes when focus is outside a question card.
+- [x] Checking twice in a row stays safe: feedback is not duplicated and focus moves exactly as it does today.
+- [x] Keyboard and screen-reader walkthrough: answering with Enter announces the feedback as before.
+- [x] `npm test`, `npm run typecheck` and `npm run check` pass.
