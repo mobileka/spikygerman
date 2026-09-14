@@ -92,10 +92,14 @@ describe("summarize", () => {
     expect(summary.issues.map((issue) => issue.question.id)).toEqual([
       "q02",
       "q03",
+      "q04",
+      "q05",
     ]);
     expect(summary.issues.map((issue) => issue.status)).toEqual([
       "incorrect",
       "almost",
+      "empty",
+      "empty",
     ]);
     expect(summary.sections[0]).toMatchObject({ answered: 2, correct: 1, total: 2 });
     expect(summary.sections[1]).toMatchObject({ answered: 1, correct: 0, total: 3 });
@@ -110,14 +114,58 @@ describe("summarize", () => {
     expect(summary.correct).toBe(0);
     expect(summary.almost).toBe(1);
     expect(summary.empty).toBe(4);
-    expect(summary.issues.map((issue) => issue.question.id)).toEqual(["q05"]);
+    expect(summary.issues.map((issue) => issue.question.id)).toEqual([
+      "q05",
+      "q01",
+      "q02",
+      "q03",
+      "q04",
+    ]);
+    expect(summary.issues.map((issue) => issue.status)).toEqual([
+      "almost",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+    ]);
+  });
+
+  it("lists errors first, then almosts, then unanswered", () => {
+    const summary = summarize(
+      sections,
+      {
+        q01: { answer: "Nein, das ist gut." },
+        q03: { answer: "Ich komme aus Ukraine" },
+      },
+      countries,
+    );
+    expect(summary.issues.map((issue) => issue.question.id)).toEqual([
+      "q01",
+      "q03",
+      "q02",
+      "q04",
+      "q05",
+    ]);
+    expect(summary.issues.map((issue) => issue.status)).toEqual([
+      "incorrect",
+      "almost",
+      "empty",
+      "empty",
+      "empty",
+    ]);
   });
 
   it("handles the empty test", () => {
     const summary = summarize(sections, {}, countries);
     expect(summary.answered).toBe(0);
     expect(summary.empty).toBe(5);
-    expect(summary.issues).toEqual([]);
+    expect(summary.issues.map((issue) => issue.status)).toEqual([
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+    ]);
   });
 });
 

@@ -9,10 +9,18 @@ export interface SectionSummary {
   total: number;
 }
 
+export type IssueStatus = Exclude<Status, "correct">;
+
+const ISSUE_PRIORITY: Record<IssueStatus, number> = {
+  incorrect: 0,
+  almost: 1,
+  empty: 2,
+};
+
 export interface SummaryIssue {
   question: Question;
   section: Section;
-  status: Status;
+  status: IssueStatus;
 }
 
 export interface TestSummary {
@@ -56,6 +64,7 @@ export function summarize(
 
       if (result.status === "empty") {
         summary.empty++;
+        summary.issues.push({ question, section, status: result.status });
       } else {
         summary.answered++;
         sectionSummary.answered++;
@@ -75,6 +84,10 @@ export function summarize(
 
     summary.sections.push(sectionSummary);
   }
+
+  summary.issues.sort(
+    (a, b) => ISSUE_PRIORITY[a.status] - ISSUE_PRIORITY[b.status],
+  );
 
   return summary;
 }

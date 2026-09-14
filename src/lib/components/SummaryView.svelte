@@ -1,8 +1,9 @@
 <script lang="ts">
   import { content, t } from "../content";
-  import { summarize } from "../grading/summary";
+  import { summarize, type IssueStatus } from "../grading/summary";
   import { progress } from "../state.svelte";
   import { format } from "../format";
+  import { sectionHash } from "../routing";
 
   let heading: HTMLHeadingElement | undefined = $state();
 
@@ -10,12 +11,18 @@
     summarize(content.sections, progress.answers, content.countries),
   );
 
+  const statusKeys: Record<IssueStatus, string> = {
+    almost: "result_almost",
+    incorrect: "result_incorrect",
+    empty: "result_empty",
+  };
+
   function questionNumber(questionId: string): number {
     return Number(questionId.replace(/^q0*/, ""));
   }
 
-  function statusKey(status: string): string {
-    return status === "almost" ? "result_almost" : "result_incorrect";
+  function percent(correct: number, total: number): number {
+    return total ? Math.round((correct / total) * 100) : 0;
   }
 
   $effect(() => {
@@ -23,79 +30,93 @@
   });
 </script>
 
-<h1 tabindex="-1" bind:this={heading}>{t("summary_title")}</h1>
+<header class="hero">
+  <h1 tabindex="-1" bind:this={heading}>{t("summary_title")}</h1>
+</header>
 
-<p>
-  {format(t("summary_answered"), {
-    answered: summary.answered,
-    total: summary.total,
-  })}
-</p>
+<div class="stat-strip">
+  <div class="od-stat st-ok">
+    <strong>{summary.correct}</strong>
+    <span>{t("summary_count_correct")}</span>
+  </div>
+  <div class="od-stat st-al">
+    <strong>{summary.almost}</strong>
+    <span>{t("summary_count_almost")}</span>
+  </div>
+  <div class="od-stat st-bad">
+    <strong>{summary.incorrect}</strong>
+    <span>{t("summary_count_incorrect")}</span>
+  </div>
+  <div class="od-stat st-emp">
+    <strong>{summary.empty}</strong>
+    <span>{t("summary_count_empty")}</span>
+  </div>
+</div>
 
-{#if summary.answered === 0}
-  <p class="muted">{t("summary_empty_state")}</p>
-{:else}
-  <dl class="summary-counts">
-    <div>
-      <dt>{t("summary_count_correct")}</dt>
-      <dd>{summary.correct}</dd>
-    </div>
-    <div>
-      <dt>{t("summary_count_almost")}</dt>
-      <dd>{summary.almost}</dd>
-    </div>
-    <div>
-      <dt>{t("summary_count_incorrect")}</dt>
-      <dd>{summary.incorrect}</dd>
-    </div>
-    <div>
-      <dt>{t("summary_count_empty")}</dt>
-      <dd>{summary.empty}</dd>
-    </div>
-  </dl>
+<div class="sum-list">
+  {#each summary.sections as entry, index (entry.section.id)}
+    <a class="section-link" href={sectionHash(entry.section.id)}>
+      <span class="section-num">{String(index + 1).padStart(2, "0")}</span>
+      <span class="st">
+        <span class="t">{entry.section.title}</span>
+        <span class="s">
+          {format(t("summary_section_line"), {
+            correct: entry.correct,
+            total: entry.total,
+          })}
+        </span>
+      </span>
+      <span class="meta">
+        <span
+          class={percent(entry.correct, entry.total) === 100
+            ? "badge done"
+            : "badge"}
+        >
+          {percent(entry.correct, entry.total)}%
+        </span>
+      </span>
+    </a>
+  {/each}
 
-  <h2>{t("summary_sections_title")}</h2>
-  <ul class="summary-sections">
-    {#each summary.sections as entry (entry.section.id)}
-      <li>
-        <a class="section-link" href={`#/s/${entry.section.id}`}>
-          <span class="section-title">{entry.section.title}</span>
-          <span class="section-meta">
-            {format(t("summary_section_line"), {
-              correct: entry.correct,
-              total: entry.total,
-            })}
-          </span>
-        </a>
-      </li>
-    {/each}
-  </ul>
-
-  <h2>{t("summary_issues_title")}</h2>
-  {#if summary.issues.length}
-    <ul class="summary-issues">
-      {#each summary.issues as issue (issue.question.id)}
-        <li>
+  <section class="issues" aria-label={t("summary_issues_title")}>
+    <h2>{t("summary_issues_title")}</h2>
+    {#if summary.issues.length}
+      <div class="issues-list">
+        {#each summary.issues as issue (issue.question.id)}
           <a
-            class="issue-link"
-            href={`#/s/${issue.section.id}/${issue.question.id}`}
+            class="issue-link is-{issue.status}"
+            href={sectionHash(issue.section.id, issue.question.id)}
           >
-            <span class="issue-heading">
-              {format(t("summary_issue"), {
-                n: questionNumber(issue.question.id),
-                status: t(statusKey(issue.status)),
-              })}
+            <span class="issue-txt">
+              <span class="issue-title">
+                {format(t("question_label"), {
+                  n: questionNumber(issue.question.id),
+                })}
+              </span>
+              <span class="issue-sub">{issue.section.title}</span>
             </span>
-            <span class="issue-ask" lang="de">{issue.question.ask}</span>
+            <span class="issue-chip">{t(statusKeys[issue.status])}</span>
+            <svg
+              class="issue-chev"
+              width="16"
+              height="16"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 5l5 5-5 5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </a>
-        </li>
-      {/each}
-    </ul>
-  {:else}
-    <p class="muted">{t("summary_no_issues")}</p>
-  {/if}
-{/if}
-
-<p class="summary-actions">
-  <a class="button" href="#/">{t("home")}</a>
-</p>
+        {/each}
+      </div>
+    {:else}
+      <p class="issues-empty">{t("summary_no_issues")}</p>
+    {/if}
+  </section>
+</div>
