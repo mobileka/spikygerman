@@ -6,7 +6,7 @@ Design sources of truth: `sich-vorstellen.html`, `einkaufen.html`, `was-ist-das.
 
 **Blocked by:** 03 (needs the question cards), 07 (changes what Enter does in free-text fields).
 
-**Status:** in-review
+**Status:** done
 
 - [x] Sentence, yes/no, price and translate answers render `input[type="text"]`, ~48px tall, no resize handle.
 - [x] The unused `multiline` branch is removed from `AnswerInput` (gaps already use it single-line).

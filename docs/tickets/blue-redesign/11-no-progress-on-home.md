@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/index.html` (home topbar without p
 
 **Blocked by:** 01 (needs the shell topbar), 05 (needs the live progress bar). Supersedes the ticket-05 bullet "the same state is visible on home" for the home screen.
 
-**Status:** in-review
+**Status:** done
 
 - [x] On `#/` and `#level-1` the topbar shows the brand row and level chip but no progress line and no progress text.
 - [x] On section screens and summary the live bar and «Отвечено: X из 36» are unchanged and keep updating as the learner types, picks, checks or resets.

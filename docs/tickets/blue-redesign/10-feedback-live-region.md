@@ -6,7 +6,7 @@ Design source of truth: the shared `paint()` function in `designs/00001 - Blue/`
 
 **Blocked by:** 03 (needs the question cards and their feedback).
 
-**Status:** in-review
+**Status:** done
 
 - [x] The `Feedback` root element has `role="status"`.
 - [x] The existing focus move to the feedback anchor is unchanged (no double announcement: one announcement per check, verified with a screen reader or by inspecting that only one live region announces).
