@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { t } from "../content";
+  import { content, t } from "../content";
+  import { format } from "../format";
+  import { countAnswered, progressPercent, totalQuestions } from "../progress";
+  import { progress } from "../state.svelte";
+
+  const total = totalQuestions(content.sections);
+  const answered = $derived(countAnswered(content.sections, progress.answers));
+  const percent = $derived(progressPercent(answered, total));
 </script>
 
 <header class="topbar">
@@ -30,8 +37,10 @@
       <span class="level-chip">{t("level_chip")}</span>
     </div>
     <div class="progress-line" aria-hidden="true">
-      <span class="progress-fill"></span>
+      <span class="progress-fill" style={`width: ${percent}%`}></span>
     </div>
-    <p class="progress-text" role="status">{t("progress_saved")}</p>
+    <p class="progress-text" role="status">
+      {format(t("progress_answered"), { answered, total })}
+    </p>
   </div>
 </header>

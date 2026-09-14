@@ -35,7 +35,7 @@ const REQUIRED_UI_KEYS = [
   "logo_home_label",
   "brand_subtitle",
   "level_chip",
-  "progress_saved",
+  "progress_answered",
   "home_hero",
   "level_summary",
   "main_nav_label",
