@@ -4,12 +4,15 @@
   import { countAnswered, progressPercent, totalQuestions } from "../progress";
   import type { Route } from "../routing";
   import { progress } from "../state.svelte";
+  import { getTheme, toggleTheme } from "../theme.svelte";
 
   let { current }: { current: Route["name"] } = $props();
 
   const total = totalQuestions(content.sections);
   const answered = $derived(countAnswered(content.sections, progress.answers));
   const percent = $derived(progressPercent(answered, total));
+  const dark = $derived(getTheme() === "dark");
+  const themeLabel = $derived(dark ? t("theme_to_light") : t("theme_to_dark"));
 </script>
 
 <header class="topbar">
@@ -56,6 +59,24 @@
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
       <span class="level-chip">{t("level_chip")}</span>
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-pressed={dark}
+        aria-label={themeLabel}
+        title={themeLabel}
+        onclick={toggleTheme}
+      >
+        <svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <path
+            d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+          />
+        </svg>
+        <svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z" />
+        </svg>
+      </button>
     </div>
     {#if current !== "home"}
       <div class="progress-line" aria-hidden="true">

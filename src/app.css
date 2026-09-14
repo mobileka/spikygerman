@@ -35,6 +35,7 @@
 }
 
 :root {
+  color-scheme: light;
   /* Blue design tokens — designs/00001 - Blue */
   --bg: #f5f8ff;
   --surface: #ffffff;
@@ -103,13 +104,72 @@
   --warn-text: #b45309;
   --danger-text: #b42318;
   --accent-soft: color-mix(in oklab, var(--accent), transparent 95%);
+  --paper: #ffffff;
+  --code-bg: rgba(0, 0, 0, 0.05);
   --border-strong: #b6c3d9;
   --ok: var(--success-text);
-  --ok-bg: color-mix(in srgb, var(--success) 12%, white);
-  --warn-bg: color-mix(in srgb, var(--warn) 14%, white);
+  --ok-bg: color-mix(in srgb, var(--success) 12%, var(--paper));
+  --warn-bg: color-mix(in srgb, var(--warn) 14%, var(--paper));
   --bad: var(--danger-text);
-  --bad-bg: color-mix(in srgb, var(--danger) 10%, white);
+  --bad-bg: color-mix(in srgb, var(--danger) 10%, var(--paper));
   --radius: var(--radius-lg);
+}
+
+/* — theme: dark ————————————————————————————————————————————————————————
+   Dark tokens are OKLch derivations of the Kumo blue system: same hue
+   family as --accent, surfaces step upward in lightness, and the accent
+   brightens so buttons flip to dark-on-blue instead of white-on-blue.
+   Source: designs/00003 – Blue – Dark */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.207 0.021 264);
+  --surface: oklch(0.262 0.024 264);
+  --surface-warm: oklch(0.322 0.03 264);
+  --fg: oklch(0.965 0.006 264);
+  --fg-2: oklch(0.86 0.012 264);
+  --muted: oklch(0.72 0.02 264);
+  --meta: oklch(0.72 0.14 264);
+  --border: oklch(0.372 0.028 264);
+  --border-soft: oklch(0.308 0.022 264);
+  --accent: oklch(0.7 0.16 264);
+  --accent-on: oklch(0.17 0.02 264);
+  --accent-hover: color-mix(in oklab, var(--accent), white 8%);
+  --accent-active: color-mix(in oklab, var(--accent), white 14%);
+  --success: oklch(0.76 0.16 152);
+  --warn: oklch(0.82 0.15 78);
+  --danger: oklch(0.71 0.18 25);
+  --paper: oklch(0.235 0.024 264);
+  --code-bg: rgba(255, 255, 255, 0.09);
+  --border-strong: oklch(0.52 0.03 264);
+  --elev-raised: 0 1px 3px 0 rgba(0, 0, 0, 0.55);
+  --focus-ring: 0 0 0 4px oklch(0.7 0.16 264 / 0.4);
+}
+
+/* the brown mascot needs a light tile to stay legible on dark chrome */
+:root[data-theme="dark"] .mark {
+  background: oklch(0.94 0.015 258);
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+:root[data-theme="dark"] .title-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 8l5 5 5-5' fill='none' stroke='%2380b0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="dark"] .skip-link {
+  color: var(--accent-on);
+}
+
+:root[data-theme="dark"] .od-stat.st-al strong {
+  color: color-mix(in oklab, var(--warn), white 12%);
+}
+
+:root[data-theme="dark"] .issue-chip {
+  color: color-mix(in oklab, var(--sc), white 50%);
 }
 
 * {
@@ -283,6 +343,65 @@ a {
   color: var(--fg);
   white-space: nowrap;
   min-height: 44px;
+}
+
+.theme-toggle {
+  flex: none;
+  margin-left: auto;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    transform var(--motion-fast) var(--ease-standard);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-warm);
+  color: var(--fg);
+}
+
+.theme-toggle:active {
+  transform: translateY(1px);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .tt-sun {
+  display: none;
+}
+
+.theme-toggle .tt-moon {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .tt-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .tt-moon {
+  display: none;
+}
+
+.brand-row > .level-chip + .theme-toggle {
+  margin-left: 8px;
 }
 
 .progress-line {
@@ -820,7 +939,7 @@ select[data-status="incorrect"] {
 
 .choice label:has(input:checked) {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 7%, white);
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
 }
 
 .choice label:has(input:focus-visible) {
@@ -1161,15 +1280,15 @@ select[data-status="incorrect"] {
 }
 
 .feedback[data-status="correct"] {
-  background: color-mix(in srgb, var(--success) 12%, white);
+  background: color-mix(in srgb, var(--success) 12%, var(--paper));
 }
 
 .feedback[data-status="almost"] {
-  background: color-mix(in srgb, var(--warn) 14%, white);
+  background: color-mix(in srgb, var(--warn) 14%, var(--paper));
 }
 
 .feedback[data-status="incorrect"] {
-  background: color-mix(in srgb, var(--danger) 10%, white);
+  background: color-mix(in srgb, var(--danger) 10%, var(--paper));
 }
 
 .feedback[data-status="empty"] {
@@ -1193,7 +1312,7 @@ select[data-status="incorrect"] {
 .feedback .model code {
   font-family: var(--font-mono);
   font-size: 0.9em;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--code-bg);
   padding: 1px 5px;
   border-radius: 4px;
   overflow-wrap: anywhere;
