@@ -32,8 +32,8 @@
       route.name === "summary"
         ? t("summary_title")
         : route.name === "section"
-          ? (section?.title ?? content.test.title)
-          : `${t("tab_home")} · ${content.test.title}`;
+          ? (section?.title ?? t("tab_home"))
+          : t("tab_home");
     document.title = `${screen} — SpikyGerman`;
   });
 
