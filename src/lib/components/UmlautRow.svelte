@@ -2,17 +2,12 @@
   const LOWER = ["ä", "ö", "ü", "ß"];
   const UPPER = ["Ä", "Ö", "Ü", "ẞ"];
 
-  let active: HTMLInputElement | HTMLTextAreaElement | null = $state(null);
+  let active: HTMLInputElement | null = $state(null);
   let inferredUpper = $state(false);
   let row: HTMLDivElement | undefined = $state();
 
-  function isTextField(
-    target: EventTarget | null,
-  ): target is HTMLInputElement | HTMLTextAreaElement {
-    return (
-      (target instanceof HTMLInputElement && target.type === "text") ||
-      target instanceof HTMLTextAreaElement
-    );
+  function isTextField(target: EventTarget | null): target is HTMLInputElement {
+    return target instanceof HTMLInputElement && target.type === "text";
   }
 
   function isLetter(character: string): boolean {
