@@ -7,7 +7,6 @@
     value,
     status,
     describedBy,
-    multiline = false,
     oninput,
   }: {
     id: string;
@@ -15,34 +14,20 @@
     value: string;
     status?: string;
     describedBy?: string;
-    multiline?: boolean;
     oninput: (value: string) => void;
   } = $props();
 </script>
 
 <label class="field" for={id}>
   <span class="field-label">{label}</span>
-  {#if multiline}
-    <textarea
-      {id}
-      rows="2"
-      {value}
-      {...noAutoCorrect}
-      data-status={status ?? ""}
-      aria-invalid={status === "incorrect" ? "true" : undefined}
-      aria-describedby={describedBy}
-      oninput={(event) => oninput(event.currentTarget.value)}
-    ></textarea>
-  {:else}
-    <input
-      {id}
-      type="text"
-      {value}
-      {...noAutoCorrect}
-      data-status={status ?? ""}
-      aria-invalid={status === "incorrect" ? "true" : undefined}
-      aria-describedby={describedBy}
-      oninput={(event) => oninput(event.currentTarget.value)}
-    />
-  {/if}
+  <input
+    {id}
+    type="text"
+    {value}
+    {...noAutoCorrect}
+    data-status={status ?? ""}
+    aria-invalid={status === "incorrect" ? "true" : undefined}
+    aria-describedby={describedBy}
+    oninput={(event) => oninput(event.currentTarget.value)}
+  />
 </label>

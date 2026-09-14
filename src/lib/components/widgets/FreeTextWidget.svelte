@@ -45,6 +45,5 @@
   value={values[ANSWER_FIELD] ?? ""}
   {status}
   {describedBy}
-  multiline
   oninput={(value) => setAnswer(question.id, ANSWER_FIELD, value)}
 />

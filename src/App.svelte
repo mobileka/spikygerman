@@ -39,11 +39,7 @@
         return;
       }
       const target = event.target;
-      if (
-        !(target instanceof HTMLElement) ||
-        target.matches("textarea") ||
-        target.closest("button")
-      ) {
+      if (!(target instanceof HTMLElement) || target.closest("button")) {
         return;
       }
       const check = target

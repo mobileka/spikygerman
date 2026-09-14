@@ -6,13 +6,13 @@ Design sources of truth: `sich-vorstellen.html`, `einkaufen.html`, `was-ist-das.
 
 **Blocked by:** 03 (needs the question cards), 07 (changes what Enter does in free-text fields).
 
-**Status:** ready-for-agent
+**Status:** in-review
 
-- [ ] Sentence, yes/no, price and translate answers render `input[type="text"]`, ~48px tall, no resize handle.
-- [ ] The unused `multiline` branch is removed from `AnswerInput` (gaps already use it single-line).
-- [ ] Enter in a free-text field triggers that card's «Проверить», same as tapping it; Shift, Ctrl, Meta or Alt with Enter is still ignored.
-- [ ] No `<textarea>` is rendered anywhere in the app (grep to confirm); the `textarea` guard in the global keydown handler is removed or kept harmlessly — either way it never fires.
-- [ ] Checking twice in a row stays safe: feedback is not duplicated and focus moves exactly as it does today.
-- [ ] Keyboard and screen-reader walkthrough: answering a free-text question with Enter announces the feedback as before.
-- [ ] `npm test`, `npm run typecheck` and `npm run check` pass.
-- [ ] Visual check of all affected screens against the design at 390×844 and 360×800, no horizontal overflow on wider viewports.
+- [x] Sentence, yes/no, price and translate answers render `input[type="text"]`, ~48px tall, no resize handle.
+- [x] The unused `multiline` branch is removed from `AnswerInput` (gaps already use it single-line).
+- [x] Enter in a free-text field triggers that card's «Проверить», same as tapping it; Shift, Ctrl, Meta or Alt with Enter is still ignored.
+- [x] No `<textarea>` is rendered anywhere in the app (grep to confirm); the `textarea` guard in the global keydown handler is removed or kept harmlessly — either way it never fires.
+- [x] Checking twice in a row stays safe: feedback is not duplicated and focus moves exactly as it does today.
+- [x] Keyboard and screen-reader walkthrough: answering a free-text question with Enter announces the feedback as before.
+- [x] `npm test`, `npm run typecheck` and `npm run check` pass.
+- [x] Visual check of all affected screens against the design at 390×844 and 360×800, no horizontal overflow on wider viewports.

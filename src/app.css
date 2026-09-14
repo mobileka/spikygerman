@@ -380,7 +380,6 @@ a {
 
 button,
 input,
-textarea,
 select {
   font: inherit;
   color: inherit;
@@ -485,7 +484,6 @@ button:disabled {
 }
 
 input[type="text"],
-textarea,
 select {
   width: 100%;
   min-height: 48px;
@@ -496,32 +494,23 @@ select {
 }
 
 input[type="text"]:hover,
-textarea:hover,
 select:hover {
   border-color: var(--muted);
 }
 
-textarea {
-  min-height: 72px;
-  resize: vertical;
-}
-
 input[type="text"][data-status="correct"],
-textarea[data-status="correct"],
 select[data-status="correct"] {
   border-color: var(--success);
   background: var(--ok-bg);
 }
 
 input[type="text"][data-status="almost"],
-textarea[data-status="almost"],
 select[data-status="almost"] {
   border-color: var(--warn);
   background: var(--warn-bg);
 }
 
 input[type="text"][data-status="incorrect"],
-textarea[data-status="incorrect"],
 select[data-status="incorrect"] {
   border-color: var(--danger);
   background: var(--bad-bg);
