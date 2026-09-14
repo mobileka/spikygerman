@@ -6,12 +6,12 @@ Design source of truth: `designs/00001 - Blue/index.html` (the `SECMAP` loop tha
 
 **Blocked by:** 01 (needs the tab bar).
 
-**Status:** in-progress
+**Status:** in-review
 
-- [ ] «Продолжить» points at the first section with at least one unchecked question.
-- [ ] The destination updates after a question is checked, on every screen.
-- [ ] A section counts as done only when all of its questions are checked (the existing checked state).
-- [ ] When all questions are checked, the tab falls back to the first section (design behaviour).
-- [ ] The destination logic is extracted into a testable helper and covered by unit tests, including the all-done fallback.
-- [ ] `npm test`, `npm run typecheck` and `npm run check` pass.
-- [ ] Keyboard and screen-reader check: the tab's purpose is clear and its link target is announced correctly when it changes.
+- [x] «Продолжить» points at the first section with at least one unchecked question.
+- [x] The destination updates after a question is checked, on every screen.
+- [x] A section counts as done only when all of its questions are checked (the existing checked state).
+- [x] When all questions are checked, the tab falls back to the first section (design behaviour).
+- [x] The destination logic is extracted into a testable helper and covered by unit tests, including the all-done fallback.
+- [x] `npm test`, `npm run typecheck` and `npm run check` pass.
+- [x] Keyboard and screen-reader check: the tab's purpose is clear and its link target is announced correctly when it changes.

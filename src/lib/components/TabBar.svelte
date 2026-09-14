@@ -1,13 +1,15 @@
 <script lang="ts">
   import { content, t } from "../content";
+  import { continueSectionId } from "../progress";
   import { sectionHash, type Route } from "../routing";
+  import { progress } from "../state.svelte";
 
   let { current }: { current: Route["name"] } = $props();
 
-  const continueHref =
-    content.sections.length > 0
-      ? sectionHash(content.sections[0].id)
-      : "#/";
+  const continueId = $derived(
+    continueSectionId(content.sections, progress.checked),
+  );
+  const continueHref = $derived(continueId ? sectionHash(continueId) : "#/");
 </script>
 
 <nav class="tabbar" aria-label={t("main_nav_label")}>

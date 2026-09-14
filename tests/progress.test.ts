@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  continueSectionId,
   countAnswered,
   progressPercent,
   totalQuestions,
@@ -86,5 +87,33 @@ describe("progressPercent", () => {
 
   it("handles an empty test", () => {
     expect(progressPercent(0, 0)).toBe(0);
+  });
+});
+
+describe("continueSectionId", () => {
+  it("points at the first section with an unchecked question", () => {
+    expect(continueSectionId(sections, [])).toBe("s1");
+  });
+
+  it("skips sections whose questions are all checked", () => {
+    expect(continueSectionId(sections, ["q01", "q02"])).toBe("s2");
+  });
+
+  it("stays on a section when only one question is checked", () => {
+    expect(continueSectionId(sections, ["q01"])).toBe("s1");
+  });
+
+  it("falls back to the first section when everything is checked", () => {
+    expect(continueSectionId(sections, ["q01", "q02", "q03", "q04"])).toBe(
+      "s1",
+    );
+  });
+
+  it("ignores checked ids that belong to no question", () => {
+    expect(continueSectionId(sections, ["q99"])).toBe("s1");
+  });
+
+  it("returns null when there are no sections", () => {
+    expect(continueSectionId([], [])).toBeNull();
   });
 });

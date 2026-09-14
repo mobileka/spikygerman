@@ -29,3 +29,16 @@ export function countAnswered(
 export function progressPercent(answered: number, total: number): number {
   return total ? Math.round((answered / total) * 100) : 0;
 }
+
+export function continueSectionId(
+  sections: Section[],
+  checked: string[],
+): string | null {
+  const done = new Set(checked);
+  for (const section of sections) {
+    if (section.questions.some((question) => !done.has(question.id))) {
+      return section.id;
+    }
+  }
+  return sections[0]?.id ?? null;
+}
