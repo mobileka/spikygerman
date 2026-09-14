@@ -100,24 +100,29 @@ export interface ProgressCounts {
   incorrect: number;
 }
 
+export interface ProgressSummary extends ProgressCounts {
+  sections: ProgressCounts[];
+}
+
+function emptyCounts(): ProgressCounts {
+  return { total: 0, answered: 0, correct: 0, almost: 0, incorrect: 0 };
+}
+
 export function summarizeProgress(
   sections: Section[],
   answers: Record<string, Record<string, string>>,
   countries: Country[],
   checked: string[],
-): ProgressCounts {
+): ProgressSummary {
   const done = new Set(checked);
-  const counts: ProgressCounts = {
-    total: 0,
-    answered: 0,
-    correct: 0,
-    almost: 0,
-    incorrect: 0,
-  };
+  const counts = emptyCounts();
+  const sectionCounts: ProgressCounts[] = [];
 
   for (const section of sections) {
+    const sectionSummary = emptyCounts();
     for (const question of section.questions) {
       counts.total++;
+      sectionSummary.total++;
       if (!done.has(question.id)) continue;
       const { status } = gradeQuestion(
         question,
@@ -126,11 +131,20 @@ export function summarizeProgress(
       );
       if (status === "empty") continue;
       counts.answered++;
-      if (status === "correct") counts.correct++;
-      else if (status === "almost") counts.almost++;
-      else counts.incorrect++;
+      sectionSummary.answered++;
+      if (status === "correct") {
+        counts.correct++;
+        sectionSummary.correct++;
+      } else if (status === "almost") {
+        counts.almost++;
+        sectionSummary.almost++;
+      } else {
+        counts.incorrect++;
+        sectionSummary.incorrect++;
+      }
     }
+    sectionCounts.push(sectionSummary);
   }
 
-  return counts;
+  return { ...counts, sections: sectionCounts };
 }

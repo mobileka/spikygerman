@@ -6,6 +6,7 @@
   import { sectionHash, LEVEL_HASH } from "../routing";
   import { format } from "../format";
   import ProgressBar from "./ProgressBar.svelte";
+  import ProgressRing from "./ProgressRing.svelte";
 
   const total = totalQuestions(content.sections);
   const totalSections = content.sections.length;
@@ -94,7 +95,10 @@
     {#each content.sections as section, index (section.id)}
       <li>
         <a class="sec-tile" href={sectionHash(section.id)}>
-          <span class="sec-n">{String(index + 1).padStart(2, "0")}</span>
+          <span class="sec-n">
+            <ProgressRing counts={counts.sections[index]} />
+            {String(index + 1).padStart(2, "0")}
+          </span>
           <span class="sec-t">{section.title}</span>
         </a>
       </li>

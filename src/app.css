@@ -762,6 +762,7 @@ select[data-status="incorrect"] {
 }
 
 .sec-n {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -774,6 +775,37 @@ select[data-status="incorrect"] {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   font-weight: 700;
+}
+
+.sec-ring {
+  position: absolute;
+  inset: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  fill: none;
+  pointer-events: none;
+}
+
+.sec-ring .ring-track,
+.sec-ring .ring-seg {
+  fill: none;
+  stroke-width: 3.5;
+}
+
+.sec-ring .ring-track {
+  stroke: var(--surface-warm);
+}
+
+.sec-ring .ring-correct {
+  stroke: var(--success);
+}
+
+.sec-ring .ring-almost {
+  stroke: var(--warn);
+}
+
+.sec-ring .ring-incorrect {
+  stroke: var(--danger);
 }
 
 .sec-t {

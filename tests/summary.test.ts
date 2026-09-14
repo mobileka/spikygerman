@@ -214,13 +214,17 @@ describe("summarizeProgress", () => {
       countries,
       ["q01", "q02", "q03"],
     );
-    expect(counts).toEqual({
+    expect(counts).toMatchObject({
       total: 5,
       answered: 3,
       correct: 1,
       almost: 1,
       incorrect: 1,
     });
+    expect(counts.sections).toEqual([
+      { total: 2, answered: 2, correct: 1, almost: 0, incorrect: 1 },
+      { total: 3, answered: 1, correct: 0, almost: 1, incorrect: 0 },
+    ]);
   });
 
   it("ignores answers that have not been checked yet", () => {
@@ -256,5 +260,25 @@ describe("summarize with the real test", () => {
     expect(summary.total).toBe(36);
     expect(summary.correct).toBe(36);
     expect(summary.issues).toEqual([]);
+  });
+
+  it("gives every section its own checked counts", () => {
+    const answers: Record<string, Record<string, string>> = {};
+    for (const section of data.sections) {
+      for (const question of section.questions) {
+        answers[question.id] = modelValues(question);
+      }
+    }
+    const counts = summarizeProgress(
+      data.sections,
+      answers,
+      data.countries,
+      Object.keys(answers),
+    );
+    expect(counts.sections).toHaveLength(6);
+    expect(counts.sections.every((entry) => entry.correct === entry.total)).toBe(
+      true,
+    );
+    expect(counts.correct).toBe(36);
   });
 });
