@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/index.html` (the `SECMAP` loop tha
 
 **Blocked by:** 01 (needs the tab bar).
 
-**Status:** in-review
+**Status:** done
 
 - [x] «Продолжить» points at the first section with at least one unchecked question.
 - [x] The destination updates after a question is checked, on every screen.

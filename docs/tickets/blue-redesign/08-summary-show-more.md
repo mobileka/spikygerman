@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/summary.html` (the `paintIssues` f
 
 **Blocked by:** 04 (needs the summary issue list).
 
-**Status:** in-review
+**Status:** done
 
 - [x] Three issues are visible when the list loads.
 - [x] The button reads «Показать ещё N» with the correct remaining count and reveals the next three on tap/click/Enter.

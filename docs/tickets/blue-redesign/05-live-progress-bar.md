@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/index.html` (the `upd()` function 
 
 **Blocked by:** 01 (needs the shell and its initial placeholder state).
 
-**Status:** in-review
+**Status:** done
 
 - [x] The topbar bar width reflects answered / total questions; the text reads «Отвечено: X из 36».
 - [x] A question counts as answered when at least one of its fields is non-empty — including selects, radios and multi-gap questions.

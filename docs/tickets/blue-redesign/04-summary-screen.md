@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/summary.html` (stat strip, section
 
 **Blocked by:** 01 (needs the tokens and shell).
 
-**Status:** in-review
+**Status:** done
 
 - [x] The four stat cards — Верно / Почти / Ошибки / Без ответа — show the design's colors and the current counts.
 - [x] Each section row shows its number circle, title, «верно X из Y» and a percent badge; at 100% the badge uses the done state.
