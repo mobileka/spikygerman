@@ -2,6 +2,7 @@ node_modules
 dist
 src/generated
 .playwright-mcp
+.openchamber
 .DS_Store
 *.local
 
