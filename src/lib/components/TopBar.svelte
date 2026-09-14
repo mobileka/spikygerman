@@ -18,18 +18,36 @@
       <a class="mark-link" href="#/" aria-label={t("logo_home_label")}>
         <span class="mark" aria-hidden="true">
           <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M5 20 4 14l3 1V9l3 4 2-6 2 5 3-5 1 5 3-4v5l3-2-1 5Z" fill="#4a3520" />
-            <ellipse cx="14" cy="21" rx="9" ry="6.5" fill="#6b4f2e" />
-            <ellipse cx="21" cy="22.5" rx="3.6" ry="2.8" fill="#d9b98a" />
-            <circle cx="23.8" cy="21.8" r="1" fill="#2b2118" />
-            <circle cx="18.5" cy="19.5" r="1.2" fill="#241c12" />
-            <circle cx="18.5" cy="19.5" r="2.6" fill="none" stroke="#ffffff" stroke-width="1.2" />
-            <path d="M21 19l2.5-1" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
-            <path d="M20 26v-5l2 1.5L23 18.5l2 3 2-3 .5 4 2.5-.5-1 3.5Z" fill="#3c2d1b" />
-            <ellipse cx="24.5" cy="25.5" rx="5" ry="3.8" fill="#7d5c33" />
-            <ellipse cx="28" cy="26" rx="2" ry="1.6" fill="#e3c893" />
-            <circle cx="26" cy="24.3" r=".9" fill="#241c12" />
-            <circle cx="29.6" cy="25.6" r=".7" fill="#2b2118" />
+            <path d="M5.1 23.3 2.2 22.2l1.4-2.6-2-2.3 2.5-1.7-.7-2.9 3.1-.4.9-2.8 2.9.9 2.2-2.1 2.2 2.1 2.9-.9.9 2.8 3.1.4-.7 2.9 2.5 1.7-2 2.3 1.4 2.6-2.9 1.1Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.9" stroke-linejoin="round" />
+            <path d="M4.6 21.3 2.9 19.6l1.2-2-1.2-2.2 2.1-1.3.6-2.3 2.5-.2 1.6-1.8 2.3.9 2.3-.9 1.6 1.8 2.5.2.6 2.3 2.1 1.3-1.2 2.2 1.2 2-1.7 1.7Z" fill="#5d6472" />
+            <circle cx="5.8" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="19.2" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M5.2 27.5V19a7.3 6.8 0 0 1 14.6 0v8.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1.1" stroke-linejoin="round" />
+            <ellipse cx="9.7" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <ellipse cx="15.3" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <circle cx="9.7" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="15.3" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="10.1" cy="17.9" r="0.35" fill="#ffffff" />
+            <circle cx="15.7" cy="17.9" r="0.35" fill="#ffffff" />
+            <ellipse cx="12.5" cy="21.2" rx="1.4" ry="1" fill="#2e3138" />
+            <ellipse cx="12.1" cy="21" rx="0.4" ry="0.25" fill="#ffffff" opacity="0.7" />
+            <path d="M12.5 22.2v.7m0 0c-.3 1-2.4 1.2-3 .3m3-.3c.3 1 2.4 1.2 3 .3" stroke="#2e3138" stroke-width="0.55" fill="none" stroke-linecap="round" />
+            <path d="M19 25.4 17.2 24.2l1.1-1.8-.8-1.9 2-.9.5-2 2.2.3 1.6-1.4 1.6 1.4 2.2-.3.5 2 2 .9-.8 1.9 1.1 1.8-1.8 1.2Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.8" stroke-linejoin="round" />
+            <path d="M18.8 23.9 17.9 22.4l1.2-1.3.1-1.7 1.7-.6 1.2-1.3 1.7.5 1.7-.5 1.2 1.3 1.7.6.1 1.7 1.2 1.3-.9 1.5Z" fill="#5d6472" />
+            <circle cx="20.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <circle cx="27.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <path d="M19.6 27.5V23a4.2 4 0 0 1 8.4 0v4.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1" stroke-linejoin="round" />
+            <ellipse cx="20.6" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <ellipse cx="27" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <circle cx="21.9" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="25.7" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M23.7 23h.2M20.1 22.8l-.9-.2M27.5 22.8l.9-.2" stroke="#2e3138" stroke-width="0.7" stroke-linecap="round" />
+            <circle cx="21.9" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="25.7" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="22.2" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="26" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
+            <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
           </svg>
         </span>
       </a>
