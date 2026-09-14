@@ -83,6 +83,7 @@ const REQUIRED_UI_KEYS = [
   "summary_count_empty",
   "summary_section_line",
   "summary_issues_title",
+  "summary_show_more",
   "summary_no_issues",
   "reset",
   "reset_confirm",

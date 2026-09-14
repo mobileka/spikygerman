@@ -1085,6 +1085,12 @@ select[data-status="incorrect"] {
   gap: 8px;
 }
 
+.issues-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
 .issues-list .issue-link {
   --sc: var(--muted);
   display: flex;

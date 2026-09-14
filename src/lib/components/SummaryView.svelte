@@ -5,11 +5,20 @@
   import { format } from "../format";
   import { sectionHash } from "../routing";
 
+  const batch = 3;
+
   let heading: HTMLHeadingElement | undefined = $state();
+  let shown = $state(batch);
 
   const summary = $derived(
     summarize(content.sections, progress.answers, content.countries),
   );
+  const visibleIssues = $derived(summary.issues.slice(0, shown));
+  const remaining = $derived(summary.issues.length - shown);
+
+  function showMore(): void {
+    shown += batch;
+  }
 
   const statusKeys: Record<IssueStatus, string> = {
     almost: "result_almost",
@@ -82,7 +91,7 @@
     <h2>{t("summary_issues_title")}</h2>
     {#if summary.issues.length}
       <div class="issues-list">
-        {#each summary.issues as issue (issue.question.id)}
+        {#each visibleIssues as issue (issue.question.id)}
           <a
             class="issue-link is-{issue.status}"
             href={sectionHash(issue.section.id, issue.question.id)}
@@ -115,6 +124,15 @@
           </a>
         {/each}
       </div>
+      {#if remaining > 0}
+        <div class="issues-more">
+          <button class="btn btn-secondary" type="button" onclick={showMore}>
+            {format(t("summary_show_more"), {
+              n: Math.min(batch, remaining),
+            })}
+          </button>
+        </div>
+      {/if}
     {:else}
       <p class="issues-empty">{t("summary_no_issues")}</p>
     {/if}
