@@ -63,7 +63,7 @@
   const explanation = $derived(explanationText(question.id));
 </script>
 
-<div class="feedback" id={id} data-status={result.status}>
+<div class="feedback" id={id} data-status={result.status} role="status">
   <p class="st">
     {#if statusIcon[result.status]}
       <span aria-hidden="true">{statusIcon[result.status]}</span>
