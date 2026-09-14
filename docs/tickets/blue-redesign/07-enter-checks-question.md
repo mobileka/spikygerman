@@ -6,7 +6,7 @@ Design source of truth: `designs/00001 - Blue/` shared `keydown` handler (presen
 
 **Blocked by:** 03 (needs the question cards on screen).
 
-**Status:** ready-for-agent
+**Status:** in-progress
 
 - [ ] Enter inside a question card (text field, gap, or select) triggers that card's «Проверить», same as tapping it.
 - [ ] Enter with Shift, Ctrl, Meta or Alt is ignored.
