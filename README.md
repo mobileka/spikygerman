@@ -29,14 +29,14 @@ The interface is in Russian in the first MVP; German prompts stay side by side w
 
 ## Development
 
-Node.js 24+ (same as CI).
+Bun 1.3+ (same as CI).
 
 ```sh
-npm install
-npm run dev        # build the content, then start the dev server
-npm test           # unit tests
-npm run typecheck  # svelte-check
-npm run build      # content check + production build
+bun install
+bun run dev        # build the content, then start the dev server
+bun run test       # unit tests (vitest)
+bun run typecheck  # svelte-check
+bun run build      # content check + production build
 ```
 
 ## License

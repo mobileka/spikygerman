@@ -434,7 +434,7 @@ lists every type with a real classroom example, in full sentences, one
 idea at a time — not a dense spec. Each question then has exactly four
 things: `type`, `ask`, the answer (`answer` / `starts_with`+keywords /
 `options`+`answer` / `country`), and a single `example`. Copy a block,
-paste at the end, change the words, run `npm run check` — which speaks
+paste at the end, change the words, run `bun run check` — which speaks
 plainly (“q22: you forgot answer = … did you mean one of der/die/das?”).
 Nothing breaks silently.
 

@@ -4,12 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run content && vite",
-    "build": "npm run check && npm run content && vite build",
+    "dev": "bun run content && vite",
+    "build": "bun run check && bun run content && vite build",
     "preview": "vite preview",
-    "content": "tsx scripts/build-content.ts",
-    "check": "tsx scripts/check-content.ts",
-    "pretest": "npm run content",
+    "content": "bun scripts/build-content.ts",
+    "check": "bun scripts/check-content.ts",
+    "pretest": "bun run content",
     "test": "vitest run",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json"
   },
@@ -19,7 +19,6 @@
     "smol-toml": "^1.4.2",
     "svelte": "^5.43.2",
     "svelte-check": "^4.3.3",
-    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vite": "^7.1.13",
     "vitest": "^3.2.4"
