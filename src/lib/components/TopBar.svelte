@@ -1,16 +1,22 @@
 <script lang="ts">
   import { content, t } from "../content";
   import { format } from "../format";
-  import { countAnswered, progressPercent, totalQuestions } from "../progress";
+  import { summarizeProgress } from "../grading/summary";
   import type { Route } from "../routing";
   import { progress } from "../state.svelte";
   import { getTheme, toggleTheme } from "../theme.svelte";
+  import ProgressBar from "./ProgressBar.svelte";
 
   let { current }: { current: Route["name"] } = $props();
 
-  const total = totalQuestions(content.sections);
-  const answered = $derived(countAnswered(content.sections, progress.answers));
-  const percent = $derived(progressPercent(answered, total));
+  const counts = $derived(
+    summarizeProgress(
+      content.sections,
+      progress.answers,
+      content.countries,
+      progress.checked,
+    ),
+  );
   const dark = $derived(getTheme() === "dark");
   const themeLabel = $derived(dark ? t("theme_to_light") : t("theme_to_dark"));
 </script>
@@ -58,7 +64,9 @@
         <span class="brand-name">SpikyGerman</span>
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
-      <span class="level-chip">{t("level_chip")}</span>
+      {#if current !== "home"}
+        <span class="level-chip">{t("level_chip")}</span>
+      {/if}
       <button
         class="theme-toggle"
         type="button"
@@ -79,11 +87,12 @@
       </button>
     </div>
     {#if current !== "home"}
-      <div class="progress-line" aria-hidden="true">
-        <span class="progress-fill" style={`width: ${percent}%`}></span>
-      </div>
+      <ProgressBar {counts} />
       <p class="progress-text" role="status">
-        {format(t("progress_answered"), { answered, total })}
+        {format(t("progress_answered"), {
+          answered: counts.answered,
+          total: counts.total,
+        })}
       </p>
     {/if}
   </div>

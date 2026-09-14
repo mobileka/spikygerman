@@ -405,6 +405,7 @@ a {
 }
 
 .progress-line {
+  display: flex;
   margin-top: 8px;
   height: 6px;
   border-radius: 99px;
@@ -412,11 +413,21 @@ a {
   overflow: hidden;
 }
 
-.progress-line .progress-fill {
+.progress-seg {
   display: block;
   height: 100%;
-  width: 0;
-  background: var(--accent);
+}
+
+.progress-seg.seg-correct {
+  background: var(--success);
+}
+
+.progress-seg.seg-almost {
+  background: var(--warn);
+}
+
+.progress-seg.seg-incorrect {
+  background: var(--danger);
 }
 
 .progress-text {
@@ -701,6 +712,10 @@ select[data-status="incorrect"] {
 
 .lvl-btn[aria-expanded="true"] .chev {
   transform: rotate(180deg);
+}
+
+.lvl-progress {
+  margin-top: 12px;
 }
 
 #level-1-panel {

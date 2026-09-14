@@ -91,3 +91,46 @@ export function summarize(
 
   return summary;
 }
+
+export interface ProgressCounts {
+  total: number;
+  answered: number;
+  correct: number;
+  almost: number;
+  incorrect: number;
+}
+
+export function summarizeProgress(
+  sections: Section[],
+  answers: Record<string, Record<string, string>>,
+  countries: Country[],
+  checked: string[],
+): ProgressCounts {
+  const done = new Set(checked);
+  const counts: ProgressCounts = {
+    total: 0,
+    answered: 0,
+    correct: 0,
+    almost: 0,
+    incorrect: 0,
+  };
+
+  for (const section of sections) {
+    for (const question of section.questions) {
+      counts.total++;
+      if (!done.has(question.id)) continue;
+      const { status } = gradeQuestion(
+        question,
+        answers[question.id] ?? {},
+        countries,
+      );
+      if (status === "empty") continue;
+      counts.answered++;
+      if (status === "correct") counts.correct++;
+      else if (status === "almost") counts.almost++;
+      else counts.incorrect++;
+    }
+  }
+
+  return counts;
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import content from "../src/generated/content.json";
-import { summarize } from "../src/lib/grading/summary.ts";
+import { summarize, summarizeProgress } from "../src/lib/grading/summary.ts";
 import { gapField } from "../src/lib/grading/grade.ts";
 import type {
   CompiledContent,
@@ -201,6 +201,46 @@ function modelValues(question: Question): Record<string, string> {
       return { answer: question.answer ?? "" };
   }
 }
+
+describe("summarizeProgress", () => {
+  it("splits checked answers into correct, almost and incorrect", () => {
+    const counts = summarizeProgress(
+      sections,
+      {
+        q01: { answer: "Ja, das ist gut." },
+        q02: { answer: "Nein, das ist gut." },
+        q03: { answer: "Ich komme aus Ukraine" },
+      },
+      countries,
+      ["q01", "q02", "q03"],
+    );
+    expect(counts).toEqual({
+      total: 5,
+      answered: 3,
+      correct: 1,
+      almost: 1,
+      incorrect: 1,
+    });
+  });
+
+  it("ignores answers that have not been checked yet", () => {
+    const counts = summarizeProgress(
+      sections,
+      { q01: { answer: "Ja, das ist gut." } },
+      countries,
+      [],
+    );
+    expect(counts.answered).toBe(0);
+    expect(counts.correct).toBe(0);
+    expect(counts.total).toBe(5);
+  });
+
+  it("does not count a checked question that has no answer", () => {
+    const counts = summarizeProgress(sections, {}, countries, ["q04", "q05"]);
+    expect(counts.answered).toBe(0);
+    expect(counts.total).toBe(5);
+  });
+});
 
 describe("summarize with the real test", () => {
   const data = content as unknown as CompiledContent;

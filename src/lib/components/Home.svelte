@@ -1,14 +1,23 @@
 <script lang="ts">
   import { content, t } from "../content";
-  import { resetAll } from "../state.svelte";
+  import { summarizeProgress } from "../grading/summary";
+  import { totalQuestions } from "../progress";
+  import { resetAll, progress } from "../state.svelte";
   import { sectionHash, LEVEL_HASH } from "../routing";
   import { format } from "../format";
+  import ProgressBar from "./ProgressBar.svelte";
 
-  const totalQuestions = content.sections.reduce(
-    (total, section) => total + section.questions.length,
-    0,
-  );
+  const total = totalQuestions(content.sections);
   const totalSections = content.sections.length;
+
+  const counts = $derived(
+    summarizeProgress(
+      content.sections,
+      progress.answers,
+      content.countries,
+      progress.checked,
+    ),
+  );
 
   let expanded = $state(
     typeof window !== "undefined" && window.location.hash === LEVEL_HASH,
@@ -49,7 +58,7 @@
     {format(t("level_summary"), {
       level: 1,
       sections: totalSections,
-      questions: totalQuestions,
+      questions: total,
     })}
   </span>
   <svg
@@ -69,6 +78,16 @@
     />
   </svg>
 </button>
+
+<div class="lvl-progress">
+  <ProgressBar {counts} />
+  <p class="progress-text" role="status">
+    {format(t("progress_answered"), {
+      answered: counts.answered,
+      total: counts.total,
+    })}
+  </p>
+</div>
 
 <div id="level-1-panel" hidden={!expanded}>
   <ol class="lvl-grid">
