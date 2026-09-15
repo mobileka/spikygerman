@@ -14,7 +14,7 @@
    ../docs/drift-report.md for the full diff.
    ========================================================================= */
 
-:root {
+:root[data-design="arctic-blue"] {
   /* --- legacy stage / body ----------------------------------------------- */
   --stage-base:  var(--phone-stage-bg);
   --body-bg:     var(--phone-stage-bg);
@@ -54,7 +54,7 @@
   /* --- legacy device chrome -------------------------------------------- */
   --phone-body: #1f2530;                       /* light theme frame fill */
 }
-:root[data-theme="dark"] {
+:root[data-design="arctic-blue"][data-theme="dark"] {
   --phone-body: #0a0d13;
   --paper-fixed: #ffffff;
   --ink-fixed:   #101828;

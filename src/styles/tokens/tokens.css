@@ -16,7 +16,12 @@
    Both are opt-in; leave them unset for pixel-faithful output.
    ========================================================================= */
 
-:root {
+/* Two-axis theming (ticket 18): the design axis lives in
+   [data-design="arctic-blue"], the color-mode axis in
+   [data-theme="light|dark"]. A future re-skin adds one tokens file under a
+   new data-design value — no markup or state changes. */
+
+:root[data-design="arctic-blue"] {
   /* ---- type families ---------------------------------------------------- */
   --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -135,7 +140,7 @@
    OKLch derivations of the same blue family (hue 264). Surfaces step *up* in
    lightness while the canvas steps down, and the accent *brightens* so buttons
    read dark-on-blue instead of white-on-blue. Never hand-mix dark greys. */
-:root[data-theme="dark"] {
+:root[data-design="arctic-blue"][data-theme="dark"] {
   color-scheme: dark;
 
   --bg:            oklch(0.207 0.021 264);
@@ -182,7 +187,7 @@
 /* Theme boot contract — identical in every screen and required for no-flash
    first paint. Keep the key "spiky-theme" so app and tooling stay in sync.
    ---------------------------------------------------------------------------
-   <html lang="ru" data-theme="light">
+   <html lang="ru" data-design="arctic-blue" data-theme="light">
    <script>(function(){try{var t=localStorage.getItem("spiky-theme");
      if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia(
      "(prefers-color-scheme: dark)").matches)?"dark":"light";}

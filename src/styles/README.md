@@ -23,6 +23,34 @@ rendered from the system files, in both themes.
 | [`components/modules.css`](components/modules.css) | Exercise, commerce, summary and settings modules |
 | [`docs/drift-report.md`](docs/drift-report.md) | Every divergence found in the screens, with evidence and resolution |
 
+## Two-axis theming (ticket 18)
+
+Two independent axes, both carried on `<html>`:
+
+- `data-design="arctic-blue"` — the *design* theme. Exactly one is compiled
+  in; there is no switcher UI.
+- `data-theme="light|dark"` — the *color mode*, owned by
+  `src/lib/theme.svelte.ts` as before.
+
+Scoping rule, kept deliberately boring:
+
+- **Tokens are always scoped per design**: `:root[data-design="arctic-blue"]`
+  and `:root[data-design="arctic-blue"][data-theme="dark"]`. This applies to
+  `tokens/tokens.css` and `tokens/legacy-bridge.css` alike.
+- **Components stay global by default**, including their `data-theme` dark
+  adaptations (theme-toggle icon swap, large-picker arrow). A re-skin that
+  needs different component shapes adds its own scoped overrides later —
+  nothing is pre-scoped on speculation.
+
+A future theme is therefore: one new tokens file under a new `data-design`
+value, plus optional scoped component overrides. No markup or state changes.
+Sketch (not shipped):
+
+```css
+:root[data-design="forest"] { --accent: #2f7d4f; --bg: #f2f6f1; }
+:root[data-design="forest"][data-theme="dark"] { --accent: #7cc79a; }
+```
+
 ## Load order
 
 ```html
@@ -45,7 +73,7 @@ unlayered.
 The theme is still the screen's job, and it must happen before first paint:
 
 ```html
-<html lang="ru" data-theme="light">
+<html lang="ru" data-design="arctic-blue" data-theme="light">
 <script>(function(){try{var t=localStorage.getItem("spiky-theme");
   if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia(
   "(prefers-color-scheme: dark)").matches)?"dark":"light";}
