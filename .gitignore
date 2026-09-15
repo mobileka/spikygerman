@@ -5,6 +5,3 @@ src/generated
 .openchamber
 .DS_Store
 *.local
-
-# Copyrighted source material: stays local, never in the repository.
-/resources/sample_test.pdf
