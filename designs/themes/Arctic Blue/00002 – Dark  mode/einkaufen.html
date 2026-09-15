@@ -10,297 +10,21 @@
 </script>
 <title>Einkaufen — SpikyGerman</title>
 <meta name="description" content="Einkaufen · SpikyGerman" />
-<style>
-/* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio.
-   Put this @layer first; product CSS outside the layer always wins. */
-@layer od-layout {
-  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
-  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
-  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
-  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
-  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
-  .od-fill    { flex: 1 1 0; min-width: 0; }
-  .od-fixed   { flex: none; }
-  .od-grid    { display: grid; gap: var(--od-gap, 12px); grid-template-columns: repeat(var(--od-cols, 3), minmax(0, 1fr)); }
-  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
-  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
-  .od-tile { display: grid; grid-template-rows: auto 1fr; }
-  :where(.od-tile) > :where(*) { display: block; }
-  .od-media { display: block; width: 100%; height: auto; aspect-ratio: var(--od-ratio, auto); }
-  .od-media-cover { object-fit: cover; }
-  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .od-clamp-2, .od-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
-  .od-clamp-2 { -webkit-line-clamp: 2; }
-  .od-clamp-3 { -webkit-line-clamp: 3; }
-  .od-lines-2 { min-height: calc(2 * 1.4em); }
-  .od-nowrap  { white-space: nowrap; }
-  .od-keep    { word-break: keep-all; overflow-wrap: anywhere; }
-  .od-screen { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
-  .od-scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
-  .od-rail { display: flex; gap: var(--od-gap, 8px); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
-             padding-inline: var(--od-rail-pad, 16px); scroll-padding-inline: var(--od-rail-pad, 16px); }
-  .od-rail::-webkit-scrollbar { display: none; }
-  :where(.od-rail) > :where(*) { flex: none; scroll-snap-align: start; }
-  :where(.od-rail) > :where(:last-child) { margin-inline-end: var(--od-rail-pad, 16px); }
-  .od-spacer { flex: none; visibility: hidden; pointer-events: none; }
-  .od-touch  { min-width: 44px; min-height: 44px; }
-}
-/* /OD-LAYOUT-PRIMITIVES v1 */
-</style>
-<style>
-/* Cloudflare Kumo UI — OpenDesign semantic bindings (curated integration, MIT upstream). */
-:root{
-  --bg: #f5f8ff;
-  --surface: #ffffff;
-  --surface-warm: #eaf1ff;
-  --fg: #101828;
-  --fg-2: #344054;
-  --muted: #667085;
-  --meta: #2563eb;
-  --border: #d7e0ef;
-  --border-soft: #edf2f8;
-  --accent: #2563eb;
-  --accent-on: #ffffff;
-  --accent-hover: color-mix(in oklab, var(--accent), black 8%);
-  --accent-active: color-mix(in oklab, var(--accent), black 14%);
-  --success: #16a34a;
-  --warn: #f59e0b;
-  --danger: #ef4444;
-  --font-display:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --font-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  --text-xs:12px; --text-sm:13px; --text-base:14px; --text-lg:16px; --text-xl:20px; --text-2xl:24px; --text-3xl:30px;
-  --leading-body:1.5; --leading-tight:1.2; --tracking-display:0;
-  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px; --space-12:48px;
-  --radius-sm:4px; --radius-md:6px; --radius-lg:8px; --radius-pill:9999px;
-  --elev-flat:none; --elev-ring:0 0 0 1px var(--border); --elev-raised:0 1px 2px 0 rgba(0,0,0,.08);
-  --focus-ring:0 0 0 4px rgba(37,99,235,.22);
-  --motion-fast:150ms; --motion-base:250ms; --ease-standard:cubic-bezier(0.77,0,0.175,1);
-  --od-gap:8px; --od-rail-pad:16px;
-  --phone-screen-width:390px; --phone-screen-height:844px; --phone-bezel:10px;
-  --phone-outer-radius:52px; --phone-screen-radius:42px;
-  --phone-safe-top:50px; --phone-safe-bottom:29px;
-  --phone-system-fg:#17181a; --phone-screen-bg:#f8f8f9; --phone-stage-bg:#eaebee;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
-body{
-  min-height:100dvh;display:grid;place-items:center;padding:32px;
-  background:radial-gradient(circle at 50% 15%,var(--stage-glow),transparent 35%),var(--phone-stage-bg);
-  color:var(--fg);font:400 var(--text-base)/var(--leading-body) var(--font-body);
-}
-/* — handset shell (presentation only) — */
-.phone-frame{position:relative;width:calc(var(--phone-screen-width) + var(--phone-bezel)*2);height:calc(var(--phone-screen-height) + var(--phone-bezel)*2);padding:var(--phone-bezel);border-radius:var(--phone-outer-radius);background:linear-gradient(145deg,rgba(255,255,255,.2),transparent 17%),linear-gradient(160deg,#3f4146 0%,#202227 48%,#0b0c0f 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),inset 0 0 0 2px rgba(0,0,0,.85),0 32px 68px -20px rgba(10,12,16,.52),0 10px 24px -10px rgba(10,12,16,.32);isolation:isolate}
-.phone-frame::before,.phone-frame::after{content:"";position:absolute;z-index:-1;top:96px;bottom:96px;width:2px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.13) 16%,transparent 30%,transparent 72%,rgba(255,255,255,.07) 88%,transparent)}
-.phone-frame::before{left:0}.phone-frame::after{right:0}
-.hardware-button{position:absolute;width:4px;border-radius:3px;background:linear-gradient(90deg,#08090b,#2a2d33 60%,#08090b)}
-.hardware-button.volume{left:-3px;top:222px;height:86px}.hardware-button.power{right:-3px;top:270px;height:82px}
-.phone-screen{position:relative;width:var(--phone-screen-width);height:var(--phone-screen-height);overflow:hidden;border-radius:var(--phone-screen-radius);background:var(--phone-screen-bg)}
-.phone-content{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:var(--phone-safe-top);padding-bottom:var(--phone-safe-bottom);background:var(--bg)}
-.phone-content::-webkit-scrollbar{display:none}
-.camera-dot{position:absolute;z-index:20;top:13px;left:50%;width:10px;height:10px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle at 38% 35%,#344154 0 12%,#0a0c10 34%,#000 76%);pointer-events:none}
-.status-bar{position:absolute;z-index:15;inset:0 0 auto;height:var(--phone-safe-top);display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);align-items:start;padding:14px 20px 0;color:var(--phone-system-fg);opacity:.8;pointer-events:none}
-.status-time{justify-self:start;display:flex;align-items:center;height:15px;font-size:14px;font-weight:560;line-height:1}
-.status-cutout-zone{width:56px}
-.status-icons{justify-self:end;display:inline-flex;align-items:center;height:15px;gap:6px}
-.status-icons svg{display:block;flex:none;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
-.gesture-indicator{position:absolute;z-index:20;left:50%;bottom:8px;width:96px;height:4px;transform:translateX(-50%);border-radius:99px;background:var(--phone-system-fg);opacity:.86;pointer-events:none}
-/* — product — */
-:root{--app-pad:16px}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}button:disabled{cursor:not-allowed}
-:focus-visible{outline:none;box-shadow:var(--focus-ring);border-radius:var(--radius-md)}
-.app{min-height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
-.topbar{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border-soft);padding:10px var(--app-pad) 10px}
-.brand-row{display:flex;align-items:center;gap:10px}
-.mark{flex:none;width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--accent-on);display:grid;place-items:center;font-weight:600;font-size:16px}
-.brand-name{display:block;font-weight:600;font-size:var(--text-base);line-height:1.2}
-.brand-sub{display:block;color:var(--muted);font-size:var(--text-xs)}
 
-
-.progress-line{margin-top:8px;height:6px;border-radius:99px;background:var(--surface-warm);overflow:hidden}
-.progress-line > span{display:block;height:100%;width:0;background:var(--accent)}
-.progress-text{margin-top:4px;color:var(--muted);font-size:var(--text-xs)}
-.title-pick{margin:0 0 4px;}.title-select{width:100%;min-height:60px;font-size:var(--text-xl);font-weight:700;color:var(--fg);border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 8l5 5 5-5' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;padding:12px 42px 12px 16px;appearance:none;-webkit-appearance:none;}
+<!-- SpikyGerman design system layers (tokens first, components last).
+     Screen-specific rules follow and win ties. -->
+<link rel="stylesheet" href="../../../src/styles/tokens/tokens.css" />
+<link rel="stylesheet" href="../../../src/styles/tokens/legacy-bridge.css" />
+<link rel="stylesheet" href="../../../src/styles/tokens/od-layout-primitives.css" />
+<link rel="stylesheet" href="../../../src/styles/components/components.css" />
+<link rel="stylesheet" href="../../../src/styles/components/design-stage.css" />
+<link rel="stylesheet" href="../../../src/styles/components/modules.css" />
 
 
 
 
-.screen{padding:16px var(--app-pad) 20px}
-.hero h1{font-size:var(--text-2xl);line-height:var(--leading-tight);letter-spacing:var(--tracking-display);margin:0;font-weight:600}
-.hero p{margin:8px 0 0;color:var(--fg);max-width:68ch}
-.hero .hint{color:var(--muted);font-size:var(--text-sm)}
-.stat-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:16px 0}
-.od-stat{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--elev-ring),var(--elev-raised);padding:10px 6px;text-align:center}
-.od-stat strong{display:block;font-size:var(--text-xl);font-weight:600;line-height:1.2}
-.od-stat span{display:block;color:var(--muted);font-size:var(--text-xs)}
-.panel{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--elev-ring),var(--elev-raised);overflow:hidden}
-.panel + .panel{margin-top:12px}
-.panel-h{padding:12px 16px;border-bottom:1px solid var(--border-soft)}
-.panel-h h2{margin:0;font-size:var(--text-lg);font-weight:600}
-.panel-h p{margin:4px 0 0;color:var(--muted);font-size:var(--text-sm)}
-.panel-b{padding:16px}
-.section-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.section-link{display:flex;align-items:center;gap:12px;min-height:64px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);text-decoration:none;color:inherit}
-.section-link:hover{border-color:var(--accent);background:color-mix(in oklab, var(--accent), transparent 93%)}
-.section-num{flex:none;width:36px;height:36px;border-radius:50%;background:color-mix(in oklab, var(--accent), transparent 90%);color:var(--accent-active);display:grid;place-items:center;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600}
-.section-link .t{font-weight:600;font-size:var(--text-base)}
-.section-link .s{color:var(--muted);font-size:var(--text-sm)}
-.section-link .meta{margin-left:auto;text-align:right;display:grid;gap:2px;flex:none}
-.badge{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);font-weight:500;background:var(--surface-warm);border-radius:var(--radius-pill);padding:4px 8px;color:var(--fg)}
-.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
-.badge.done{color:var(--fg)}.badge.done::before{background:var(--success)}
-.qcard{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);padding:14px;margin:0 0 12px}
-.qcard[data-status="correct"]{border-color:var(--success)}
-.qcard[data-status="almost"]{border-color:var(--warn)}
-.qcard[data-status="incorrect"]{border-color:var(--danger)}
-.q-instr{color:var(--muted);font-size:var(--text-sm);margin:0 0 6px}
-.q-ask{display:block;font-weight:600;margin-bottom:10px;white-space:pre-line}
-.q-ask .qn{color:var(--muted);font-weight:500;margin-right:6px}
-.example{background:color-mix(in oklab, var(--accent), transparent 95%);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:12px}
-.example p{margin:0;font-size:var(--text-sm)}
-.example .ex-k{font-size:var(--text-xs);font-weight:600;color:var(--muted);margin-bottom:4px}
-.field{margin-bottom:10px}
-.field label{display:block;font-size:var(--text-sm);font-weight:500;margin-bottom:4px}
-.field input[type="text"],.field select{width:100%;min-height:48px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface)}
-.field input:hover,.field select:hover{border-color:var(--muted)}
-.field input[data-status="correct"],.field select[data-status="correct"]{border-color:var(--success)}
-.field input[data-status="almost"],.field select[data-status="almost"]{border-color:var(--warn)}
-.field input[data-status="incorrect"],.field select[data-status="incorrect"]{border-color:var(--danger)}
-.gap-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px}
-.gap-line input,.gap-line select{flex:1 1 140px;min-height:48px;border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 12px;background:var(--surface)}
-.choice{display:grid;gap:8px;margin-bottom:10px;border:0;padding:0}
-.choice legend{font-size:var(--text-sm);font-weight:500;margin-bottom:4px}
-.choice label{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer}
-.choice input{width:22px;height:22px;accent-color:var(--accent)}
-.choice label:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--paper))}
-.choice label:has(input:focus-visible){box-shadow:var(--focus-ring)}
-.btn{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid transparent;border-radius:var(--radius-lg);font-weight:500;font-size:var(--text-base);text-decoration:none}
-.btn-primary{background:var(--accent);color:var(--accent-on);width:100%}
-.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
-.btn-primary:active{background:var(--accent-active);color:var(--accent-on);transform:none}
-.btn-secondary{border-color:var(--border);background:var(--surface);color:var(--fg)}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-warm)}
-.btn:disabled{background:var(--surface-warm);color:var(--muted);border-color:var(--border-soft)}
-.feedback{border-radius:var(--radius-md);padding:10px 12px;margin-top:10px;font-size:var(--text-sm)}
-.feedback[data-status="correct"]{background:color-mix(in srgb,var(--success) 12%,var(--paper))}
-.feedback[data-status="almost"]{background:color-mix(in srgb,var(--warn) 14%,var(--paper))}
-.feedback[data-status="incorrect"]{background:color-mix(in srgb,var(--danger) 10%,var(--paper))}
-.feedback .st{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:4px}
-.feedback .st svg{flex:none}
-.feedback .model,.feedback .tip{color:var(--fg);margin:4px 0 0}
-.feedback .model code{font-family:var(--font-mono);font-size:.9em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.skip-link{position:absolute;left:-999px;top:0;background:var(--accent);color:#fff;padding:8px 12px;z-index:60}
-.skip-link:focus{left:8px}
-.bottombar{background:var(--surface);border-top:1px solid var(--border-soft);padding:8px var(--app-pad) calc(10px + env(safe-area-inset-bottom,0px));display:grid;gap:8px}
-.umlaut{display:flex;gap:6px;overflow-x:auto}
-.umlaut button{flex:none;min-width:46px;min-height:44px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);font-size:17px}
-.umlaut button:hover{background:var(--surface-warm)}
-.pagenav{display:flex;gap:8px}
-.pagenav .btn{flex:1}
-.tabbar{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface);border-top:1px solid var(--border-soft);padding:6px 8px calc(8px + env(safe-area-inset-bottom,0px))}
-.tab{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:52px;justify-content:center;border-radius:var(--radius-md);text-decoration:none;color:var(--muted);font-size:var(--text-xs);font-weight:500}
-.tab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.tab[aria-current="page"]{color:var(--fg);background:var(--surface-warm)}
-.price-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:var(--text-sm)}
-.price-table caption{text-align:left;font-weight:600;margin-bottom:4px}
-.price-table th,.price-table td{border:1px solid var(--border);padding:8px 10px;text-align:left}
-.food-photo{border-radius:var(--radius-md);background:var(--surface-warm);padding:20px;text-align:center;font-size:40px;margin:0 0 10px}
-.issue-link{display:grid;gap:2px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);text-decoration:none;color:inherit;min-height:56px}
-.issue-link:hover{background:var(--surface-warm)}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-@media (max-height:927px){.phone-frame{zoom:.9}}
-@media (max-height:840px){.phone-frame{zoom:.82}}
-@media (max-height:771px){.phone-frame{zoom:.74}}
-@media (max-height:702px){.phone-frame{zoom:.66}}
-@media (max-width:480px){body{padding:0;display:block}.phone-frame{width:100%;height:100dvh;padding:0;border-radius:0;background:none;box-shadow:none;zoom:1}.phone-frame::before,.phone-frame::after,.hardware-button{display:none}.phone-screen{width:100%;height:100dvh;border-radius:0}}
-</style>
-<style>
-/* overflow fix v1 — keep every app region inside the 390px phone screen */
-.app,.screen,.topbar,.panel,.panel-b,.qcard,.bottombar,.tabbar{max-width:100%;}
-.app>*,.screen>*,.brand-row>*,.pagenav>*,.od-row>*,.section-link>*{min-width:0;}
-.brand-row{max-width:100%;}
-
-.section-rail{max-width:100%;}
-.screen{overflow:visible;min-width:0;}
-.hero p{max-width:100%;}
-.q-ask,.q-instr,.section-link .t,.section-link .s,.feedback,.feedback .model,.feedback .tip,.choice label,.panel-h p,.example p{overflow-wrap:anywhere;word-break:break-word;}
-.stat-strip>*{min-width:0;}
-.stat-strip strong{font-size:18px;}
-.stat-strip span{overflow-wrap:anywhere;}
-.section-link .meta{min-width:0;}
-.choice label{min-width:0;}
-.choice input{flex:none;}
-.price-table th,.price-table td{overflow-wrap:anywhere;word-break:break-word;}
-.feedback .model code{overflow-wrap:anywhere;word-break:break-word;}
-.pagenav .btn,.od-row .btn{min-width:0;overflow-wrap:anywhere;}
-.umlaut{max-width:100%;}
-.photo-ph{margin:0 0 10px;border:1px dashed var(--border-strong,#9aa4b1);border-radius:8px;padding:12px;background:var(--surface);}
-.photo-ph figcaption{font-size:13px;margin-bottom:4px;}
-img{max-width:100%;height:auto;}
-.tabbar{position:sticky;bottom:0;z-index:6;}.mark{padding:0;overflow:hidden;background:var(--surface-warm);}.mark svg{width:100%;height:100%;display:block;}.mark-link{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;flex:none;border-radius:8px;margin-left:-6px;}.level-chip{flex:none;margin-left:auto;display:inline-flex;align-items:center;background:var(--surface-warm);border-radius:var(--radius-pill);padding:8px 12px;font-size:var(--text-xs);font-weight:600;color:var(--fg);white-space:nowrap;min-height:44px;}.bottombar[hidden]{display:none;}footer{position:sticky;bottom:0;z-index:7;background:var(--bg);}
-</style>
 
 
-<style>
-/* — theme layer: light (default) + dark ——————————————————————————————
-   Dark tokens are OKLch derivations of the Kumo blue system: same hue
-   family as --accent, surfaces step upward in lightness, and the accent
-   brightens so buttons flip to dark-on-blue instead of white-on-blue. */
-:root{color-scheme:light;--paper:#ffffff;--code-bg:rgba(0,0,0,.05);--stage-glow:rgba(255,255,255,.94)}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:oklch(0.207 0.021 264);
-  --surface:oklch(0.262 0.024 264);
-  --surface-warm:oklch(0.322 0.03 264);
-  --fg:oklch(0.965 0.006 264);
-  --fg-2:oklch(0.86 0.012 264);
-  --muted:oklch(0.72 0.02 264);
-  --meta:oklch(0.72 0.14 264);
-  --border:oklch(0.372 0.028 264);
-  --border-soft:oklch(0.308 0.022 264);
-  --accent:oklch(0.7 0.16 264);
-  --accent-on:oklch(0.17 0.02 264);
-  --accent-hover:color-mix(in oklab,var(--accent),white 8%);
-  --accent-active:color-mix(in oklab,var(--accent),white 14%);
-  --success:oklch(0.76 0.16 152);
-  --warn:oklch(0.82 0.15 78);
-  --danger:oklch(0.71 0.18 25);
-  --paper:oklch(0.235 0.024 264);
-  --code-bg:rgba(255,255,255,.09);
-  --stage-glow:oklch(0.62 0.17 264 / .16);
-  --elev-raised:0 1px 3px 0 rgba(0,0,0,.55);
-  --focus-ring:0 0 0 4px oklch(0.7 0.16 264 / .4);
-  --phone-system-fg:oklch(0.95 0.005 264);
-  --phone-screen-bg:oklch(0.115 0.012 264);
-  --phone-stage-bg:oklch(0.135 0.014 264);
-}
-/* the brown mascot needs a light tile to stay legible on dark chrome */
-:root[data-theme="dark"] .mark{background:oklch(0.94 0.015 258)}
-@media (min-width:481px){
-  :root[data-theme="dark"] .phone-frame{
-    background:linear-gradient(145deg,rgba(255,255,255,.16),transparent 17%),linear-gradient(160deg,#34373d 0%,#1a1c21 48%,#07080b 100%);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 0 0 2px rgba(0,0,0,.85),0 34px 72px -20px rgba(0,0,0,.7),0 10px 26px -10px rgba(0,0,0,.5);
-  }
-}
-:root[data-theme="dark"] body{background:radial-gradient(circle at 50% 15%,var(--stage-glow),transparent 35%),var(--phone-stage-bg)}
-:root[data-theme="dark"] input::placeholder,:root[data-theme="dark"] textarea::placeholder{color:var(--muted);opacity:1}
-:root[data-theme="dark"] .title-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath d='M5 8l5 5 5-5' fill='none' stroke='%2380b0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
-:root[data-theme="dark"] .skip-link{color:var(--accent-on)}
-:root[data-theme="dark"] .od-stat.st-al strong{color:color-mix(in oklab,var(--warn),white 12%)}
-:root[data-theme="dark"] .issue-chip{color:color-mix(in oklab,var(--sc),white 50%)}
-/* — topbar theme toggle — */
-.theme-toggle{flex:none;margin-left:auto;display:inline-grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);color:var(--fg);cursor:pointer;transition:background var(--motion-fast) var(--ease-standard),border-color var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard)}
-.theme-toggle:hover{border-color:var(--accent);background:var(--surface-warm);color:var(--fg)}
-.theme-toggle:active{transform:translateY(1px)}
-.theme-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.theme-toggle .tt-sun{display:none}
-.theme-toggle .tt-moon{display:block}
-:root[data-theme="dark"] .theme-toggle .tt-sun{display:block}
-:root[data-theme="dark"] .theme-toggle .tt-moon{display:none}
-.brand-row>.level-chip+.theme-toggle{margin-left:8px}
-</style>
 <script>
 /* theme toggle wiring — system preference is the default, an explicit
    choice is remembered under "spiky-theme". */
@@ -338,16 +62,19 @@ img{max-width:100%;height:auto;}
 </script>
 </head>
 <body>
+<div class="od-stage">
 <div class="phone-frame" data-phone-shell data-platform="neutral">
-<span class="hardware-button volume" aria-hidden="true"></span>
-<span class="hardware-button power" aria-hidden="true"></span>
+<span class="hardware-button is-mute" aria-hidden="true"></span>
+<span class="hardware-button is-vol-up" aria-hidden="true"></span>
+<span class="hardware-button is-vol-dn" aria-hidden="true"></span>
+<span class="hardware-button is-power" aria-hidden="true"></span>
 <section class="phone-screen" data-phone-screen>
-<main class="phone-content" data-phone-content>
-<!-- APP CONTENT START -->
+<div class="status-bar" aria-hidden="true"><span class="status-time">9:41</span><span class="status-icons"><svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg></span></div>
+<div class="status-cutout-zone" aria-hidden="true"><span class="camera-dot"></span></div>
 <a class="skip-link" href="#screens">К содержанию</a>
 <div class="app">
 
-<header class="topbar"><div class="brand-row"><a class="mark-link" href="index.html" aria-label="SpikyGerman — на главную"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true">
+<header class="topbar"><div class="brand-row"><a class="mark" href="index.html" aria-label="SpikyGerman — на главную"><svg viewBox="0 0 32 32" aria-hidden="true">
             <path d="M5.1 23.3 2.2 22.2l1.4-2.6-2-2.3 2.5-1.7-.7-2.9 3.1-.4.9-2.8 2.9.9 2.2-2.1 2.2 2.1 2.9-.9.9 2.8 3.1.4-.7 2.9 2.5 1.7-2 2.3 1.4 2.6-2.9 1.1Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.9" stroke-linejoin="round" />
             <path d="M4.6 21.3 2.9 19.6l1.2-2-1.2-2.2 2.1-1.3.6-2.3 2.5-.2 1.6-1.8 2.3.9 2.3-.9 1.6 1.8 2.5.2.6 2.3 2.1 1.3-1.2 2.2 1.2 2-1.7 1.7Z" fill="#5d6472" />
             <circle cx="5.8" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
@@ -378,16 +105,14 @@ img{max-width:100%;height:auto;}
             <circle cx="26" cy="22.8" r="0.22" fill="#ffffff" />
             <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
             <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
-          </svg></span></a><span><span class="brand-name">SpikyGerman</span><span class="brand-sub">Немецкий без острых углов · Deutsch A0</span></span><span class="level-chip" data-od-id="level-badge">Уровень 1</span><button class="theme-toggle" type="button" data-theme-toggle data-od-id="theme-toggle" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z"/></svg></button></div><div class="progress-line" aria-hidden="true"><span id="progressFill"></span></div><p class="progress-text" id="progressText" role="status">Прогресс сохраняется на Вашем устройстве</p></header>
-<div class="screen" id="screens" tabindex="-1"><header class="hero"><h1 class="sr-only">Einkaufen</h1><div class="title-pick"><select id="secPick" class="title-select" aria-label="Раздел" onchange="if(this.value)location.href=this.value;"><option value="sich-vorstellen.html">Sich vorstellen</option><option value="dialoge.html">Dialoge</option><option value="einkaufen.html" selected>Einkaufen</option><option value="was-ist-das.html">Was ist das?</option><option value="preise.html">Preise</option><option value="artikel-und-verben.html">Artikel und Verben</option></select></div><p>Помогите Сандре и Тому составить список покупок. Посмотрите на холодильник и ответьте на вопросы полными предложениями.</p></header><div style="height:12px"></div><div class="panel"><div class="panel-b"><figure class="photo-ph"><figcaption><strong>Фото:</strong> Рисунок: холодильник с продуктами.</figcaption><p class="sr-only">На рисунке холодильник. В холодильнике лежат бананы и помидоры. Яиц в холодильнике нет. Перца (Paprika) в холодильнике тоже нет.</p></figure></div></div><div class="example"><p class="ex-k">Пример</p><p class="example-text">Haben wir Milch?<br/>Ja, wir haben Milch. / Nein, wir haben keine Milch.</p></div><article class="qcard" id="q13" tabindex="-1" data-qid="q13" data-kind="exact" data-answer="ja, wir haben bananen." data-model="Ja, wir haben Bananen."><span class="q-ask"><span class="qn">13.</span>Haben wir Bananen?</span><div class="field"><label for="f-q13">Ваш ответ</label><input id="f-q13" data-k="v" type="text" autocapitalize="none" autocomplete="off" /></div><button class="btn btn-primary" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback" data-status="empty"></div></article><article class="qcard" id="q14" tabindex="-1" data-qid="q14" data-kind="exact" data-answer="nein, wir haben keine eier." data-model="Nein, wir haben keine Eier."><span class="q-ask"><span class="qn">14.</span>Haben wir Eier?</span><div class="field"><label for="f-q14">Ваш ответ</label><input id="f-q14" data-k="v" type="text" autocapitalize="none" autocomplete="off" /></div><button class="btn btn-primary" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback" data-status="empty"></div></article><article class="qcard" id="q15" tabindex="-1" data-qid="q15" data-kind="exact" data-answer="nein, wir haben keine paprika." data-model="Nein, wir haben keine Paprika."><span class="q-ask"><span class="qn">15.</span>Haben wir Paprika?</span><div class="field"><label for="f-q15">Ваш ответ</label><input id="f-q15" data-k="v" type="text" autocapitalize="none" autocomplete="off" /></div><button class="btn btn-primary" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback" data-status="empty"></div></article><article class="qcard" id="q16" tabindex="-1" data-qid="q16" data-kind="exact" data-answer="ja, wir haben tomaten." data-model="Ja, wir haben Tomaten."><span class="q-ask"><span class="qn">16.</span>Haben wir Tomaten?</span><div class="field"><label for="f-q16">Ваш ответ</label><input id="f-q16" data-k="v" type="text" autocapitalize="none" autocomplete="off" /></div><button class="btn btn-primary" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback" data-status="empty"></div></article><article class="qcard" id="q17" tabindex="-1" data-qid="q17" data-kind="translate" data-frame="wir brauchen" data-keywords="paprika|eier|fisch" data-model="Wir brauchen Paprika, Eier und Fisch."><p class="q-instr">Переведите на немецкий.</p><span class="q-ask"><span class="qn">17.</span>Нам нужны перец, яйца и рыба.</span><div class="example"><p class="ex-k">Пример</p><p class="example-text">Нам нужен сыр. → Wir brauchen Käse.</p></div><div class="field"><label for="f-q17">Ваш ответ</label><input id="f-q17" data-k="v" type="text" autocapitalize="none" autocomplete="off" /></div><button class="btn btn-primary" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback" data-status="empty"></div></article><div style="height:12px"></div><div class="panel"><div class="panel-b"><div class="od-row"><a class="btn btn-secondary od-fill" href="dialoge.html">Назад</a><a class="btn btn-secondary od-fill" href="was-ist-das.html">Дальше</a></div></div></div><script type="application/json" id="explData">{"q13": "Бананы есть: Ja, wir haben Bananen.", "q14": "Eier — множественное число: keine Eier.", "q15": "Paprika — без артикля: keine Paprika.", "q16": "Помидоры есть: Ja, wir haben Tomaten.", "q17": "Paprika и Fisch — без артикля. Eier — множественное число, тоже без артикля."}</script><script type="application/json" id="modelData">{"q13": "Ja, wir haben Bananen.", "q14": "Nein, wir haben keine Eier.", "q15": "Nein, wir haben keine Paprika.", "q16": "Ja, wir haben Tomaten.", "q17": "Wir brauchen Paprika, Eier und Fisch."}</script></div>
+          </svg></a><span class="brand-text">
+<span class="brand-name">SpikyGerman</span><span class="brand-sub">Немецкий без острых углов · Deutsch A0</span></span><span class="level-chip" data-od-id="level-badge">Уровень 1</span><button class="theme-toggle" type="button" data-theme-toggle data-od-id="theme-toggle" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z"/></svg></button></div><div class="lvl-progress"><div class="progress-line is-segmented" aria-hidden="true"><span class="progress-seg seg-correct" id="pgCorrect"></span><span class="progress-seg seg-almost" id="pgAlmost"></span><span class="progress-seg seg-incorrect" id="pgIncorrect"></span></div><p class="progress-text" id="progressText" role="status">Прогресс сохраняется на Вашем устройстве</p></div></header>
+<main class="screen" id="screens" tabindex="-1"><header class="hero"><h1 class="sr-only">Einkaufen</h1><div><select id="secPick" class="select-lg" aria-label="Раздел" onchange="if(this.value)location.href=this.value;"><option value="sich-vorstellen.html">Sich vorstellen</option><option value="dialoge.html">Dialoge</option><option value="einkaufen.html" selected>Einkaufen</option><option value="was-ist-das.html">Was ist das?</option><option value="preise.html">Preise</option><option value="artikel-und-verben.html">Artikel und Verben</option></select></div><p>Помогите Сандре и Тому составить список покупок. Посмотрите на холодильник и ответьте на вопросы полными предложениями.</p></header><div class="panel"><div class="panel-b"><figure class="photo-ph"><figcaption><strong>Фото:</strong> Рисунок: холодильник с продуктами.</figcaption><p class="sr-only">На рисунке холодильник. В холодильнике лежат бананы и помидоры. Яиц в холодильнике нет. Перца (Paprika) в холодильнике тоже нет.</p></figure></div></div><div class="example"><strong>Пример</strong> Haben wir Milch?<br/>Ja, wir haben Milch. / Nein, wir haben keine Milch.</div><article class="qcard" id="q13" tabindex="-1" data-qid="q13" data-kind="exact" data-answer="ja, wir haben bananen." data-model="Ja, wir haben Bananen."><span class="q-ask"><span class="qn">13.</span>Haben wir Bananen?</span><label class="field-label" for="f-q13">Ваш ответ</label><input class="field" id="f-q13" data-k="v" type="text" autocapitalize="none" autocomplete="off" /><button class="btn btn-primary is-block" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback is-empty"></div></article><article class="qcard" id="q14" tabindex="-1" data-qid="q14" data-kind="exact" data-answer="nein, wir haben keine eier." data-model="Nein, wir haben keine Eier."><span class="q-ask"><span class="qn">14.</span>Haben wir Eier?</span><label class="field-label" for="f-q14">Ваш ответ</label><input class="field" id="f-q14" data-k="v" type="text" autocapitalize="none" autocomplete="off" /><button class="btn btn-primary is-block" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback is-empty"></div></article><article class="qcard" id="q15" tabindex="-1" data-qid="q15" data-kind="exact" data-answer="nein, wir haben keine paprika." data-model="Nein, wir haben keine Paprika."><span class="q-ask"><span class="qn">15.</span>Haben wir Paprika?</span><label class="field-label" for="f-q15">Ваш ответ</label><input class="field" id="f-q15" data-k="v" type="text" autocapitalize="none" autocomplete="off" /><button class="btn btn-primary is-block" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback is-empty"></div></article><article class="qcard" id="q16" tabindex="-1" data-qid="q16" data-kind="exact" data-answer="ja, wir haben tomaten." data-model="Ja, wir haben Tomaten."><span class="q-ask"><span class="qn">16.</span>Haben wir Tomaten?</span><label class="field-label" for="f-q16">Ваш ответ</label><input class="field" id="f-q16" data-k="v" type="text" autocapitalize="none" autocomplete="off" /><button class="btn btn-primary is-block" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback is-empty"></div></article><article class="qcard" id="q17" tabindex="-1" data-qid="q17" data-kind="translate" data-frame="wir brauchen" data-keywords="paprika|eier|fisch" data-model="Wir brauchen Paprika, Eier und Fisch."><p class="q-instr">Переведите на немецкий.</p><span class="q-ask"><span class="qn">17.</span>Нам нужны перец, яйца и рыба.</span><div class="example"><strong>Пример</strong> Нам нужен сыр. → Wir brauchen Käse.</div><label class="field-label" for="f-q17">Ваш ответ</label><input class="field" id="f-q17" data-k="v" type="text" autocapitalize="none" autocomplete="off" /><button class="btn btn-primary is-block" data-check type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5 8.5 15 16 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Проверить</span></button><div class="feedback is-empty"></div></article><div style="height:12px"></div><div class="panel"><div class="panel-b"><div class="od-row"><a class="btn btn-secondary od-fill" href="dialoge.html">Назад</a><a class="btn btn-secondary od-fill" href="was-ist-das.html">Дальше</a></div></div></div><script type="application/json" id="explData">{"q13": "Бананы есть: Ja, wir haben Bananen.", "q14": "Eier — множественное число: keine Eier.", "q15": "Paprika — без артикля: keine Paprika.", "q16": "Помидоры есть: Ja, wir haben Tomaten.", "q17": "Paprika и Fisch — без артикля. Eier — множественное число, тоже без артикля."}</script><script type="application/json" id="modelData">{"q13": "Ja, wir haben Bananen.", "q14": "Nein, wir haben keine Eier.", "q15": "Nein, wir haben keine Paprika.", "q16": "Ja, wir haben Tomaten.", "q17": "Wir brauchen Paprika, Eier und Fisch."}</script></main>
 <footer><div class="bottombar" hidden><div class="umlaut" id="umlautRow" role="toolbar" aria-label="Немецкие буквы"></div></div><nav class="tabbar" aria-label="Основная навигация"><a class="tab" href="index.html"><svg viewBox="0 0 20 20"><path d="M3 10.5 10 3.5l7 7M5 9.5V16h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Главная</span></a><a class="tab" id="continueTab" href="sich-vorstellen.html" aria-current="page"><svg viewBox="0 0 20 20"><path d="M4 5h12v7H9l-3 3v-3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Продолжить</span></a><a class="tab" href="summary.html"><svg viewBox="0 0 20 20"><path d="M4 16V9m4 7V5m4 11v-6m4 6V7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Итоги</span></a></nav></footer>
 </div>
-<!-- APP CONTENT END -->
-</main>
-<div class="status-bar" aria-hidden="true"><span class="status-time">9:41</span><span class="status-cutout-zone"></span><span class="status-icons"><svg width="15" height="12" viewBox="0 0 15 12"><path d="M1.5 10.5v-2m4 2v-4.5m4 4.5v-7m4 7v-9" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg><svg width="15" height="12" viewBox="0 0 16 12"><path d="M1.5 4.7a9.2 9.2 0 0 1 13 0M4.2 7.3a5.4 5.4 0 0 1 7.6 0M6.9 10a1.55 1.55 0 0 1 2.2 0" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg><svg width="19" height="11" viewBox="0 0 20 11"><rect x=".75" y="1.25" width="16.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span></div>
-<div class="camera-dot" aria-hidden="true"></div>
-<div class="gesture-indicator" aria-hidden="true"></div>
+<span class="gesture-indicator" aria-hidden="true"></span>
 </section>
+</div>
 </div>
 <script>
 "use strict";
@@ -406,26 +131,26 @@ function gradeCard(card){
  function v(key){var el=card.querySelector('[data-k="'+key+'"]');return el?el.value:"";}
  if(k==="sentence"){var t=norm(v("v"));if(!t)return{st:"empty"};if(card.dataset.country&&/aus\s+(ukraine|t\u00fcrkei|turkei)$/.test(t))return{st:"almost"};if(t.indexOf(card.dataset.frame)!==0)return{st:"incorrect"};if(card.dataset.end&&t.lastIndexOf(card.dataset.end)!==t.length-card.dataset.end.length)return{st:"incorrect"};return{st:"correct"};}
  if(k==="gaps"){var ok=true,any=false,inputs=card.querySelectorAll("[data-accept]");inputs.forEach(function(el){var acc=(el.dataset.accept||"").split("|");var val=normT(el.value);if(val!=="")any=true;if(val===""||acc.indexOf(val)<0)ok=false;});if(!any)return{st:"empty"};return{st:ok?"correct":"incorrect"};}
- if(k==="choice"){var c=card.querySelector("input:checked");if(!c)return{st:"empty"};return{st:c.value===card.dataset.answer?"correct":"incorrect"};}
+ if(k==="choice"){var c=card.querySelector(".choice[aria-pressed=\"true\"]");if(!c)return{st:"empty"};return{st:c.dataset.v===card.dataset.answer?"correct":"incorrect"};}
  if(k==="exact"){var raw=v("v"),t2=norm(raw);if(!t2)return{st:"empty"};var exp=norm(card.dataset.answer);if(t2===exp)return{st:"correct"};if(t2.indexOf("nein")===0){var mk=keywords(exp);var has=mk.some(function(w){return t2.indexOf(w)>=0;});var two=raw.split(/[.!?]+/).filter(function(s){return s.trim().length>0;}).length>=2;if(has&&two)return{st:"correct"};return{st:"almost"};}return{st:"incorrect"};}
  if(k==="translate"){var t3=norm(v("v"));if(!t3)return{st:"empty"};if(t3.indexOf(card.dataset.frame)<0)return{st:"incorrect",noframe:true};var miss=card.dataset.keywords.split("|").filter(function(w){return t3.indexOf(w)<0;});if(!miss.length)return{st:"correct"};return{st:"incorrect",miss:miss};}
  return{st:"empty"};
 }
 var UI={correct:"\u0412\u0435\u0440\u043d\u043e",almost:"\u041f\u043e\u0447\u0442\u0438!",incorrect:"\u041e\u0448\u0438\u0431\u043a\u0430",empty:"\u041d\u0435\u0442 \u043e\u0442\u0432\u0435\u0442\u0430"};
-function paint(card,res,expl,model){try{S.results=S.results||{};S.results[card.dataset.qid]=res.st;save();}catch(e){}card.dataset.status=res.st;card.querySelectorAll("input[type=text],select").forEach(function(i){i.dataset.status=res.st;});var h="";if(res.st!=="empty"){var ic=res.st==="correct"?"\u2713":(res.st==="almost"?"!":"\u2715");h='<div class="feedback" data-status="'+res.st+'" role="status"><p class="st"><span aria-hidden="true">'+ic+'</span><span>'+UI[res.st]+'</span></p>';if(model)h+='<p class="model">\u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442: <code>'+model+'</code></p>';if(expl)h+='<p class="tip">\u041f\u043e\u044f\u0441\u043d\u0435\u043d\u0438\u0435: '+expl+'</p>';if(res.miss)h+='<p class="tip">\u041d\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442: '+res.miss.join(", ")+'.</p>';h+="</div>";}else{h='<div class="feedback" data-status="empty"><p class="st"><span>'+UI.empty+'</span></p></div>';}card.querySelector(".feedback").outerHTML=h;}
+function paint(card,res,expl,model){try{S.results=S.results||{};S.results[card.dataset.qid]=res.st;save();}catch(e){}card.dataset.state=res.st;card.querySelectorAll("input[type=text],select").forEach(function(i){i.dataset.state=res.st;});var h="";if(res.st!=="empty"){var ic=res.st==="correct"?"\u2713":(res.st==="almost"?"!":"\u2715");h='<div class="feedback '+res.st+'" role="status"><span class="fb-glyph" aria-hidden="true">'+ic+'</span><div class="fb-main"><strong>'+UI[res.st]+'</strong>';if(model)h+='<p class="model">\u041f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442: <code>'+model+'</code></p>';if(expl)h+='<p class="tip">\u041f\u043e\u044f\u0441\u043d\u0435\u043d\u0438\u0435: '+expl+'</p>';if(res.miss)h+='<p class="tip">\u041d\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442: '+res.miss.join(", ")+'.</p>';h+="</div></div>";}else{h='<div class="feedback is-empty"><span class="fb-glyph" aria-hidden="true">\u25cb</span><div class="fb-main"><strong>'+UI.empty+'</strong></div></div>';}card.querySelector(".feedback").outerHTML=h;}
 document.addEventListener("DOMContentLoaded",function(){drawU();
  var EXPL=JSON.parse(document.getElementById("explData").textContent||"{}");
  var MODELS=JSON.parse(document.getElementById("modelData").textContent||"{}");
- document.querySelectorAll(".qcard").forEach(function(card){var qid=card.dataset.qid;var sv=S.answers[qid]||{};Object.keys(sv).forEach(function(k){card.querySelectorAll('[data-k="'+k+'"]').forEach(function(el){if(el.type==="radio"){if(el.value===sv[k])el.checked=true;}else el.value=sv[k];});});if(S.checked[qid])paint(card,gradeCard(card),EXPL[qid],MODELS[qid]);});
- document.addEventListener("input",function(e){var card=e.target.closest(".qcard");if(!card)return;var qid=card.dataset.qid;S.answers[qid]=S.answers[qid]||{};S.answers[qid][e.target.dataset.k]=e.target.type==="radio"?e.target.value:e.target.value;save();upd();});
+ document.querySelectorAll(".qcard").forEach(function(card){var qid=card.dataset.qid;var sv=S.answers[qid]||{};Object.keys(sv).forEach(function(k){card.querySelectorAll('[data-k="'+k+'"]').forEach(function(el){if(el.matches("button.choice")){el.setAttribute("aria-pressed",el.dataset.v===sv[k]?"true":"false");}else el.value=sv[k];});});if(S.checked[qid])paint(card,gradeCard(card),EXPL[qid],MODELS[qid]);});
+ document.addEventListener("input",function(e){var card=e.target.closest(".qcard");if(!card)return;var qid=card.dataset.qid;S.answers[qid]=S.answers[qid]||{};S.answers[qid][e.target.dataset.k]=e.target.value;save();upd();});
  document.addEventListener("change",function(e){var card=e.target.closest(".qcard");if(!card)return;if(e.target.matches("select")&&S.checked[card.dataset.qid]){var EXPL2=JSON.parse(document.getElementById("explData").textContent||"{}");var M2=JSON.parse(document.getElementById("modelData").textContent||"{}");paint(card,gradeCard(card),EXPL2[card.dataset.qid],M2[card.dataset.qid]);}});
  document.addEventListener("click",function(e){var b=e.target.closest("[data-check]");if(!b)return;var card=b.closest(".qcard");S.checked[card.dataset.qid]=true;save();var EXPL3=JSON.parse(document.getElementById("explData").textContent||"{}");var M3=JSON.parse(document.getElementById("modelData").textContent||"{}");paint(card,gradeCard(card),EXPL3[card.dataset.qid],M3[card.dataset.qid]);card.focus({preventScroll:true});upd();});
- document.addEventListener("keydown",function(e){if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey)return;if(!e.target||!e.target.matches||e.target.matches("textarea"))return;var card=e.target.closest?e.target.closest(".qcard"):null;if(!card)return;var b=card.querySelector("[data-check]");if(!b)return;e.preventDefault();b.click();});
+ document.addEventListener("click",function(e){var ch=e.target.closest("button.choice");if(!ch)return;var card=ch.closest(".qcard");if(!card)return;var qid=card.dataset.qid;card.querySelectorAll("button.choice").forEach(function(o){o.setAttribute("aria-pressed",o===ch?"true":"false");});S.answers[qid]=S.answers[qid]||{};S.answers[qid][ch.dataset.k]=ch.dataset.v;save();upd();});document.addEventListener("keydown",function(e){if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey)return;if(!e.target||!e.target.matches||e.target.matches("textarea"))return;var card=e.target.closest?e.target.closest(".qcard"):null;if(!card)return;var b=card.querySelector("[data-check]");if(!b)return;e.preventDefault();b.click();});
  upd();
 });
 </script>
 <script>
-var SECMAP=[["sich-vorstellen",["q01","q02","q03","q04","q05"]],["dialoge",["q06","q07","q08"]],["einkaufen",["q13","q14","q15","q16","q17"]],["was-ist-das",["q18","q19","q20","q21"]],["preise",["q22","q23","q24","q25"]],["artikel-und-verben",["q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40"]]];function upd(){var total=36,ids=['q01', 'q02', 'q03', 'q04', 'q05', 'q06', 'q07', 'q08', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'q24', 'q25', 'q26', 'q27', 'q28', 'q29', 'q30', 'q31', 'q32', 'q33', 'q34', 'q35', 'q36', 'q37', 'q38', 'q39', 'q40'],ans=0,chk=0;try{var r=JSON.parse(localStorage.getItem("spiky-redesign-v1")||"{}");var A=r.answers||{},C=r.checked||{};ids.forEach(function(id){var v=A[id];if(v&&Object.keys(v).some(function(k){return(v[k]||"").trim()!=="";}))ans++;if(C[id])chk++;});}catch(e){}var f=document.getElementById("progressFill"),t=document.getElementById("progressText");if(f)f.style.width=Math.round(ans/total*100)+"%";if(t)t.textContent="Отвечено: "+ans+" из "+total;try{var RR=JSON.parse(localStorage.getItem("spiky-redesign-v1")||"{}");var CC=RR.checked||{};var dest=SECMAP[0][0]+".html";for(var si=0;si<SECMAP.length;si++){var sq=SECMAP[si][1],allDone=true;for(var qi=0;qi<sq.length;qi++){if(!CC[sq[qi]]){allDone=false;break;}}if(!allDone){dest=SECMAP[si][0]+".html";break;}}var ct=document.getElementById("continueTab");if(ct)ct.setAttribute("href",dest);}catch(e){}} 
+var SECMAP=[["sich-vorstellen",["q01","q02","q03","q04","q05"]],["dialoge",["q06","q07","q08"]],["einkaufen",["q13","q14","q15","q16","q17"]],["was-ist-das",["q18","q19","q20","q21"]],["preise",["q22","q23","q24","q25"]],["artikel-und-verben",["q26","q27","q28","q29","q30","q31","q32","q33","q34","q35","q36","q37","q38","q39","q40"]]];function upd(){var total=36,ids=['q01', 'q02', 'q03', 'q04', 'q05', 'q06', 'q07', 'q08', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'q24', 'q25', 'q26', 'q27', 'q28', 'q29', 'q30', 'q31', 'q32', 'q33', 'q34', 'q35', 'q36', 'q37', 'q38', 'q39', 'q40'],ans=0,chk=0;try{var r=JSON.parse(localStorage.getItem("spiky-redesign-v1")||"{}");var A=r.answers||{},C=r.checked||{};ids.forEach(function(id){var v=A[id];if(v&&Object.keys(v).some(function(k){return(v[k]||"").trim()!=="";}))ans++;if(C[id])chk++;});}catch(e){}var t=document.getElementById("progressText");if(t)t.textContent="Отвечено: "+ans+" из "+total;try{var R2=JSON.parse(localStorage.getItem("spiky-redesign-v1")||"{}");var RS=R2.results||{},c0=0,a0=0,i0=0;ids.forEach(function(id){var st=RS[id];if(st==="correct")c0++;else if(st==="almost")a0++;else if(st==="incorrect")i0++;});var pc=document.getElementById("pgCorrect"),pa=document.getElementById("pgAlmost"),pi=document.getElementById("pgIncorrect");if(pc)pc.style.width=(c0/total*100)+"%";if(pa)pa.style.width=(a0/total*100)+"%";if(pi)pi.style.width=(i0/total*100)+"%";}catch(e){}try{var RR=JSON.parse(localStorage.getItem("spiky-redesign-v1")||"{}");var CC=RR.checked||{};var dest=SECMAP[0][0]+".html";for(var si=0;si<SECMAP.length;si++){var sq=SECMAP[si][1],allDone=true;for(var qi=0;qi<sq.length;qi++){if(!CC[sq[qi]]){allDone=false;break;}}if(!allDone){dest=SECMAP[si][0]+".html";break;}}var ct=document.getElementById("continueTab");if(ct)ct.setAttribute("href",dest);}catch(e){}} 
 </script>
 </body>
 </html>

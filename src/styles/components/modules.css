@@ -1,0 +1,282 @@
+/* ============================================================================
+   SpikyGerman Design System — screen modules  ·  v1.0
+   ----------------------------------------------------------------------------
+   Four modules cover all nine screens. Nothing here is screen-specific markup
+   dressing: each module is the shared expression of one product job, and the
+   screens compose them.
+
+     A. exercise   был/ist das · Artikel und Verben · Sich vorstellen
+     B. commerce   Einkaufen · Preise
+     C. summary    Итоги (summary)
+     D. settings   Настройки (einstellungen)
+
+   Provenance: normalised extraction of the screen-local CSS blocks found after
+   the shared token layer in each source file. Values that a screen contradicted
+   are marked "resolved"; undefined tokens are now defined and marked "hardened".
+   See ../docs/drift-report.md.
+   ========================================================================= */
+
+/* ============================================ A. exercise  (quizzes) ======= */
+.qcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--elev-ring), var(--elev-raised);
+}
+.q-instr { font-size: var(--text-xs); font-weight: 600; color: var(--muted); }
+.q-ask   { display: block; font-size: var(--text-lg); font-weight: 600; white-space: pre-line; margin: 0; color: var(--fg); }
+.qn      { color: var(--muted); font-weight: 500; margin-right: 6px; }
+
+.example {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface-warm);
+  color: var(--fg-2);
+  font-size: var(--text-base);
+}
+.example b, .example strong { color: var(--fg); }
+
+/* Cloze blank — the underline an answer is dropped into. */
+.gap-line {
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 88px;
+  padding: 0 6px;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Card state. Colour is a secondary cue: the feedback text below carries the
+   meaning, so colour-blind users never lose the result. */
+.qcard[data-state="correct"]  { box-shadow: 0 0 0 2px var(--success), var(--elev-raised); }
+.qcard[data-state="almost"]   { box-shadow: 0 0 0 2px var(--warn), var(--elev-raised); }
+.qcard[data-state="incorrect"]{ box-shadow: 0 0 0 2px var(--danger), var(--elev-raised); }
+
+.feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+}
+.feedback strong { display: block; }
+.feedback .fb-body { color: var(--fg-2); }
+.fb-icon { flex: none; width: 20px; height: 20px; }
+
+.feedback.correct   { background: color-mix(in oklab, var(--success), transparent 90%); border-color: color-mix(in oklab, var(--success), transparent 68%); color: var(--success-ink); }
+.feedback.almost    { background: color-mix(in oklab, var(--warn),    transparent 90%); border-color: color-mix(in oklab, var(--warn),    transparent 62%); color: var(--warn-ink); }
+.feedback.incorrect { background: color-mix(in oklab, var(--danger),  transparent 92%); border-color: color-mix(in oklab, var(--danger),  transparent 72%); color: var(--danger-ink); }
+.feedback.is-empty  { background: var(--surface-warm); color: var(--muted); }
+/* Pre-check cards carry an empty .feedback slot; hide it so it never renders
+   as a stray strip. Painted results always have children, so only :empty hides. */
+.feedback.is-empty:empty { display: none; }
+
+/* Result body. The glyph occupies the icon slot; .fb-main stacks the verdict
+   with the model answer and hints that drill scripts render. */
+.fb-glyph { flex: none; width: 20px; height: 20px; display: grid; place-items: center; font-weight: 700; }
+.fb-main { display: grid; gap: var(--space-1); min-width: 0; }
+.feedback .model, .feedback .tip { color: var(--fg-2); font-size: var(--text-sm); }
+.feedback .model code { font-family: var(--font-mono); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: var(--radius-sm); overflow-wrap: anywhere; }
+
+/* ============================================ B. commerce  ================= */
+.price-table { display: flex; flex-direction: column; }
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.price-row:last-child { border-bottom: 0; }
+.price-name  { color: var(--fg-2); font-size: var(--text-base); }
+.price-val   { color: var(--fg); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.price-note  { color: var(--muted); font-size: var(--text-xs); }
+.price-total { font-size: var(--text-lg); font-weight: 700; color: var(--fg); }
+
+.food-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-ring);
+}
+/* Placeholder for product shots that have not been art-directed yet. Uses the
+   legacy --border-strong name, which the bridge now defines. */
+.photo-ph {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  padding: var(--space-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface-warm);
+  color: var(--muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+/* ============================================ C. summary  ================== */
+.od-stat.is-ok    strong { color: var(--success-ink); }
+.od-stat.is-al    strong { color: var(--warn-ink); }
+.od-stat.is-bad   strong { color: var(--danger-ink); }
+.od-stat.is-emp   strong { color: var(--muted); }
+
+.minibar { display: flex; gap: 3px; height: 8px; }
+.minibar span { flex: 1 1 0; border-radius: var(--radius-sm); background: var(--surface-warm); }
+.minibar span.is-ok    { background: var(--success); }
+.minibar span.is-bad   { background: var(--danger); }
+.minibar span.is-al    { background: var(--warn); }
+.minibar span.is-empty { background: var(--border); }
+
+.sum-list { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+
+.kv {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.kv:last-child { border-bottom: 0; }
+.kv dt { color: var(--muted); font-size: var(--text-sm); }
+.kv dd { margin: 0; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.issues-list { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.issue-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--elev-ring), var(--elev-raised);
+  color: var(--fg);
+  text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+.issue-link:hover { background: var(--surface-warm); }
+.issue-chip {
+  flex: none;
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--danger), transparent 88%);
+  color: var(--danger-ink);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.issue-txt { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.issue-title { font-size: var(--text-base); font-weight: 600; color: var(--fg); }
+.issue-sub   { font-size: var(--text-xs); color: var(--muted); }
+.issue-chev  { flex: none; color: var(--muted); }
+
+/* Issue status tints the chip only; the title sentence carries the meaning. */
+.issue-link.is-almost .issue-chip { background: color-mix(in oklab, var(--warn), transparent 88%); color: var(--warn-ink); }
+.issue-link.is-empty .issue-chip { background: var(--surface-warm); color: var(--muted); }
+
+/* Issues section block rendered by the summary screen. */
+.issues { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+.issues h2 { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+.issues-empty { margin: 0; color: var(--muted); font-size: var(--text-sm); }
+.issues-more { display: flex; justify-content: center; margin-top: var(--space-3); }
+
+/* ============================================ D. settings  ================= */
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 56px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.set-row:last-child { border-bottom: 0; }
+
+.sr-i {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--surface-warm);
+  color: var(--meta);
+}
+.sr-t { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.sr-t b, .sr-t strong { font-size: var(--text-base); font-weight: 600; color: var(--fg); }
+.sr-t span { font-size: var(--text-xs); color: var(--muted); }
+
+.seg {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-warm);
+}
+.seg button {
+  flex: 1 1 0;
+  min-height: 44px;                                   /* hardened: compact controls still meet the tap target */
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--fg-2);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+.seg button:hover { color: var(--fg); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: var(--elev-raised); }
+
+.swatch { display: flex; gap: var(--space-2); }
+.swatch button {
+  width: 44px;
+  height: 44px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--swatch, var(--accent));
+  box-shadow: var(--elev-ring);
+  cursor: pointer;
+}
+.swatch button[aria-pressed="true"] { border-color: var(--fg); }
+
+.set-note { color: var(--muted); font-size: var(--text-xs); }
+.set-reset {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.set-status { color: var(--success-ink); font-size: var(--text-xs); font-weight: 600; }
+
+.danger, .danger-zone .panel-h { color: var(--danger-ink); }
+.danger-zone {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--danger), transparent 92%);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--danger), transparent 70%);
+}
+.confirm-actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }

@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="SpikyGerman design system — tokens, components and modules extracted from the nine learning screens." />
+<title>SpikyGerman Design System — spec sheet</title>
+<script>
+/* Spec-sheet theme, independent of the app's "spiky-theme" key so opening this
+   page never changes how the product screens render. */
+(function(){try{var t=localStorage.getItem("spiky-ds-theme");
+if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}
+document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
+
+<!-- system layers, in load order.
+
+     The path to the system files depends on which directory this page is served
+     from, and that directory is not always the folder the file sits in:
+
+       · opened from disk        …/src/styles/index.html  → the system folders are siblings
+       · served from the repo     …/index.html             → reach into src/styles/
+
+     So the prefix follows the URL actually in use: if the address already contains
+     "src/styles/", the system files are siblings and take no prefix; otherwise
+     this page is being served from the repository root and reaches into the package.
+     Resolved synchronously, before any stylesheet is requested — no unstyled flash,
+     and no dependency on how a given host maps file paths. -->
+<script>
+(function () {
+  var servedFromPackage = decodeURIComponent(location.href).indexOf("src/styles/") > -1;
+  var prefix = servedFromPackage ? "" : "src/styles/";
+  var layers = [
+    "tokens/tokens.css",
+    "tokens/legacy-bridge.css",
+    "tokens/od-layout-primitives.css",
+    "components/components.css",
+    "components/design-stage.css",
+    "components/modules.css"
+  ];
+  for (var i = 0; i < layers.length; i++) {
+    document.write('<link rel="stylesheet" href="' + prefix + layers[i] + '">');
+  }
+})();
+</script>
+
+<style>
+/* ==========================================================================
+   Spec-sheet chrome only. Every declaration below consumes system tokens.
+   Nothing here ships to the product screens.
+   ======================================================================== */
+:root {
+  /* Tweak levers. Defaults are identity, so the frozen token values show
+     through untouched; the renderer's panel can move them live. */
+  --kumo-radius-scale: var(--ocd-tweak-radius-scale, 1);
+  --kumo-space-scale:  var(--ocd-tweak-space-scale, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); }
+
+.ds-page { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6) var(--space-12); }
+.ds-layout { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: var(--space-12); align-items: start; }
+
+/* ---- header ---- */
+.ds-head { padding: var(--space-12) 0 var(--space-8); border-bottom: 1px solid var(--border); }
+.ds-eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--surface-warm); color: var(--meta);
+  font-size: var(--text-xs); font-weight: 700;
+}
+.ds-head h1 {
+  margin: var(--space-4) 0 var(--space-4);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  font-weight: 700; letter-spacing: -.025em; line-height: 1.05;
+}
+.ds-lede { max-width: 64ch; color: var(--fg-2); font-size: var(--text-lg); line-height: 1.6; }
+.ds-head-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
+
+.ds-facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px; margin-top: var(--space-6);
+  background: var(--border); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.ds-fact { background: var(--surface); padding: 14px 16px; display: grid; gap: 2px; }
+.ds-fact b { font-size: var(--text-xl); font-weight: 700; font-variant-numeric: tabular-nums; }
+.ds-fact span { font-size: var(--text-xs); color: var(--muted); }
+
+/* ---- rail ---- */
+.ds-rail { position: sticky; top: var(--space-6); font-size: var(--text-sm); }
+.ds-rail-title { font-size: var(--text-xs); font-weight: 700; color: var(--muted); margin-bottom: var(--space-3); }
+.ds-rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.ds-rail a {
+  display: flex; gap: var(--space-2); padding: 7px 10px; border-radius: var(--radius-md);
+  color: var(--fg-2); text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+.ds-rail a:hover { background: var(--surface-warm); color: var(--fg); }
+.ds-rail a span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.ds-rail-foot { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--border); display: grid; gap: var(--space-2); }
+.ds-rail-foot a { color: var(--accent); font-weight: 600; text-decoration: none; padding: 0; }
+.ds-rail-foot a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---- sections ---- */
+.ds-main { min-width: 0; }
+.ds-section { padding-top: var(--space-12); scroll-margin-top: var(--space-6); }
+.ds-section > h2 { font-size: var(--text-2xl); font-weight: 700; letter-spacing: -.02em; }
+.ds-section > h2 .ds-num { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: var(--space-2); }
+.ds-sub { max-width: 68ch; color: var(--fg-2); margin-top: var(--space-3); }
+.ds-h3 { font-size: var(--text-lg); font-weight: 600; margin: var(--space-8) 0 var(--space-3); }
+.ds-block { margin-top: var(--space-6); }
+.ds-grid { display: grid; gap: var(--space-3); }
+.ds-grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.ds-grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.ds-card {
+  padding: var(--space-5); border-radius: var(--radius-lg);
+  background: var(--surface); box-shadow: var(--elev-ring), var(--elev-raised);
+}
+.ds-card h4 { font-size: var(--text-sm); font-weight: 700; }
+.ds-card p { color: var(--muted); font-size: var(--text-xs); margin-top: var(--space-1); }
+.ds-card-body { margin-top: var(--space-4); }
+.ds-spec { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--muted); }
+.ds-note {
+  margin-top: var(--space-4); padding: 14px 16px;
+  border-left: 3px solid var(--accent); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--surface-warm); color: var(--fg-2); font-size: var(--text-sm);
+}
+.ds-note b { color: var(--fg); }
+
+/* ---- colour ---- */
+.ds-swatch { border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); box-shadow: var(--elev-ring), var(--elev-raised); }
+.ds-swatch-chip { height: 76px; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+.ds-swatch-meta { padding: 10px 12px; display: grid; gap: 2px; }
+.ds-swatch-meta code { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--fg); }
+.ds-swatch-meta small { color: var(--muted); font-size: 0.6875rem; font-variant-numeric: tabular-nums; }
+
+/* ---- type ---- */
+.ds-type-row {
+  display: grid; grid-template-columns: 76px minmax(0, 1fr) 140px;
+  gap: var(--space-4); align-items: baseline;
+  padding: var(--space-3) 0; border-bottom: 1px solid var(--border-soft);
+}
+.ds-type-row:last-child { border-bottom: 0; }
+.ds-type-sample { color: var(--fg); letter-spacing: 0; line-height: 1.15; }
+.ds-type-meta { text-align: right; }
+
+/* ---- ladders ---- */
+.ds-ladder { display: grid; gap: var(--space-3); }
+.ds-ladder-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: var(--space-4); align-items: center; }
+.ds-bar { height: 14px; border-radius: var(--radius-sm); background: var(--accent); opacity: .85; }
+.ds-radii { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: flex-end; }
+.ds-radii figure { margin: 0; display: grid; gap: var(--space-2); justify-items: center; }
+.ds-radii .box { width: 72px; height: 72px; background: var(--surface-warm); box-shadow: var(--elev-ring); }
+.ds-elev { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-5); }
+.ds-elev .demo { height: 88px; border-radius: var(--radius-lg); background: var(--surface); display: grid; place-items: center; color: var(--muted); font-size: var(--text-xs); }
+
+/* ---- specimen stage ---- */
+.ds-stage {
+  margin-top: var(--space-4); padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: radial-gradient(120% 100% at 50% 0%, var(--stage-glow), transparent 60%), var(--phone-stage-bg);
+  display: flex; justify-content: center; overflow: auto;
+}
+.ds-stage.is-plain { background: var(--surface-warm); padding: var(--space-5); }
+.ds-row-specimens { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.ds-col-specimens { display: grid; gap: var(--space-3); max-width: 460px; }
+.ds-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+@media (min-width: 1180px) { .ds-split { grid-template-columns: minmax(0, 1fr) 380px; } }
+
+/* ---- tables ---- */
+.ds-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.ds-table caption { text-align: left; color: var(--muted); font-size: var(--text-xs); padding-bottom: var(--space-2); }
+.ds-table th, .ds-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+.ds-table th { font-size: var(--text-xs); font-weight: 700; color: var(--muted); background: var(--surface-warm); }
+.ds-table td code { font-family: var(--font-mono); font-size: 0.6875rem; }
+.ds-table a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.ds-table a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.ds-table tbody tr:hover td { background: color-mix(in oklab, var(--surface-warm), transparent 55%); }
+
+/* ---- lists ---- */
+.ds-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-3); }
+.ds-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-2); }
+.ds-list li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: var(--space-2); font-size: var(--text-sm); color: var(--fg-2); }
+.ds-list li::before { content: ""; width: 14px; height: 14px; margin-top: 4px; border-radius: var(--radius-sm); background: var(--surface-warm); box-shadow: inset 0 0 0 1.5px currentColor; }
+.ds-list.is-dont li::before { background: color-mix(in oklab, var(--danger), transparent 88%); color: var(--danger-ink); }
+.ds-list.is-do li::before { background: color-mix(in oklab, var(--success), transparent 88%); color: var(--success-ink); }
+
+.ds-files { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ds-files li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 14px; border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--elev-ring); }
+.ds-files a { color: var(--fg); font-weight: 600; text-decoration: none; font-size: var(--text-base); }
+.ds-files a:hover { color: var(--accent); }
+.ds-files span { color: var(--muted); font-size: var(--text-xs); }
+
+.ds-legend { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--border); font-size: var(--text-xs); color: var(--muted); }
+.ds-legend code { color: var(--fg); }
+
+.ds-footer { margin-top: var(--space-12); padding-top: var(--space-6); border-top: 1px solid var(--border); color: var(--muted); font-size: var(--text-xs); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; }
+
+/* ---- levers readout ---- */
+.ds-levers { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+.ds-lever {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 6px 10px; border-radius: var(--radius-pill);
+  background: var(--surface); box-shadow: var(--elev-ring);
+  font-size: var(--text-xs); color: var(--muted);
+}
+.ds-lever b { color: var(--fg); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- responsive ---- */
+@media (max-width: 960px) {
+  .ds-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .ds-rail { position: static; }
+  .ds-rail ol { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; padding-bottom: var(--space-2); }
+  .ds-page { padding: 0 var(--space-4) var(--space-12); }
+  .ds-head { padding-top: var(--space-8); }
+  .ds-type-row { grid-template-columns: 64px minmax(0, 1fr); }
+  .ds-type-meta { grid-column: 1 / -1; text-align: left; }
+}
+@media (max-width: 720px) {
+  .ds-stage { padding: var(--space-3); }
+  .ds-stage .phone-frame { zoom: .78; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to system spec</a>
+
+<div class="ds-page">
+  <header class="ds-head">
+    <p class="ds-eyebrow">SpikyGerman · extracted system · v1.0</p>
+    <h1>One design language<br />for nine German screens</h1>
+    <p class="ds-lede">
+      Tokens, components and modules recovered from the nine static screens in this repository.
+      The screens are a Russian-language German course rendered inside a 390&nbsp;×&nbsp;844 device
+      surface, in light and dark themes. This page is built from the extracted system only — if a
+      specimen here is wrong, the system is wrong.
+    </p>
+
+    <div class="ds-head-actions">
+      <button class="btn btn-secondary" type="button" id="theme-btn" aria-pressed="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <span id="theme-label">Dark theme</span>
+      </button>
+      <a class="btn btn-secondary" href="../index.html">Open screen: Главная</a>
+      <a class="btn btn-secondary" href="tokens/tokens.json" download>tokens.json</a>
+    </div>
+
+    <div class="ds-facts">
+      <div class="ds-fact"><b>9</b><span>screens audited</span></div>
+      <div class="ds-fact"><b>9 / 8 + 1</b><span>copies of the token layer · 1 drifted</span></div>
+      <div class="ds-fact"><b>2</b><span>themes, attribute-driven</span></div>
+      <div class="ds-fact"><b>7</b><span>type steps · 12→30px</span></div>
+      <div class="ds-fact"><b>8</b><span>spacing steps · 4→48px</span></div>
+      <div class="ds-fact"><b>3 + pill</b><span>radius steps</span></div>
+      <div class="ds-fact"><b>3</b><span>elevation states</span></div>
+      <div class="ds-fact"><b>2</b><span>durations · 1 curve</span></div>
+    </div>
+
+    <div class="ds-levers" id="levers" aria-live="polite">
+      <span class="ds-lever">radius lever <b id="lever-radius">×1</b></span>
+      <span class="ds-lever">space lever <b id="lever-space">×1</b></span>
+      <span class="ds-lever">resolved <code class="ds-spec" id="lever-radius-px">--radius-lg 8px</code></span>
+      <span class="ds-lever">resolved <code class="ds-spec" id="lever-space-px">--space-4 16px</code></span>
+    </div>
+  </header>
+
+  <div class="ds-layout">
+    <nav class="ds-rail" aria-label="Spec sheet sections">
+      <p class="ds-rail-title">Contents</p>
+      <ol>
+        <li><a href="#s01"><span>01</span> Foundations</a></li>
+        <li><a href="#s02"><span>02</span> Typography</a></li>
+        <li><a href="#s03"><span>03</span> Space &amp; shape</a></li>
+        <li><a href="#s04"><span>04</span> Elevation &amp; motion</a></li>
+        <li><a href="#s05"><span>05</span> Device shell</a></li>
+        <li><a href="#s06"><span>06</span> Components</a></li>
+        <li><a href="#s07"><span>07</span> Modules</a></li>
+        <li><a href="#s08"><span>08</span> Screen inventory</a></li>
+        <li><a href="#s09"><span>09</span> Governance</a></li>
+      </ol>
+      <div class="ds-rail-foot">
+        <a href="DESIGN.md">DESIGN.md — the baton</a>
+        <a href="docs/drift-report.md">Drift report</a>
+        <a href="README.md">README &amp; load order</a>
+        <a href="../summary.html">Open screen: Итоги</a>
+      </div>
+    </nav>
+
+    <main class="ds-main" id="main">
+
+      <!-- ============================== 01 foundations ==================== -->
+      <section class="ds-section" id="s01">
+        <h2><span class="ds-num">01</span>Foundations</h2>
+        <p class="ds-sub">
+          Every swatch below is painted with the live token, and the resolved value is read back from
+          the browser — switch the theme and the sheet re-reads itself. Six semantic roles cover the
+          whole product: canvas, surface, tinted surface, text, secondary text, muted meta.
+        </p>
+
+        <div class="ds-block">
+          <div class="ds-grid ds-grid-3" id="color-grid"></div>
+          <div class="ds-note">
+            <b>Dark mode is a re-derivation, not a filter.</b> Dark values are OKLch at hue 264, and the
+            accent <em>brightens</em> while its ink flips to dark. Status colours are fills only —
+            small text reads from <code class="ds-spec">--success-ink</code>,
+            <code class="ds-spec">--danger-ink</code> and their siblings so 12px labels stay legible.
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Theme boot contract</h3>
+        <div class="ds-card">
+          <h4>data-theme on &lt;html&gt;, resolved before first paint</h4>
+          <p>
+            The screens read <code class="ds-spec">localStorage["spiky-theme"]</code>, fall back to
+            <code class="ds-spec">prefers-color-scheme</code>, and write
+            <code class="ds-spec">data-theme="light|dark"</code> in an inline script in the head — no
+            flash, no theme-dependent JavaScript in the body.
+          </p>
+          <div class="ds-card-body">
+            <div class="ds-row-specimens">
+              <span class="badge">data-theme="light"</span>
+              <span class="badge">data-theme="dark"</span>
+              <span class="badge is-done">theme resolved pre-paint</span>
+              <span class="badge is-soon">system preference honored</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== 02 typography ===================== -->
+      <section class="ds-section" id="s02">
+        <h2><span class="ds-num">02</span>Typography</h2>
+        <p class="ds-sub">
+          One family, seven steps. Inter for everything from hero questions to table numerals; the
+          mono stack only for code-like content in documentation. Russian UI copy and German lesson
+          text live in the same column — both must wrap, never clip.
+        </p>
+
+        <div class="ds-card ds-block" id="type-scale"></div>
+
+        <div class="ds-note">
+          <b>Numbers that move get tabular figures.</b> Progress captions, stat values, prices, level
+          chips and quiz counters all set <code class="ds-spec">font-variant-numeric: tabular-nums</code>,
+          so a value ticking from 9 to 10 does not shift the row.
+        </div>
+      </section>
+
+      <!-- ============================== 03 space & shape ================== -->
+      <section class="ds-section" id="s03">
+        <h2><span class="ds-num">03</span>Space &amp; shape</h2>
+        <p class="ds-sub">
+          One spacing ladder, one radius ladder. The bars and squares below are drawn with the tokens
+          themselves, so the levers in the tweak panel move them.
+        </p>
+
+        <div class="ds-split">
+          <div class="ds-card">
+            <h4>Spacing ladder</h4>
+            <p>4px is for icon-to-label gaps only. Section spacing starts at 16px.</p>
+            <div class="ds-ladder ds-card-body" id="space-ladder"></div>
+          </div>
+          <div class="ds-card">
+            <h4>Radius ladder</h4>
+            <p>3px-free: 4 / 6 / 8 + pill. Device radii are geometry, not ladder steps.</p>
+            <div class="ds-radii ds-card-body">
+              <figure><div class="box" style="border-radius: var(--radius-sm)"></div><figcaption class="ds-spec">--radius-sm 4px</figcaption></figure>
+              <figure><div class="box" style="border-radius: var(--radius-md)"></div><figcaption class="ds-spec">--radius-md 6px</figcaption></figure>
+              <figure><div class="box" style="border-radius: var(--radius-lg)"></div><figcaption class="ds-spec">--radius-lg 8px</figcaption></figure>
+              <figure><div class="box" style="border-radius: var(--radius-pill)"></div><figcaption class="ds-spec">--radius-pill</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== 04 elevation & motion ============= -->
+      <section class="ds-section" id="s04">
+        <h2><span class="ds-num">04</span>Elevation &amp; motion</h2>
+        <p class="ds-sub">
+          Three elevation states, two durations, one curve. Card depth is a 1px ring plus a 1px shadow,
+          always as a pair — the ring is what keeps cards crisp in dark mode.
+        </p>
+
+        <div class="ds-grid ds-grid-3 ds-block">
+          <div class="ds-card" style="box-shadow: none">
+            <h4>flat</h4><p>--elev-flat · content sitting directly on the canvas</p>
+          </div>
+          <div class="ds-card">
+            <h4>ring + raised</h4><p>--elev-ring + --elev-raised · the canonical card</p>
+          </div>
+          <div class="ds-card" style="background: var(--surface-warm); box-shadow: var(--elev-ring)">
+            <h4>tinted surface</h4><p>--surface-warm · the pressed/selected alternative</p>
+          </div>
+        </div>
+
+        <div class="ds-card ds-block">
+          <h4>Motion</h4>
+          <p>150ms for colour and state · 250ms for size and position · cubic-bezier(0.77, 0, 0.175, 1)</p>
+          <div class="ds-card-body" style="display: grid; gap: var(--space-4)">
+            <div class="progress-line is-lg"><span id="motion-bar" style="--progress: 18%"></span></div>
+            <div class="ds-row-specimens">
+              <button class="btn btn-secondary" type="button" id="motion-run">Run the curve</button>
+              <span class="ds-spec">width transitions with --motion-base; press feedback is a 1px shift, never a scale</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-note">
+          <b>Reduced motion is a first-class state.</b>
+          <code class="ds-spec">prefers-reduced-motion: reduce</code> collapses both durations to ~0ms
+          and removes the press shift, while results still change in the same order.
+        </div>
+      </section>
+
+      <!-- ============================== 05 device shell =================== -->
+      <section class="ds-section" id="s05">
+        <h2><span class="ds-num">05</span>Device shell</h2>
+        <p class="ds-sub">
+          The phone is presentation, not product: 390 × 844 screen, 10px bezel, 52px outer radius,
+          42px screen radius, 50px top safe area (status bar + dynamic island), 29px bottom for the
+          gesture indicator. Two hardware rules — the frame never carries theme colour, and app
+          content never enters the safe areas.
+        </p>
+
+        <div class="ds-split">
+          <div class="ds-stage">
+            <div class="phone-frame">
+              <span class="hardware-button is-mute" aria-hidden="true"></span>
+              <span class="hardware-button is-vol-up" aria-hidden="true"></span>
+              <span class="hardware-button is-vol-dn" aria-hidden="true"></span>
+              <span class="hardware-button is-power" aria-hidden="true"></span>
+              <div class="phone-screen">
+                <div class="status-bar" aria-hidden="true">
+                  <span class="status-time">9:41</span>
+                  <span class="status-icons">
+                    <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+                    <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y=".5" width="20" height="11" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/><path d="M22.5 4v4c1.2-.4 1.8-1 1.8-2s-.6-1.6-1.8-2Z" fill="currentColor" opacity=".4"/></svg>
+                  </span>
+                </div>
+                <div class="status-cutout-zone" aria-hidden="true"><span class="camera-dot"></span></div>
+
+                <div class="app">
+                  <header class="topbar">
+                    <div class="brand-row od-fill">
+                      <span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M5.1 23.3 2.2 22.2l1.4-2.6-2-2.3 2.5-1.7-.7-2.9 3.1-.4.9-2.8 2.9.9 2.2-2.1 2.2 2.1 2.9-.9.9 2.8 3.1.4-.7 2.9 2.5 1.7-2 2.3 1.4 2.6-2.9 1.1Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.9" stroke-linejoin="round" />
+            <path d="M4.6 21.3 2.9 19.6l1.2-2-1.2-2.2 2.1-1.3.6-2.3 2.5-.2 1.6-1.8 2.3.9 2.3-.9 1.6 1.8 2.5.2.6 2.3 2.1 1.3-1.2 2.2 1.2 2-1.7 1.7Z" fill="#5d6472" />
+            <circle cx="5.8" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="19.2" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M5.2 27.5V19a7.3 6.8 0 0 1 14.6 0v8.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1.1" stroke-linejoin="round" />
+            <ellipse cx="9.7" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <ellipse cx="15.3" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <circle cx="9.7" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="15.3" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="10.1" cy="17.9" r="0.35" fill="#ffffff" />
+            <circle cx="15.7" cy="17.9" r="0.35" fill="#ffffff" />
+            <ellipse cx="12.5" cy="21.2" rx="1.4" ry="1" fill="#2e3138" />
+            <ellipse cx="12.1" cy="21" rx="0.4" ry="0.25" fill="#ffffff" opacity="0.7" />
+            <path d="M12.5 22.2v.7m0 0c-.3 1-2.4 1.2-3 .3m3-.3c.3 1 2.4 1.2 3 .3" stroke="#2e3138" stroke-width="0.55" fill="none" stroke-linecap="round" />
+            <path d="M19 25.4 17.2 24.2l1.1-1.8-.8-1.9 2-.9.5-2 2.2.3 1.6-1.4 1.6 1.4 2.2-.3.5 2 2 .9-.8 1.9 1.1 1.8-1.8 1.2Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.8" stroke-linejoin="round" />
+            <path d="M18.8 23.9 17.9 22.4l1.2-1.3.1-1.7 1.7-.6 1.2-1.3 1.7.5 1.7-.5 1.2 1.3 1.7.6.1 1.7 1.2 1.3-.9 1.5Z" fill="#5d6472" />
+            <circle cx="20.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <circle cx="27.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <path d="M19.6 27.5V23a4.2 4 0 0 1 8.4 0v4.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1" stroke-linejoin="round" />
+            <ellipse cx="20.6" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <ellipse cx="27" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <circle cx="21.9" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="25.7" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M23.7 23h.2M20.1 22.8l-.9-.2M27.5 22.8l.9-.2" stroke="#2e3138" stroke-width="0.7" stroke-linecap="round" />
+            <circle cx="21.9" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="25.7" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="22.2" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="26" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
+            <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
+          </svg></span>
+                      <span class="od-fill" style="display:grid;gap:1px">
+                        <span class="brand-name">SpikyGerman</span>
+                        <span class="brand-sub">Тест 1 · Deutsch A1</span>
+                      </span>
+                      <span class="level-chip">A1</span>
+                    </div>
+                    <button class="theme-toggle" type="button" aria-label="Тема оформления">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+                    </button>
+                  </header>
+
+                  <div class="progress-text"><span>Урок 3 из 8</span><span>62%</span></div>
+                  <div class="progress-line is-lg" style="margin: 0 16px var(--space-2)"><span style="--progress: 62%"></span></div>
+
+                  <div class="screen od-scroll">
+                    <div class="hero">
+                      <h3 class="ds-h3" style="margin:0;font-size:var(--text-2xl);font-weight:700">Главная</h3>
+                      <p>Продолжите с того места, где остановились.</p>
+                    </div>
+                    <div class="stat-strip">
+                      <div class="od-stat"><strong>18</strong><span>правильно</span></div>
+                      <div class="od-stat is-al"><strong>3</strong><span>почти</span></div>
+                      <div class="od-stat is-bad"><strong>2</strong><span>ошибки</span></div>
+                      <div class="od-stat"><strong>7</strong><span>серия</span></div>
+                    </div>
+                    <div class="section-list">
+                      <a class="section-link" href="../was-ist-das.html">
+                        <span class="section-num">01</span>
+                        <span class="od-fill"><strong>Was ist das?</strong><span class="ds-spec">24 слова · словарь</span></span>
+                        <span class="badge is-done">готово</span>
+                      </a>
+                      <a class="section-link" href="../artikel-und-verben.html">
+                        <span class="section-num">02</span>
+                        <span class="od-fill"><strong>Artikel und Verben</strong><span class="ds-spec">der · die · das</span></span>
+                        <span class="badge">начать</span>
+                      </a>
+                      <a class="section-link" href="../sich-vorstellen.html">
+                        <span class="section-num">03</span>
+                        <span class="od-fill"><strong>Sich vorstellen</strong><span class="ds-spec">12 фраз</span></span>
+                        <span class="badge is-soon">скоро</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <nav class="tabbar" aria-label="Основная навигация" style="--tab-count: 3">
+                    <a class="tab" href="../index.html" aria-current="page">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+                      Главная
+                    </a>
+                    <a class="tab" href="../dialoge.html">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a8 8 0 1 1-3.2-6.4"/><path d="M8 12h8M8 8h5"/></svg>
+                      Dialoge
+                    </a>
+                    <a class="tab" href="../summary.html">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                      Итоги
+                    </a>
+                  </nav>
+                </div>
+
+                <span class="gesture-indicator" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ds-card">
+            <h4>Shell anatomy</h4>
+            <p>Chrome elements and the tokens that size them.</p>
+            <table class="ds-table ds-card-body">
+              <caption class="ds-spec">.phone-frame &gt; .phone-screen &gt; .app</caption>
+              <thead><tr><th>Element</th><th>Token</th></tr></thead>
+              <tbody>
+                <tr><td>Screen</td><td><code>390 × 844px</code></td></tr>
+                <tr><td>Bezel</td><td><code>--phone-bezel 10px</code></td></tr>
+                <tr><td>Outer radius</td><td><code>--phone-outer-radius 52px</code></td></tr>
+                <tr><td>Screen radius</td><td><code>--phone-screen-radius 42px</code></td></tr>
+                <tr><td>Top safe area</td><td><code>--phone-safe-top 50px</code></td></tr>
+                <tr><td>Bottom safe area</td><td><code>--phone-safe-bottom 29px</code></td></tr>
+                <tr><td>App grid rows</td><td><code>chrome · progress · content · bottombar</code></td></tr>
+                <tr><td>Scroll container</td><td><code>.screen</code> only</td></tr>
+              </tbody>
+            </table>
+            <p class="ds-spec" style="margin-top: var(--space-4)">
+              Below 480px the frame is dropped and the app fills the viewport — the phone is a desktop
+              preview affordance, not a layout constraint.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== 06 components ===================== -->
+      <section class="ds-section" id="s06">
+        <h2><span class="ds-num">06</span>Components</h2>
+        <p class="ds-sub">
+          Live specimens from <code class="ds-spec">components/components.css</code>. Every interactive
+          class here ships with rest, hover, pressed, focus-visible and disabled states — tab through
+          this page to check them.
+        </p>
+
+        <h3 class="ds-h3">Buttons</h3>
+        <div class="ds-card">
+          <div class="ds-row-specimens">
+            <button class="btn btn-primary" type="button">Проверить</button>
+            <button class="btn btn-secondary" type="button">Пропустить</button>
+            <button class="btn btn-danger" type="button">Сбросить</button>
+            <button class="btn btn-danger-solid" type="button">Удалить прогресс</button>
+            <button class="btn btn-primary" type="button" disabled>Недоступно</button>
+          </div>
+          <p class="ds-spec" style="margin-top: var(--space-4)">
+            44px minimum height · 10px/14px padding · --radius-lg · focus-visible uses the 4px halo,
+            not an outline ring
+          </p>
+        </div>
+
+        <h3 class="ds-h3">Navigation &amp; status</h3>
+        <div class="ds-grid ds-grid-2">
+          <div class="ds-card">
+            <h4>Section list &amp; badges</h4>
+            <div class="section-list ds-card-body">
+              <a class="section-link" href="../was-ist-das.html">
+                <span class="section-num">04</span>
+                <span class="od-fill"><strong>Einkaufen</strong><span class="ds-spec">18 слов · диалог</span></span>
+                <span class="badge is-done">готово</span>
+              </a>
+              <a class="section-link" href="../preise.html">
+                <span class="section-num">05</span>
+                <span class="od-fill"><strong>Preise</strong><span class="ds-spec">тарифы курса</span></span>
+                <span class="badge">открыть</span>
+              </a>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h4>Level picker &amp; segmented control</h4>
+            <div class="lvl-grid ds-card-body" role="group" aria-label="Уровень">
+              <button class="lvl-btn" type="button" aria-pressed="true">A1</button>
+              <button class="lvl-btn" type="button" aria-pressed="false">A2</button>
+              <button class="lvl-btn" type="button" aria-pressed="false">B1</button>
+            </div>
+            <div class="ds-row-specimens" style="margin-top: var(--space-4)">
+              <span class="seg" role="group" aria-label="Тема">
+                <button type="button" aria-pressed="true">Светлая</button>
+                <button type="button" aria-pressed="false">Тёмная</button>
+                <button type="button" aria-pressed="false">Системная</button>
+              </span>
+              <span class="level-chip">A1</span>
+            </div>
+            <div class="swatch ds-card-body" role="group" aria-label="Цвет">
+              <button type="button" aria-pressed="true" aria-label="Синий" style="--swatch: var(--accent)"></button>
+              <button type="button" aria-pressed="false" aria-label="Зелёный" style="--swatch: var(--success)"></button>
+              <button type="button" aria-pressed="false" aria-label="Янтарный" style="--swatch: var(--warn)"></button>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Inputs</h3>
+        <div class="ds-grid ds-grid-2">
+          <div class="ds-card">
+            <h4>Field &amp; umlaut keypad</h4>
+            <div class="ds-card-body" style="display:grid;gap:var(--space-3)">
+              <label class="field-label" for="ds-answer">Ответ по-немецки</label>
+              <input class="field" id="ds-answer" type="text" inputmode="text" placeholder="der Tisch" />
+              <div class="umlaut" role="group" aria-label="Умлауты">
+                <button type="button">ä</button><button type="button">ö</button>
+                <button type="button">ü</button><button type="button">ß</button>
+              </div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h4>Large picker</h4>
+            <p>Dialoge uses one oversized select per screen — the only control at 20px.</p>
+            <div class="ds-card-body">
+              <label class="sr-only" for="ds-dialog">Диалог</label>
+              <select class="select-lg" id="ds-dialog">
+                <option>Im Café</option>
+                <option>Beim Arzt</option>
+                <option>Am Bahnhof</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Progress</h3>
+        <div class="ds-card">
+          <div class="ds-card-body" style="display:grid;gap:var(--space-3);max-width:560px">
+            <div class="progress-text" style="padding:0"><span>Урок 4 из 12</span><span>33%</span></div>
+            <div class="progress-line"><span style="--progress: 33%"></span></div>
+            <div class="progress-text" style="padding:0"><span>Модуль завершён</span><span>100%</span></div>
+            <div class="progress-line is-lg"><span style="--progress: 100%"></span></div>
+            <div class="progress-text" style="padding:var(--space-4) 0 0"><span>Отвечено 7 из 12</span><span>4 · 2 · 1</span></div>
+            <div class="progress-line is-segmented" role="img" aria-label="Отвечено 7 из 12: 4 верных, 2 почти, 1 ошибка">
+              <span class="progress-seg seg-correct" style="width: 33.4%"></span><span class="progress-seg seg-almost" style="width: 16.7%"></span><span class="progress-seg seg-incorrect" style="width: 8.3%"></span>
+            </div>
+            <div class="progress-text" style="padding:0"><span>Ещё не начато</span><span>0 из 12</span></div>
+            <div class="progress-line is-segmented is-lg" role="img" aria-label="Ещё не начато: 0 из 12"></div>
+            <div style="display:flex;gap:var(--space-4);align-items:flex-end;flex-wrap:wrap;padding-top:var(--space-2)">
+              <span class="sec-n">01</span>
+              <span class="sec-n">02<svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24" /><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="113.1 37.7" stroke-dashoffset="0" /></g></svg></span>
+              <span class="sec-n">03<svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24" /><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="75.4 75.4" stroke-dashoffset="0" /><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="37.7 113.1" stroke-dashoffset="-75.4" /><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="25.1 125.7" stroke-dashoffset="-113.1" /></g></svg></span>
+            </div>
+          </div>
+          <p class="ds-spec" style="margin-top: var(--space-4)">
+            6px default · 8px <code>.is-lg</code> (resolved from the settings screen) · pill radius · accent fill on --surface-warm track ·
+            <code>.is-segmented</code> reports results correct → almost → incorrect (empty = track) · <code>.sec-ring</code> pies reuse the same order/arcs (56 viewBox, r=24)
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================== 07 modules ======================== -->
+      <section class="ds-section" id="s07">
+        <h2><span class="ds-num">07</span>Modules</h2>
+        <p class="ds-sub">
+          Four modules carry all nine screens: exercise, commerce, summary, settings. Try the drill
+          below — the card state, the feedback copy and the progress bar all move together.
+        </p>
+
+        <h3 class="ds-h3">A · Exercise — Was ist das?</h3>
+        <div class="ds-split">
+          <div class="ds-stage is-plain">
+            <div class="ds-col-specimens" style="width:100%">
+              <article class="qcard" id="quiz-card">
+                <p class="q-instr">Выберите артикль</p>
+                <p class="qn">___ Tisch</p>
+                <p class="example">Der Tisch ist aus Holz. <b>Пример</b></p>
+                <div style="display:grid;gap:var(--space-2)" role="group" aria-label="Артикль" id="quiz-choices">
+                  <button class="choice" type="button" aria-pressed="false" data-key="der"><span class="choice-key">1</span>der</button>
+                  <button class="choice" type="button" aria-pressed="false" data-key="die"><span class="choice-key">2</span>die</button>
+                  <button class="choice" type="button" aria-pressed="false" data-key="das"><span class="choice-key">3</span>das</button>
+                </div>
+                <div id="quiz-feedback" hidden></div>
+                <button class="btn btn-primary is-block" type="button" id="quiz-check">Проверить</button>
+              </article>
+              <div>
+                <div class="progress-text" style="padding:0 0 var(--space-2)"><span id="quiz-progress-label">Вопрос 1 из 8</span><span id="quiz-progress-value">12%</span></div>
+                <div class="progress-line"><span id="quiz-progress" style="--progress: 12%"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h4>Feedback contract</h4>
+            <p>Three states, each with colour, an icon slot and a sentence. Colour never carries the result alone.</p>
+            <div class="ds-card-body" style="display:grid;gap:var(--space-3)">
+              <div class="feedback correct">
+                <svg class="fb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                <span><strong>Правильно</strong><span class="fb-body">der Tisch — мужской род, окончание согласной.</span></span>
+              </div>
+              <div class="feedback almost">
+                <svg class="fb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>
+                <span><strong>Почти</strong><span class="fb-body">Слова на -e чаще женского рода: die Lampe.</span></span>
+              </div>
+              <div class="feedback incorrect">
+                <svg class="fb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                <span><strong>Неверно</strong><span class="fb-body">Правильно: der Tisch.</span></span>
+              </div>
+            </div>
+            <p class="ds-spec" style="margin-top: var(--space-4)">
+              .qcard[data-state] adds a 2px status ring · .feedback tints the message · both use status
+              ink tokens so 13px copy passes contrast in both themes
+            </p>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">B · Commerce — Einkaufen</h3>
+        <div class="ds-grid ds-grid-2">
+          <div class="ds-card">
+            <h4>Price table</h4>
+            <div class="price-table ds-card-body">
+              <div class="price-row"><span class="price-name">Tomaten · 1 kg</span><span class="price-val">2,49 €</span></div>
+              <div class="price-row"><span class="price-name">Brot · 500 g</span><span class="price-val">1,89 €</span></div>
+              <div class="price-row"><span class="price-name">Milch · 1 l</span><span class="price-val">0,99 €</span></div>
+              <div class="price-row"><span class="price-total">Gesamt</span><span class="price-val price-total">5,37 €</span></div>
+            </div>
+            <p class="ds-spec" style="margin-top: var(--space-3)">German decimal comma, tabular figures, no currency column of its own</p>
+          </div>
+          <div class="ds-card">
+            <h4>Product media</h4>
+            <div class="photo-ph ds-card-body" role="img" aria-label="Фото продукта ещё не подготовлено">
+              <span>4:3 product shot<br />not yet art-directed</span>
+            </div>
+            <p class="ds-spec" style="margin-top: var(--space-3)">
+              .photo-ph is the honest placeholder — dashed --border-strong, no stock photography
+            </p>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">C · Summary — Итоги</h3>
+        <div class="ds-card">
+          <div class="stat-strip">
+            <div class="od-stat is-ok"><strong>18</strong><span>правильно</span></div>
+            <div class="od-stat is-al"><strong>3</strong><span>почти</span></div>
+            <div class="od-stat is-bad"><strong>2</strong><span>ошибки</span></div>
+            <div class="od-stat"><strong>7</strong><span>серия</span></div>
+          </div>
+          <div class="ds-card-body" style="display:grid;gap:var(--space-5);max-width:640px">
+            <div class="minibar" role="img" aria-label="23 ответа: 18 верных, 3 почти, 2 ошибки">
+              <span class="is-ok"></span><span class="is-ok"></span><span class="is-ok"></span><span class="is-ok"></span>
+              <span class="is-al"></span><span class="is-ok"></span><span class="is-bad"></span><span class="is-ok"></span>
+              <span class="is-ok"></span><span class="is-ok"></span><span class="is-al"></span><span class="is-ok"></span>
+              <span class="is-ok"></span><span class="is-bad"></span><span class="is-ok"></span><span class="is-ok"></span>
+              <span class="is-ok"></span><span class="is-al"></span><span class="is-ok"></span><span class="is-ok"></span>
+              <span class="is-ok"></span><span class="is-ok"></span><span class="is-ok"></span>
+            </div>
+            <dl style="margin:0">
+              <div class="kv"><dt>Точность</dt><dd>78%</dd></div>
+              <div class="kv"><dt>Время</dt><dd>6 мин 24 с</dd></div>
+              <div class="kv"><dt>Новые слова</dt><dd>14</dd></div>
+            </dl>
+            <div class="issues-list">
+              <a class="issue-link" href="../artikel-und-verben.html">
+                <span class="issue-chip">6</span>
+                <span class="issue-txt od-fill"><span class="issue-title">Артикли der · die · das</span><span class="issue-sub">6 ошибок в этом уроке</span></span>
+                <svg class="issue-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </a>
+              <a class="issue-link" href="../sich-vorstellen.html">
+                <span class="issue-chip">2</span>
+                <span class="issue-txt od-fill"><span class="issue-title">Sich vorstellen</span><span class="issue-sub">2 ошибки в этом уроке</span></span>
+                <svg class="issue-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">D · Settings — Настройки</h3>
+        <div class="ds-grid ds-grid-2">
+          <div class="ds-card">
+            <h4>Rows with inline controls</h4>
+            <div class="ds-card-body">
+              <div class="set-row">
+                <span class="sr-i" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="3.5"/></svg>
+                </span>
+                <span class="sr-t od-fill"><b>Тема</b><span>Светлая, тёмная или системная</span></span>
+                <span class="seg" role="group" aria-label="Тема">
+                  <button type="button" aria-pressed="true">Светлая</button>
+                  <button type="button" aria-pressed="false">Тёмная</button>
+                </span>
+              </div>
+              <div class="set-row">
+                <span class="sr-i" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6"/></svg>
+                </span>
+                <span class="sr-t od-fill"><b>Уровень</b><span>Влияет на словарь уроков</span></span>
+                <span class="level-chip">A1</span>
+              </div>
+              <div class="set-row">
+                <span class="sr-t od-fill"><b>Сбросить прогресс</b><button class="set-reset" type="button" id="ds-reset">Сбросить</button></span>
+                <span class="set-status" id="ds-reset-status" aria-live="polite"></span>
+              </div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <h4>Destructive zone</h4>
+            <div class="danger-zone ds-card-body">
+              <p class="panel-h" style="margin-bottom: var(--space-2)">Удалить аккаунт</p>
+              <p class="panel-b">Прогресс, серии и сохранённые диалоги будут удалены безвозвратно.</p>
+              <div class="confirm-actions">
+                <button class="btn btn-danger-solid" type="button">Удалить</button>
+                <button class="btn btn-secondary" type="button">Отмена</button>
+              </div>
+            </div>
+            <p class="ds-spec" style="margin-top: var(--space-4)">
+              Destructive panels use a 8% danger tint with a 30% ring — never a red card with white text
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== 08 inventory ====================== -->
+      <section class="ds-section" id="s08">
+        <h2><span class="ds-num">08</span>Screen inventory</h2>
+        <p class="ds-sub">
+          All nine screens, their real titles, which module they compose and which token generation
+          they currently load. Links open the untouched source files.
+        </p>
+
+        <table class="ds-table ds-block">
+          <caption>Source file · document title · job · module · token generation</caption>
+          <thead>
+            <tr><th>File</th><th>Title</th><th>Job</th><th>Module</th><th>Token layer</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="../index.html">index.html</a></td><td>Главная · Test 1</td><td>course launcher, stat strip, tab bar</td><td><code>shared + metrics</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../was-ist-das.html">was-ist-das.html</a></td><td>Was ist das?</td><td>vocabulary drill</td><td><code>A exercise</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../artikel-und-verben.html">artikel-und-verben.html</a></td><td>Artikel und Verben</td><td>article &amp; verb drill</td><td><code>A exercise</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../sich-vorstellen.html">sich-vorstellen.html</a></td><td>Sich vorstellen</td><td>self-introduction drill</td><td><code>A exercise</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../einkaufen.html">einkaufen.html</a></td><td>Einkaufen</td><td>shopping dialogue, prices, photos</td><td><code>B commerce</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../dialoge.html">dialoge.html</a></td><td>Dialoge</td><td>dialogue picker (large select)</td><td><code>shared + .select-lg</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../summary.html">summary.html</a></td><td>Итоги</td><td>session results &amp; weak spots</td><td><code>C summary</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../preise.html">preise.html</a></td><td>Preise</td><td>course pricing</td><td><code>B commerce</code></td><td>Kumo binding</td></tr>
+            <tr><td><a href="../einstellungen.html">einstellungen.html</a></td><td>Настройки</td><td>preferences &amp; destructive actions</td><td><code>D settings</code></td><td><span class="badge is-soon">legacy KUMO</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="ds-note">
+          <b>One screen is out of step.</b> <code class="ds-spec">einstellungen.html</code> predates the
+          Kumo binding layer: softer radii (8/10/14px), a 15px base size, literal hover hexes and two
+          tokens it references but never defines. Everything that can be aliased is bridged by
+          <code class="ds-spec">tokens/legacy-bridge.css</code>; the collisions are itemised in the
+          <a href="docs/drift-report.md" style="color: var(--accent); font-weight: 600">drift report</a>.
+        </div>
+      </section>
+
+      <!-- ============================== 09 governance ===================== -->
+      <section class="ds-section" id="s09">
+        <h2><span class="ds-num">09</span>Governance</h2>
+        <p class="ds-sub">
+          The system only holds if new screens consume it. These are the rules that keep the next
+          screen from inventing a tenth radius.
+        </p>
+
+        <div class="ds-cols ds-block">
+          <div class="ds-card">
+            <h4>Do</h4>
+            <ul class="ds-list is-do ds-card-body">
+              <li>Reach for a token or an existing class before writing a new value.</li>
+              <li>Add a new value to tokens.css <em>and</em> tokens.json in the same change.</li>
+              <li>Keep one accent action per screen.</li>
+              <li>Pair every colour-coded result with a sentence in Russian.</li>
+              <li>Compose with the od-layout primitives instead of new flex wrappers.</li>
+            </ul>
+          </div>
+          <div class="ds-card">
+            <h4>Don't</h4>
+            <ul class="ds-list is-dont ds-card-body">
+              <li>Write literal hex, px radius, ms duration or shadow values in a screen.</li>
+              <li>Use --muted for interactive text, or status fills as text colour.</li>
+              <li>Add a fourth elevation, a second accent hue or a third duration.</li>
+              <li>Mix 6px and 8px radii inside one card.</li>
+              <li>Tint the phone chrome with theme colours.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="ds-h3">Files in this system</h3>
+        <ul class="ds-files">
+          <li><a href="DESIGN.md">DESIGN.md</a><span>The baton: colours, type, layout, elevation, do's and don'ts</span></li>
+          <li><a href="tokens/tokens.css">tokens/tokens.css</a><span>Canonical tokens, light + dark, with two optional levers</span></li>
+          <li><a href="tokens/tokens.json">tokens/tokens.json</a><span>Frozen values for framework ports</span></li>
+          <li><a href="tokens/legacy-bridge.css">tokens/legacy-bridge.css</a><span>Maps the older KUMO names onto canonical tokens</span></li>
+          <li><a href="tokens/od-layout-primitives.css">tokens/od-layout-primitives.css</a><span>The @layer od-layout primitives, verbatim</span></li>
+          <li><a href="components/components.css">components/components.css</a><span>Shell, chrome, navigation, controls, metrics, utilities</span></li>
+          <li><a href="components/modules.css">components/modules.css</a><span>Exercise, commerce, summary, settings modules</span></li>
+          <li><a href="docs/drift-report.md">docs/drift-report.md</a><span>Every divergence found, and how it was resolved</span></li>
+          <li><a href="README.md">README.md</a><span>Load order, adoption path, extraction deltas</span></li>
+        </ul>
+
+        <div class="ds-legend">
+          <span><code>resolved</code> — screens contradicted each other, canonical value chosen</span>
+          <span><code>hardened</code> — undefined token defined or literal made themable</span>
+          <span>Source files were not modified.</span>
+        </div>
+      </section>
+
+      <footer class="ds-footer">
+        <span>SpikyGerman design system v1.0 · extracted from 9 screens in the repository root</span>
+        <span>Spec sheet built from the system files only — no external assets, no inline hex.</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+/* ---- tweak levers (identity defaults; the panel can move them) ----------- */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "radiusScale": 1,
+  "spaceScale": 1
+}/*EDITMODE-END*/;
+
+/* ---- theme toggle ------------------------------------------------------- */
+const root = document.documentElement;
+const themeBtn = document.getElementById('theme-btn');
+const themeLabel = document.getElementById('theme-label');
+
+function syncThemeLabel() {
+  const dark = root.getAttribute('data-theme') === 'dark';
+  themeLabel.textContent = dark ? 'Light theme' : 'Dark theme';
+  themeBtn.setAttribute('aria-pressed', String(dark));
+}
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('spiky-ds-theme', next); } catch (e) {}
+  syncThemeLabel();
+  paintSwatches();
+  paintLevers();
+});
+syncThemeLabel();
+
+/* ---- resolved value readback ------------------------------------------- */
+const readVar = (name) => getComputedStyle(root).getPropertyValue(name).trim();
+
+/* ---- colour grid: values are read back, never hard-coded ---------------- */
+const COLOR_TOKENS = [
+  ['--bg', 'canvas', 'app background'],
+  ['--surface', 'surface', 'cards, bars, panels'],
+  ['--surface-warm', 'tint', 'selected, badges, rails'],
+  ['--fg', 'text', 'primary copy'],
+  ['--fg-2', 'text 2', 'secondary copy'],
+  ['--muted', 'muted', 'meta, icons, hints'],
+  ['--border', 'border', 'hairlines, rings'],
+  ['--accent', 'accent', 'one action per screen'],
+  ['--accent-on', 'on accent', 'text on accent only'],
+  ['--success', 'correct', 'fill — never text'],
+  ['--warn', 'almost', 'fill — never text'],
+  ['--danger', 'wrong', 'fill + destructive'],
+];
+const colorGrid = document.getElementById('color-grid');
+
+function paintSwatches() {
+  colorGrid.innerHTML = COLOR_TOKENS.map(([token, label, use]) => {
+    const value = readVar(token);
+    return `<div class="ds-swatch">
+      <div class="ds-swatch-chip" style="background: var(${token})"></div>
+      <div class="ds-swatch-meta">
+        <code>var(${token})</code>
+        <small>${value || '—'}</small>
+        <span class="ds-spec">${label} · ${use}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+paintSwatches();
+
+/* ---- type scale --------------------------------------------------------- */
+const TYPE_TOKENS = [
+  ['--text-3xl', 'Screen hero', 700, 'Guten Tag!'],
+  ['--text-2xl', 'Question', 700, 'Was ist das?'],
+  ['--text-xl', 'Stat · picker', 600, 'der Tisch'],
+  ['--text-lg', 'Section title', 600, 'Artikel und Verben'],
+  ['--text-base', 'Body · action', 400, 'Выберите правильный артикль.'],
+  ['--text-sm', 'Label', 600, 'Ответ по-немецки'],
+  ['--text-xs', 'Meta · badge', 600, 'Урок 3 из 8 · A1'],
+];
+document.getElementById('type-scale').insertAdjacentHTML('afterbegin', TYPE_TOKENS.map(([token, role, weight, sample]) => `
+  <div class="ds-type-row">
+    <span class="ds-spec">${token.replace('--text-', '')}</span>
+    <span class="ds-type-sample" style="font-size: var(${token}); font-weight: ${weight}" lang="de">${sample}</span>
+    <span class="ds-type-meta ds-spec">${role}<br />${readVar(token)} / ${weight}</span>
+  </div>`).join(''));
+
+/* ---- spacing ladder ----------------------------------------------------- */
+const SPACE_TOKENS = ['--space-1', '--space-2', '--space-3', '--space-4', '--space-5', '--space-6', '--space-8', '--space-12'];
+document.getElementById('space-ladder').innerHTML = SPACE_TOKENS.map((token) => `
+  <div class="ds-ladder-row">
+    <span class="ds-spec">${token.replace('--space-', 'space ')}</span>
+    <span class="ds-bar" style="width: var(${token})"></span>
+  </div>`).join('');
+
+/* ---- levers readout ----------------------------------------------------- */
+function paintLevers() {
+  document.getElementById('lever-radius').textContent = '×' + (readVar('--kumo-radius-scale') || '1');
+  document.getElementById('lever-space').textContent = '×' + (readVar('--kumo-space-scale') || '1');
+  document.getElementById('lever-radius-px').textContent = '--radius-lg ' + readVar('--radius-lg');
+  document.getElementById('lever-space-px').textContent = '--space-4 ' + readVar('--space-4');
+}
+paintLevers();
+/* The renderer writes tweak values onto :root — re-read whenever it does. */
+new MutationObserver(paintLevers).observe(root, { attributes: true, attributeFilter: ['style', 'class'] });
+
+/* ---- motion specimen --------------------------------------------------- */
+const motionBar = document.getElementById('motion-bar');
+let motionOn = false;
+document.getElementById('motion-run').addEventListener('click', () => {
+  motionOn = !motionOn;
+  motionBar.style.setProperty('--progress', motionOn ? '100%' : '18%');
+});
+
+/* ---- exercise module: real state machine ------------------------------- */
+const answer = 'der';
+const HINTS = {
+  der: ['correct', 'Правильно', 'der Tisch — мужской род, окончание согласной.'],
+  die: ['almost', 'Почти', 'Слова на -e чаще женского рода: die Lampe.'],
+  das: ['incorrect', 'Неверно', 'Правильно: der Tisch.'],
+};
+const quizCard = document.getElementById('quiz-card');
+const quizChoices = document.getElementById('quiz-choices');
+const quizFeedback = document.getElementById('quiz-feedback');
+const quizProgress = document.getElementById('quiz-progress');
+let picked = null;
+let answered = false;
+
+const ICONS = {
+  correct: '<path d="M20 6 9 17l-5-5"/>',
+  almost: '<path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/>',
+  incorrect: '<path d="M18 6 6 18M6 6l12 12"/>',
+};
+
+quizChoices.addEventListener('click', (event) => {
+  const choice = event.target.closest('.choice');
+  if (!choice || answered) return;
+  picked = choice.dataset.key;
+  [...quizChoices.querySelectorAll('.choice')].forEach((el) => {
+    el.setAttribute('aria-pressed', String(el === choice));
+  });
+});
+
+document.getElementById('quiz-check').addEventListener('click', () => {
+  if (answered) {
+    answered = false;
+    picked = null;
+    quizCard.removeAttribute('data-state');
+    quizFeedback.hidden = true;
+    quizFeedback.innerHTML = '';
+    [...quizChoices.querySelectorAll('.choice')].forEach((el) => el.setAttribute('aria-pressed', 'false'));
+    quizProgress.style.setProperty('--progress', '12%');
+    document.getElementById('quiz-progress-value').textContent = '12%';
+    document.getElementById('quiz-progress-label').textContent = 'Вопрос 1 из 8';
+    document.getElementById('quiz-check').textContent = 'Проверить';
+    return;
+  }
+  if (!picked) return;
+  const [state, title, body] = HINTS[picked];
+  answered = true;
+  quizCard.dataset.state = state;
+  quizFeedback.hidden = false;
+  quizFeedback.innerHTML = `<div class="feedback ${state}" role="status">
+      <svg class="fb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">${ICONS[state]}</svg>
+      <span><strong>${title}</strong><span class="fb-body">${body}</span></span>
+    </div>`;
+  quizProgress.style.setProperty('--progress', '25%');
+  document.getElementById('quiz-progress-value').textContent = '25%';
+  document.getElementById('quiz-progress-label').textContent = 'Вопрос 2 из 8';
+  document.getElementById('quiz-check').textContent = 'Дальше';
+});
+
+/* ---- settings module: destructive confirm pattern ---------------------- */
+const resetBtn = document.getElementById('ds-reset');
+const resetStatus = document.getElementById('ds-reset-status');
+resetBtn.addEventListener('click', () => {
+  const armed = resetBtn.dataset.armed === 'true';
+  resetBtn.dataset.armed = String(!armed);
+  resetBtn.textContent = armed ? 'Сбросить' : 'Подтвердить';
+  resetStatus.textContent = armed ? '' : 'Не забудьте подтвердить';
+});
+
+/* ---- pressed-state toggles for the generic specimens ------------------- */
+document.querySelectorAll('.lvl-btn, .seg button, .swatch button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const group = button.parentElement;
+    [...group.querySelectorAll('button')].forEach((el) => el.setAttribute('aria-pressed', String(el === button)));
+  });
+});
+
+/* ---- umlaut keypad inserts into the field ------------------------------ */
+const field = document.getElementById('ds-answer');
+document.querySelectorAll('.umlaut button').forEach((button) => {
+  button.addEventListener('click', () => {
+    const start = field.selectionStart ?? field.value.length;
+    field.value = field.value.slice(0, start) + button.textContent.trim() + field.value.slice(start);
+    field.focus();
+  });
+});
+</script>
+</body>
+</html>

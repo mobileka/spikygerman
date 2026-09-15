@@ -1,0 +1,136 @@
+/* ============================================================================
+   SpikyGerman Design System — design-stage scaffolding  ·  v1.0
+   ----------------------------------------------------------------------------
+   Mocks only. Phone frame, presentation stage, status bar, dynamic-island
+   cut-out, gesture indicator and hardware buttons exist so the frozen screens
+   in designs/ and the spec sheet render as device mockups. They are never
+   part of the shipped app: src/app.css does NOT import this file.
+
+   Moved verbatim out of components/components.css (ticket 17) so the
+   component layer stays shippable. Every declaration references
+   tokens/tokens.css — no literal colours, radii, spacing or durations below
+   this line.
+   ========================================================================= */
+
+/* Presentation stage. In the source files this rule targeted <body>; the system
+   moves it here so screens can be embedded in docs, galleries and storybooks
+   without inheriting a centred, full-viewport stage. */
+.od-stage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  gap: var(--space-6);
+  padding: var(--space-8);
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--stage-glow), transparent 60%),
+    var(--phone-stage-bg);
+}
+
+/* ------------------------------------------------- device shell (chrome) -- */
+.phone-frame {
+  position: relative;
+  flex: none;
+  width: calc(var(--phone-screen-width) + var(--phone-bezel) * 2);
+  height: calc(var(--phone-screen-height) + var(--phone-bezel) * 2);
+  padding: var(--phone-bezel);
+  border-radius: var(--phone-outer-radius);
+  background: linear-gradient(155deg, #4a5261 0%, #23282f 38%, var(--phone-body) 100%);
+  box-shadow:
+    0 48px 88px -40px rgba(16, 24, 40, .5),
+    0 4px 12px -4px rgba(16, 24, 40, .22),
+    inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+
+.phone-screen {
+  position: relative;
+  width: var(--phone-screen-width);
+  height: var(--phone-screen-height);
+  border-radius: var(--phone-screen-radius);
+  overflow: hidden;
+  background: var(--phone-screen-bg);
+  color: var(--phone-system-fg);
+  isolation: isolate;
+}
+
+.status-bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  height: var(--phone-safe-top);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6) 0 var(--space-8);
+  font-size: var(--text-sm);
+  font-weight: 560;
+  letter-spacing: .01em;
+  pointer-events: none;
+}
+.status-time { font-variant-numeric: tabular-nums; }
+.status-icons { display: flex; align-items: center; gap: 6px; }
+.status-icons svg { display: block; }
+
+/* Dynamic-island cut-out. Device chrome only — never place app content here. */
+.status-cutout-zone {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: #05060a;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+.camera-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle at 35% 35%, rgba(120, 170, 255, .55), rgba(10, 12, 18, .9) 70%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+}
+
+.gesture-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  opacity: .32;
+  z-index: 3;
+}
+
+.hardware-button {
+  position: absolute;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #3d444f, #1b1f26);
+}
+.hardware-button.is-mute   { left: -2px; top: 132px; width: 3px; height: 30px; }
+.hardware-button.is-vol-up { left: -2px; top: 186px; width: 3px; height: 56px; }
+.hardware-button.is-vol-dn { left: -2px; top: 256px; width: 3px; height: 56px; }
+.hardware-button.is-power  { right: -2px; top: 210px; width: 3px; height: 84px; }
+
+.od-stage .phone-frame { margin-inline: auto; }
+
+/* The mock app frame clears the device chrome above and below. Kept here —
+   not in components.css — because the shipped app has no status bar or
+   gesture indicator to clear. */
+.app { padding: var(--phone-safe-top) 0 var(--phone-safe-bottom); }
+
+/* Frame scaling. `zoom` keeps layout metrics honest (hit targets stay 44px in
+   device space, unlike transform:scale). Scoped to the stage so an embedded
+   .phone-frame is never silently resized by the host viewport. */
+@media (max-height: 900px) { .od-stage .phone-frame { zoom: .92; } }
+@media (max-height: 820px) { .od-stage .phone-frame { zoom: .84; } }
+@media (max-width: 480px) {
+  .od-stage { display: block; padding: 0; background: var(--phone-screen-bg); }
+  .od-stage .phone-frame { width: 100%; height: auto; padding: 0; border-radius: 0; box-shadow: none; background: none; zoom: 1; }
+  .od-stage .phone-screen { width: 100%; height: 100vh; border-radius: 0; }
+  .od-stage .status-cutout-zone, .od-stage .hardware-button { display: none; }
+}

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<script>
+/* theme boot — must stay inline in <head> so the first paint has no flash */
+(function(){try{var t=localStorage.getItem("spiky-theme");if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
+<title>Новый урок — SpikyGerman</title>
+
+<!-- Design system, in load order.
+
+     This template becomes a new screen at the repository root, but it also renders
+     correctly where it sits inside the package, so the path to the system files
+     depends on where the file ends up:
+
+       · copied to the repository root      →  src/styles/tokens/tokens.css
+       · previewed inside src/styles/        →  tokens/tokens.css
+
+     Both are resolved below before a single stylesheet is requested. Once a screen
+     has settled at the root, the "src/styles/…" form can be hard-coded. -->
+<script>
+(function () {
+  /* Which directory is this page actually served from? Not always the folder the file
+     sits in, so the prefix follows the live URL: if the address already contains
+     "src/styles/", the system folders are siblings and need no prefix; otherwise
+     the page is being served from the repository root and reaches into the package. */
+  var servedFromPackage = decodeURIComponent(location.href).indexOf("src/styles/") > -1;
+  var prefix = servedFromPackage ? "" : "src/styles/";
+  var layers = [
+    "tokens/tokens.css",
+    "tokens/legacy-bridge.css",
+    "tokens/od-layout-primitives.css",
+    "components/components.css",
+    "components/design-stage.css",
+    "components/modules.css"
+  ];
+  for (var i = 0; i < layers.length; i++) {
+    document.write('<link rel="stylesheet" href="' + prefix + layers[i] + '">');
+  }
+  // The screen links below are authored for the repository root, where they point
+  // at sibling screens. Previewed where it sits, they are re-based so the mock and
+  // its tab bar stay navigable.
+  if (servedFromPackage) {
+    document.addEventListener("DOMContentLoaded", function () {
+      var links = document.querySelectorAll('a[href$=".html"]');
+      for (var j = 0; j < links.length; j++) {
+        links[j].setAttribute("href", "../" + links[j].getAttribute("href"));
+      }
+    });
+  }
+})();
+</script>
+</head>
+<body>
+<a class="skip-link" href="#screen">Перейти к заданию</a>
+
+<div class="od-stage">
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="status-bar" aria-hidden="true">
+        <span class="status-time">9:41</span>
+        <span class="status-icons">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+        </span>
+      </div>
+      <div class="status-cutout-zone" aria-hidden="true"><span class="camera-dot"></span></div>
+
+      <div class="app">
+        <header class="topbar">
+          <div class="brand-row od-fill">
+            <span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M5.1 23.3 2.2 22.2l1.4-2.6-2-2.3 2.5-1.7-.7-2.9 3.1-.4.9-2.8 2.9.9 2.2-2.1 2.2 2.1 2.9-.9.9 2.8 3.1.4-.7 2.9 2.5 1.7-2 2.3 1.4 2.6-2.9 1.1Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.9" stroke-linejoin="round" />
+            <path d="M4.6 21.3 2.9 19.6l1.2-2-1.2-2.2 2.1-1.3.6-2.3 2.5-.2 1.6-1.8 2.3.9 2.3-.9 1.6 1.8 2.5.2.6 2.3 2.1 1.3-1.2 2.2 1.2 2-1.7 1.7Z" fill="#5d6472" />
+            <circle cx="5.8" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="19.2" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M5.2 27.5V19a7.3 6.8 0 0 1 14.6 0v8.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1.1" stroke-linejoin="round" />
+            <ellipse cx="9.7" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <ellipse cx="15.3" cy="18.5" rx="2" ry="2.4" fill="#eecb93" />
+            <circle cx="9.7" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="15.3" cy="18.3" r="1.25" fill="#2e3138" />
+            <circle cx="10.1" cy="17.9" r="0.35" fill="#ffffff" />
+            <circle cx="15.7" cy="17.9" r="0.35" fill="#ffffff" />
+            <ellipse cx="12.5" cy="21.2" rx="1.4" ry="1" fill="#2e3138" />
+            <ellipse cx="12.1" cy="21" rx="0.4" ry="0.25" fill="#ffffff" opacity="0.7" />
+            <path d="M12.5 22.2v.7m0 0c-.3 1-2.4 1.2-3 .3m3-.3c.3 1 2.4 1.2 3 .3" stroke="#2e3138" stroke-width="0.55" fill="none" stroke-linecap="round" />
+            <path d="M19 25.4 17.2 24.2l1.1-1.8-.8-1.9 2-.9.5-2 2.2.3 1.6-1.4 1.6 1.4 2.2-.3.5 2 2 .9-.8 1.9 1.1 1.8-1.8 1.2Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.8" stroke-linejoin="round" />
+            <path d="M18.8 23.9 17.9 22.4l1.2-1.3.1-1.7 1.7-.6 1.2-1.3 1.7.5 1.7-.5 1.2 1.3 1.7.6.1 1.7 1.2 1.3-.9 1.5Z" fill="#5d6472" />
+            <circle cx="20.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <circle cx="27.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
+            <path d="M19.6 27.5V23a4.2 4 0 0 1 8.4 0v4.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1" stroke-linejoin="round" />
+            <ellipse cx="20.6" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <ellipse cx="27" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
+            <circle cx="21.9" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <circle cx="25.7" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
+            <path d="M23.7 23h.2M20.1 22.8l-.9-.2M27.5 22.8l.9-.2" stroke="#2e3138" stroke-width="0.7" stroke-linecap="round" />
+            <circle cx="21.9" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="25.7" cy="23.1" r="0.8" fill="#2e3138" />
+            <circle cx="22.2" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="26" cy="22.8" r="0.22" fill="#ffffff" />
+            <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
+            <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
+          </svg></span>
+            <span class="od-fill" style="display:grid;gap:1px">
+              <span class="brand-name">SpikyGerman</span>
+              <span class="brand-sub">Тест 2 · Deutsch A1</span>
+            </span>
+            <span class="level-chip">A1</span>
+          </div>
+        </header>
+
+        <div class="progress-text"><span>Вопрос 1 из 8</span><span>12%</span></div>
+        <div class="progress-line is-lg" style="margin: 0 16px var(--space-2)"><span style="--progress: 12%"></span></div>
+
+        <main class="screen od-scroll" id="screen">
+          <article class="qcard">
+            <p class="q-instr">Выберите артикль</p>
+            <p class="qn">___ Lampe</p>
+            <p class="example">Die Lampe ist neu.</p>
+            <div style="display:grid;gap:var(--space-2)" role="group" aria-label="Артикль">
+              <button class="choice" type="button" aria-pressed="false"><span class="choice-key">1</span>der</button>
+              <button class="choice" type="button" aria-pressed="true"><span class="choice-key">2</span>die</button>
+              <button class="choice" type="button" aria-pressed="false"><span class="choice-key">3</span>das</button>
+            </div>
+            <div class="feedback correct" role="status">
+              <svg class="fb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              <span><strong>Правильно</strong><span class="fb-body">die Lampe — слова на -e чаще женского рода.</span></span>
+            </div>
+            <button class="btn btn-primary is-block" type="button">Проверить</button>
+          </article>
+        </main>
+
+        <nav class="tabbar" aria-label="Основная навигация" style="--tab-count: 3">
+          <a class="tab" href="index.html" aria-current="page">Главная</a>
+          <a class="tab" href="dialoge.html">Dialoge</a>
+          <a class="tab" href="summary.html">Итоги</a>
+        </nav>
+      </div>
+
+      <span class="gesture-indicator" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<!-- This page is the copy-paste starting point for a new screen: five links, a
+     theme boot, and the four-row app grid. Nothing else is required. -->
+</body>
+</html>

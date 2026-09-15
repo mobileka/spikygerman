@@ -1,0 +1,98 @@
+/* ============================================================================
+   SpikyGerman Design System — legacy bridge  ·  v1.0
+   ----------------------------------------------------------------------------
+   einstellungen.html ("Настройки") still speaks the older "KUMO token layer"
+   naming. This file maps every legacy name that CAN be expressed in canonical
+   tokens onto tokens/tokens.css, so the settings screen can adopt the shared
+   system without being rewritten first.
+
+   Load order:  tokens.css → legacy-bridge.css → (any screen css)
+
+   Names that CANNOT be aliased because they collide with canonical tokens are
+   listed at the bottom as open work. They are the reason einstellungen.html
+   looks slightly different from the other eight screens — see
+   ../docs/drift-report.md for the full diff.
+   ========================================================================= */
+
+:root {
+  /* --- legacy stage / body ----------------------------------------------- */
+  --stage-base:  var(--phone-stage-bg);
+  --body-bg:     var(--phone-stage-bg);
+  --stage-glow:  var(--stage-glow);            /* dark theme sets its own */
+  --paper-fixed: #ffffff;                      /* legacy: never flips with theme */
+  --ink-fixed:   #101828;                      /* legacy: never flips with theme */
+
+  /* --- legacy surfaces & fills ------------------------------------------ */
+  --surface-muted: var(--surface-warm);
+  --accent-soft:   color-mix(in oklab, var(--accent), transparent 86%);
+  --success-soft:  color-mix(in oklab, var(--success), transparent 88%);
+  --warn-soft:     color-mix(in oklab, var(--warn), transparent 88%);
+  --danger-soft:   color-mix(in oklab, var(--danger), transparent 90%);
+  --border-strong: var(--muted);
+
+  /* --- legacy radius verbs ---------------------------------------------- */
+  --radius-full: var(--radius-pill);
+  --radius-xl:   20px;                         /* legacy sheet/hero radius */
+
+  /* --- legacy elevation (canonical set is flat / ring / raised only) ----- */
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, .06), 0 1px 3px rgba(17, 24, 39, .04);
+  --shadow-md: 0 8px 20px rgba(17, 24, 39, .08), 0 2px 6px rgba(17, 24, 39, .04);
+  --shadow-lg: 0 18px 40px rgba(17, 24, 39, .12), 0 4px 12px rgba(17, 24, 39, .06);
+  --halo: 0 0 0 1px rgba(17, 24, 39, .04), 0 10px 30px rgba(17, 24, 39, .06);
+
+  /* --- legacy typography ------------------------------------------------ */
+  --font-sans: var(--font-body);
+  --lh-base:    1.5;
+  --lh-tight:   1.2;
+  --lh-relaxed: 1.65;
+
+  /* --- legacy motion ---------------------------------------------------- */
+  --duration-fast: var(--motion-fast);
+  --duration-base: var(--motion-base);
+  --ease-emphasized: var(--ease-standard);
+
+  /* --- legacy device chrome -------------------------------------------- */
+  --phone-body: #1f2530;                       /* light theme frame fill */
+}
+:root[data-theme="dark"] {
+  --phone-body: #0a0d13;
+  --paper-fixed: #ffffff;
+  --ink-fixed:   #101828;
+}
+
+/* ---------------------------------------------------------------------------
+   NOT BRIDGED — colliding names. Aliasing these would silently restyle the
+   eight canonical screens, so they must be resolved by editing
+   einstellungen.html (or by accepting the canonical value as the new look).
+
+   name              einstellungen.html        canonical (tokens.css)
+   --bg              #eef1f6 (stage-ish)       #f5f8ff
+   --surface         #ffffff                   #ffffff              ✓ same
+   --surface-warm    #f5f8ff                   #eaf1ff
+   --border          #d8dee8                   #d7e0ef
+   --border-soft     #e9edf4                   #edf2f8
+   --fg              #111827                   #101828
+   --fg-2            #3f4653                   #344054
+   --muted           #6b7280                   #667085
+   --accent          #2563eb                   #2563eb              ✓ same
+   --accent-hover    #1d4ed8 (literal)         color-mix(accent, black 8%)
+   --accent-active   #1e40af (literal)         color-mix(accent, black 14%)
+   --success         #15803d                   #16a34a
+   --warn            #b45309                   #f59e0b
+   --danger          #b91c1c                   #ef4444
+   --radius-sm       8px                       4px
+   --radius-md       10px                      6px
+   --radius-lg       14px                      8px
+   --text-base       15px                      14px
+   --text-xl         18px (after 18px patch)   20px
+   --text-2xl        22px                      24px
+   --text-3xl        28px                      30px
+   --motion-fast     120ms                     150ms
+   --motion-base     220ms                     250ms
+   --ease-standard   differing curve           cubic-bezier(0.77, 0, 0.175, 1)
+
+   Migration guidance: the settings screen gains ~2px of extra air and drops one
+   step of radius when it moves to the canonical ladder. That is the intended
+   direction of travel; the legacy surface only *looks* softer because its
+   radius ladder was authored for a poster-like layout.
+   ------------------------------------------------------------------------ */

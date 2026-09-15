@@ -1,3 +1,20 @@
+/* Arctic Blue design system — single source of truth lives in src/styles/.
+   Wired so far: tokens + layout primitives. Both are provably inert under the
+   rules kept in this file (tokens only add variables this file overrides or
+   never reads; primitives sit in @layer od-layout and no markup uses od-*
+   classes), so rendering stays byte-identical.
+   components.css / modules.css are NOT imported yet: their product rules
+   assume mock markup (e.g. .topbar flex column, .app safe-area padding) and
+   demonstrably shift the app layout (topbar 65px → 89px). Wiring them in is
+   ticket 19's per-component convergence, not this ticket. Nothing below is
+   deleted yet.
+   Not imported, ever, by the app: tokens/legacy-bridge.css (nothing uses the
+   legacy names, and its soft-fill values differ) and
+   components/design-stage.css (phone frame, stage and device chrome the
+   shipped app never renders). */
+@import "./styles/tokens/tokens.css";
+@import "./styles/tokens/od-layout-primitives.css";
+
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -36,7 +53,8 @@
 
 :root {
   color-scheme: light;
-  /* Blue design tokens — designs/00001 - Blue */
+  /* Blue design tokens — canonical values now live in src/styles/tokens/tokens.css;
+     this block stays as the app override layer until ticket 19 converges it. */
   --bg: #f5f8ff;
   --surface: #ffffff;
   --surface-warm: #eaf1ff;
@@ -119,7 +137,7 @@
    Dark tokens are OKLch derivations of the Kumo blue system: same hue
    family as --accent, surfaces step upward in lightness, and the accent
    brightens so buttons flip to dark-on-blue instead of white-on-blue.
-   Source: designs/00003 – Blue – Dark */
+   Canonical source: src/styles/tokens/tokens.css */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: oklch(0.207 0.021 264);

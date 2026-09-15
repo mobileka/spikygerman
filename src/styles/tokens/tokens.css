@@ -1,0 +1,196 @@
+/* ============================================================================
+   SpikyGerman Design System — token layer  ·  v1.0
+   ----------------------------------------------------------------------------
+   Source of truth: index.html (entry) — "Cloudflare Kumo UI — OpenDesign
+   semantic bindings (curated integration, MIT upstream)".
+   The same block is byte-identical in 8 of the 9 screens in this directory
+   (index, was-ist-das, artikel-und-verben, sich-vorstellen, einkaufen,
+   dialoge, summary, preise). einstellungen.html carries the older "KUMO token
+   layer" and is bridged by tokens/legacy-bridge.css — see docs/drift-report.md.
+
+   Frozen values are listed literally below so an implementation can be ported
+   without reading this file's comments. Two runtime levers are expressed as
+   calc() multipliers with identity defaults (1 = the frozen value):
+     --kumo-radius-scale   rounds the radius ladder
+     --kumo-space-scale    scales the 4→48 spacing ladder
+   Both are opt-in; leave them unset for pixel-faithful output.
+   ========================================================================= */
+
+:root {
+  /* ---- type families ---------------------------------------------------- */
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* ---- type scale (px) -------------------------------------------------- */
+  --kumo-type-scale: 1;                      /* lever · default 1 = frozen  */
+  --text-xs:   calc(12px * var(--kumo-type-scale));
+  --text-sm:   calc(13px * var(--kumo-type-scale));
+  --text-base: calc(14px * var(--kumo-type-scale));
+  --text-lg:   calc(16px * var(--kumo-type-scale));
+  --text-xl:   calc(20px * var(--kumo-type-scale));
+  --text-2xl:  calc(24px * var(--kumo-type-scale));
+  --text-3xl:  calc(30px * var(--kumo-type-scale));
+
+  --leading-body: 1.5;
+  --leading-tight: 1.2;
+  --tracking-display: 0;
+
+  /* weight ladder actually used by screens: 500 label · 600 title · 700 hero
+     (status bar uses 560 — device chrome only) */
+
+  /* ---- spacing ladder (px) --------------------------------------------- */
+  --kumo-space-scale: 1;                     /* lever · default 1 = frozen  */
+  --space-1:  calc(4px  * var(--kumo-space-scale));
+  --space-2:  calc(8px  * var(--kumo-space-scale));
+  --space-3:  calc(12px * var(--kumo-space-scale));
+  --space-4:  calc(16px * var(--kumo-space-scale));
+  --space-5:  calc(20px * var(--kumo-space-scale));
+  --space-6:  calc(24px * var(--kumo-space-scale));
+  --space-8:  calc(32px * var(--kumo-space-scale));
+  --space-12: calc(48px * var(--kumo-space-scale));
+
+  /* ---- radius ladder --------------------------------------------------- */
+  --kumo-radius-scale: 1;                    /* lever · default 1 = frozen  */
+  --radius-sm:   calc(4px * var(--kumo-radius-scale));   /* chips, swatch, code */
+  --radius-md:   calc(6px * var(--kumo-radius-scale));   /* inputs-in-row, icon btn */
+  --radius-lg:   calc(8px * var(--kumo-radius-scale));   /* cards, buttons, fields */
+  --radius-pill: 9999px;                                 /* badges, progress, chips */
+
+  /* ---- elevation ------------------------------------------------------- */
+  --elev-flat:   none;
+  --elev-ring:   0 0 0 1px var(--border);        /* always paired with raised */
+  --elev-raised: 0 1px 2px 0 rgba(0, 0, 0, .08);
+
+  /* ---- focus ----------------------------------------------------------- */
+  --focus-ring: 0 0 0 4px rgba(37, 99, 235, .22);
+
+  /* ---- motion ---------------------------------------------------------- */
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+  --ease-standard: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* ---- layout / primitives -------------------------------------------- */
+  --od-gap: 8px;
+  --od-rail-pad: 16px;
+  --app-pad: 16px;
+  --tab-count: 3;                            /* tabbar column count         */
+  --strip-cols: 4;                           /* stat-strip column count     */
+
+  /* ---- device shell geometry (presentation only) ---------------------- */
+  --phone-screen-width: 390px;
+  --phone-screen-height: 844px;
+  --phone-bezel: 10px;
+  --phone-outer-radius: 52px;
+  --phone-screen-radius: 42px;
+  --phone-safe-top: 50px;
+  --phone-safe-bottom: 29px;
+  --phone-system-fg: #17181a;
+  --phone-screen-bg: #f8f8f9;
+  --phone-stage-bg: #eaebee;
+
+  /* ---- semantic color · light theme ----------------------------------- */
+  color-scheme: light;
+
+  --bg: #f5f8ff;            /* app canvas */
+  --surface: #ffffff;       /* cards, panels, bars */
+  --surface-warm: #eaf1ff;  /* tinted fills, badges, active tabs */
+  --paper: #ffffff;         /* flat backdrop behind app frame */
+  --stage: var(--phone-stage-bg);
+
+  --fg: #101828;            /* primary text */
+  --fg-2: #344054;          /* secondary text */
+  --muted: #667085;         /* meta text, icons, placeholder */
+  --meta: #2563eb;          /* linked metadata in running text */
+
+  --border: #d7e0ef;
+  --border-soft: #edf2f8;
+
+  --accent: #2563eb;
+  --accent-on: #ffffff;
+  --accent-hover:  color-mix(in oklab, var(--accent), black 8%);
+  --accent-active: color-mix(in oklab, var(--accent), black 14%);
+
+  --success: #16a34a;
+  --warn:    #f59e0b;
+  --danger:  #ef4444;
+
+  /* status ink: text-safe counterparts of the fills above (fills are tuned
+     for area, not for 12–13px text). Fixed hex so they resolve on older
+     engines without color-mix; the dark block overrides them below. */
+  --success-ink:      #15803d;
+  --warn-ink:         #b45309;
+  --danger-ink:       #b91c1c;
+  --danger-solid:     #dc2626;
+  --danger-ink-solid: #ffffff;
+
+  --code-bg: rgba(0, 0, 0, .05);
+  --stage-glow: rgba(255, 255, 255, .94);
+
+  /* ---- device chrome (light) ------------------------------------------ */
+  --phone-body: #1f2530;
+}
+
+/* ---- semantic color · dark theme ---------------------------------------
+   OKLch derivations of the same blue family (hue 264). Surfaces step *up* in
+   lightness while the canvas steps down, and the accent *brightens* so buttons
+   read dark-on-blue instead of white-on-blue. Never hand-mix dark greys. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:            oklch(0.207 0.021 264);
+  --surface:       oklch(0.262 0.024 264);
+  --surface-warm:  oklch(0.322 0.030 264);
+  --paper:         oklch(0.235 0.024 264);
+
+  --fg:    oklch(0.965 0.006 264);
+  --fg-2:  oklch(0.860 0.012 264);
+  --muted: oklch(0.720 0.020 264);
+  --meta:  oklch(0.720 0.140 264);
+
+  --border:      oklch(0.372 0.028 264);
+  --border-soft: oklch(0.308 0.022 264);
+
+  --accent:        oklch(0.700 0.160 264);
+  --accent-on:     oklch(0.170 0.020 264);
+  --accent-hover:  color-mix(in oklab, var(--accent), white 8%);
+  --accent-active: color-mix(in oklab, var(--accent), white 14%);
+
+  --success: oklch(0.760 0.160 152);
+  --warn:    oklch(0.820 0.150 78);
+  --danger:  oklch(0.710 0.180 25);
+
+  /* status ink flips: soft tints stay dark here, so the text must be bright */
+  --success-ink:      color-mix(in oklab, var(--success), white 10%);
+  --warn-ink:         color-mix(in oklab, var(--warn), white 10%);
+  --danger-ink:       color-mix(in oklab, var(--danger), white 10%);
+  --danger-solid:     var(--danger);
+  --danger-ink-solid: oklch(0.170 0.020 264);
+
+  --code-bg:    rgba(255, 255, 255, .09);
+  --stage-glow: oklch(0.620 0.170 264 / .16);
+
+  --elev-raised: 0 1px 3px 0 rgba(0, 0, 0, .55);
+  --focus-ring:  0 0 0 4px oklch(0.700 0.160 264 / .4);
+
+  --phone-system-fg:   oklch(0.950 0.005 264);
+  --phone-screen-bg:   oklch(0.115 0.012 264);
+  --phone-stage-bg:    oklch(0.135 0.014 264);
+  --phone-body:        #0a0d13;
+}
+
+/* Theme boot contract — identical in every screen and required for no-flash
+   first paint. Keep the key "spiky-theme" so app and tooling stay in sync.
+   ---------------------------------------------------------------------------
+   <html lang="ru" data-theme="light">
+   <script>(function(){try{var t=localStorage.getItem("spiky-theme");
+     if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia(
+     "(prefers-color-scheme: dark)").matches)?"dark":"light";}
+     document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+   ------------------------------------------------------------------------ */
+
+/* Compatibility note: --accent-hover / --accent-active / every *-soft fill use
+   color-mix(in oklab|srgb, …). Support: Chrome/Edge 111+, Safari 16.2+,
+   Firefox 113+. Below that the mixes drop out and hover/soft fills fall back to
+   transparent — ship the literal fallbacks in tokens/tokens.json if you must
+   target older engines. */
