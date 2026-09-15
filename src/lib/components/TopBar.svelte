@@ -22,11 +22,9 @@
 </script>
 
 <header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand-row">
-      <a class="mark-link" href="#/" aria-label={t("logo_home_label")}>
-        <span class="mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
+  <div class="brand-row">
+    <a class="mark" href="#/" aria-label={t("logo_home_label")}>
+      <svg viewBox="0 0 32 32" aria-hidden="true">
             <path d="M5.1 23.3 2.2 22.2l1.4-2.6-2-2.3 2.5-1.7-.7-2.9 3.1-.4.9-2.8 2.9.9 2.2-2.1 2.2 2.1 2.9-.9.9 2.8 3.1.4-.7 2.9 2.5 1.7-2 2.3 1.4 2.6-2.9 1.1Z" fill="#3f444e" stroke="#2e3138" stroke-width="0.9" stroke-linejoin="round" />
             <path d="M4.6 21.3 2.9 19.6l1.2-2-1.2-2.2 2.1-1.3.6-2.3 2.5-.2 1.6-1.8 2.3.9 2.3-.9 1.6 1.8 2.5.2.6 2.3 2.1 1.3-1.2 2.2 1.2 2-1.7 1.7Z" fill="#5d6472" />
             <circle cx="5.8" cy="13.5" r="2.1" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.9" />
@@ -58,18 +56,19 @@
             <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
             <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
           </svg>
-        </span>
       </a>
       <span class="brand-text">
         <span class="brand-name">SpikyGerman</span>
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
       {#if current !== "home"}
-        <span class="level-chip">{t("level_chip")}</span>
+        <span class="level-chip" data-od-id="level-badge">{t("level_chip")}</span>
       {/if}
       <button
         class="theme-toggle"
         type="button"
+        data-theme-toggle
+        data-od-id="theme-toggle"
         aria-pressed={dark}
         aria-label={themeLabel}
         title={themeLabel}
@@ -87,13 +86,14 @@
       </button>
     </div>
     {#if current !== "home"}
-      <ProgressBar {counts} />
-      <p class="progress-text" role="status">
-        {format(t("progress_answered"), {
-          answered: counts.answered,
-          total: counts.total,
-        })}
-      </p>
+      <div class="lvl-progress">
+        <ProgressBar {counts} />
+        <p class="progress-text" role="status">
+          {format(t("progress_answered"), {
+            answered: counts.answered,
+            total: counts.total,
+          })}
+        </p>
+      </div>
     {/if}
-  </div>
 </header>

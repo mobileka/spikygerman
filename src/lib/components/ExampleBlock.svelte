@@ -16,13 +16,13 @@
 </script>
 
 <div class="example">
-  <p class="ex-k">{t("example_label")}</p>
+  <strong>{t("example_label")}</strong>
   {#if photo}
     <ImageBlock {photo} {alt} />
   {/if}
   {#if german}
-    <p class="example-text" lang="de">{example}</p>
+    <br /><span lang="de">{example}</span>
   {:else}
-    <p class="example-text">{example}</p>
+    <br /><span>{example}</span>
   {/if}
 </div>

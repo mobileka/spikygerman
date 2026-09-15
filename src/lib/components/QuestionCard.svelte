@@ -52,7 +52,8 @@
   class="qcard"
   id={question.id}
   tabindex="-1"
-  data-status={result?.status ?? ""}
+  data-qid={question.id}
+  data-state={result?.status ?? ""}
   aria-label={format(t("question_label"), { n: number })}
 >
   {#if question.instruction}
@@ -67,7 +68,12 @@
   {:else}
     <FreeTextWidget {question} {number} {values} {result} media={questionMedia} />
   {/if}
-  <button type="button" class="btn btn-primary check-button" onclick={onCheck}>
+  <button
+    type="button"
+    class="btn btn-primary is-block"
+    data-check
+    onclick={onCheck}
+  >
     <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
       <path
         d="M4 10.5 8.5 15 16 6"
@@ -80,9 +86,11 @@
     </svg>
     <span>{t("check")}</span>
   </button>
-  {#if result}
-    <div class="feedback-anchor" bind:this={feedbackAnchor} tabindex="-1">
+  <div class="feedback-anchor" bind:this={feedbackAnchor} tabindex="-1">
+    {#if result}
       <Feedback {question} {result} id={feedbackId} />
-    </div>
-  {/if}
+    {:else}
+      <div class="feedback is-empty"></div>
+    {/if}
+  </div>
 </article>

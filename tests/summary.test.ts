@@ -167,6 +167,28 @@ describe("summarize", () => {
       "empty",
     ]);
   });
+
+  it("counts typed-but-unchecked answers as empty when a checked list is given", () => {
+    const summary = summarize(
+      sections,
+      {
+        q01: { answer: "Ja, das ist gut." },
+        q02: { answer: "Nein, das ist schlecht." },
+      },
+      countries,
+      ["q01"],
+    );
+    expect(summary.answered).toBe(1);
+    expect(summary.correct).toBe(1);
+    expect(summary.empty).toBe(4);
+    expect(summary.issues.map((issue) => issue.question.id)).toEqual([
+      "q02",
+      "q03",
+      "q04",
+      "q05",
+    ]);
+    expect(summary.issues.every((issue) => issue.status === "empty")).toBe(true);
+  });
 });
 
 function modelValues(question: Question): Record<string, string> {

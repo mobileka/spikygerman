@@ -38,6 +38,7 @@ export function summarize(
   sections: Section[],
   answers: Record<string, Record<string, string>>,
   countries: Country[],
+  checked?: string[],
 ): TestSummary {
   const summary: TestSummary = {
     total: 0,
@@ -59,6 +60,15 @@ export function summarize(
     };
 
     for (const question of section.questions) {
+      // When a checked list is given (app runtime), only checked questions
+      // count — typed-but-unchecked stays empty so header and summary agree.
+      // Without it (unit tests, bulk grading) every answer grades live.
+      if (checked && !checked.includes(question.id)) {
+        summary.total++;
+        summary.empty++;
+        summary.issues.push({ question, section, status: "empty" });
+        continue;
+      }
       const result = gradeQuestion(question, answers[question.id] ?? {}, countries);
       summary.total++;
 

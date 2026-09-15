@@ -4,6 +4,7 @@
   import { progress } from "../state.svelte";
   import { format } from "../format";
   import { sectionHash } from "../routing";
+  import ProgressRing from "./ProgressRing.svelte";
 
   const batch = 3;
 
@@ -11,7 +12,12 @@
   let shown = $state(batch);
 
   const summary = $derived(
-    summarize(content.sections, progress.answers, content.countries),
+    summarize(
+      content.sections,
+      progress.answers,
+      content.countries,
+      progress.checked,
+    ),
   );
   const visibleIssues = $derived(summary.issues.slice(0, shown));
   const remaining = $derived(summary.issues.length - shown);
@@ -44,19 +50,19 @@
 </header>
 
 <div class="stat-strip">
-  <div class="od-stat st-ok">
+  <div class="od-stat is-ok">
     <strong>{summary.correct}</strong>
     <span>{t("summary_count_correct")}</span>
   </div>
-  <div class="od-stat st-al">
+  <div class="od-stat is-al">
     <strong>{summary.almost}</strong>
     <span>{t("summary_count_almost")}</span>
   </div>
-  <div class="od-stat st-bad">
+  <div class="od-stat is-bad">
     <strong>{summary.incorrect}</strong>
     <span>{t("summary_count_incorrect")}</span>
   </div>
-  <div class="od-stat st-emp">
+  <div class="od-stat is-emp">
     <strong>{summary.empty}</strong>
     <span>{t("summary_count_empty")}</span>
   </div>
@@ -65,24 +71,41 @@
 <div class="sum-list">
   {#each summary.sections as entry, index (entry.section.id)}
     <a class="section-link" href={sectionHash(entry.section.id)}>
-      <span class="section-num">{String(index + 1).padStart(2, "0")}</span>
-      <span class="st">
-        <span class="t">{entry.section.title}</span>
-        <span class="s">
+      <span class="sec-n">
+        <ProgressRing
+          counts={{
+            total: entry.total,
+            answered: entry.answered,
+            correct: entry.correct,
+            almost: summary.issues.filter(
+              (issue) =>
+                issue.section.id === entry.section.id &&
+                issue.status === "almost",
+            ).length,
+            incorrect: summary.issues.filter(
+              (issue) =>
+                issue.section.id === entry.section.id &&
+                issue.status === "incorrect",
+            ).length,
+          }}
+        />
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span class="issue-txt">
+        <span class="issue-title">{entry.section.title}</span>
+        <span class="issue-sub">
           {format(t("summary_section_line"), {
             correct: entry.correct,
             total: entry.total,
           })}
         </span>
       </span>
-      <span class="meta">
-        <span
-          class={percent(entry.correct, entry.total) === 100
-            ? "badge done"
-            : "badge"}
-        >
-          {percent(entry.correct, entry.total)}%
-        </span>
+      <span
+        class={percent(entry.correct, entry.total) === 100
+          ? "badge is-done"
+          : "badge is-soon"}
+      >
+        {percent(entry.correct, entry.total)}%
       </span>
     </a>
   {/each}

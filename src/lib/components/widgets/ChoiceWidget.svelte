@@ -28,7 +28,7 @@
   );
 </script>
 
-<p class="q-ask" id={askId} lang="de">
+<span class="q-ask" id={askId} lang="de">
   <span class="qn">{number}.</span>
   {#each question.ask.split(/(_{3,})/) as part, index (index)}
     {#if /^_{3,}$/.test(part)}
@@ -40,7 +40,7 @@
       <span>{part}</span>
     {/if}
   {/each}
-</p>
+</span>
 
 {@render media?.()}
 

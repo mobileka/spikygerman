@@ -133,10 +133,15 @@ p { margin: 0; }
 :root[data-theme="dark"] .theme-toggle .tt-sun { display: block; }
 :root[data-theme="dark"] .theme-toggle .tt-moon { display: none; }
 /* Toggle placement (ports the production app rules): pinned to the bar's right
-   edge via auto margin; on drill bars it rides 8px behind the level chip. */
+   edge via auto margin. On drill bars the chip absorbs the free space, so the
+   chip + toggle cluster hangs on the right edge 8px apart — on a phone that is
+   what the reference already looked like, on wide viewports it keeps the toggle
+   from floating mid-bar. */
 .theme-toggle { margin-left: auto; }
+.brand-row > .level-chip { margin-left: auto; }
 .brand-row > .level-chip + .theme-toggle { margin-left: 8px; }
 .brand-row > .level-chip + .topbar-icon { margin-left: 8px; }
+.brand-row > .topbar-icon + .theme-toggle { margin-left: 8px; }
 
 /* ------------------------------------------------------- 4. progress chrome */
 .progress-line {
@@ -222,7 +227,6 @@ p { margin: 0; }
   gap: var(--space-2);
 }
 .od-stat {
-  aspect-ratio: 1;
   display: grid;
   place-content: center;
   gap: var(--space-1);

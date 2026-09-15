@@ -42,14 +42,15 @@
 
 {@render media?.()}
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-${PRONOUN_FIELD}`}>
     {t("pronoun_label")}
   </label>
   <select
+    class="field"
     id={`${question.id}-${PRONOUN_FIELD}`}
     value={values[PRONOUN_FIELD] ?? ""}
-    data-status={statusOf(PRONOUN_FIELD) ?? ""}
+    data-state={statusOf(PRONOUN_FIELD) ?? ""}
     aria-describedby={describedBy}
     onchange={(event) =>
       setAnswer(question.id, PRONOUN_FIELD, event.currentTarget.value)}
@@ -61,50 +62,53 @@
   </select>
 </div>
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-name`}>{t("name_label")}</label>
   <div class="field-line">
     <span class="de" lang="de">Das ist</span>
     <input
+      class="field"
       id={`${question.id}-name`}
       type="text"
       value={values.name ?? ""}
       {...noAutoCorrect}
-      data-status={statusOf("name") ?? ""}
+      data-state={statusOf("name") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) => setAnswer(question.id, "name", event.currentTarget.value)}
     />
   </div>
 </div>
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-from`}>{t("from_label")}</label>
   <div class="field-line">
     <span class="de" lang="de">{subject} {kommt}</span>
     <input
+      class="field"
       id={`${question.id}-from`}
       type="text"
       value={values.from ?? ""}
       {...noAutoCorrect}
-      data-status={statusOf("from") ?? ""}
+      data-state={statusOf("from") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) => setAnswer(question.id, "from", event.currentTarget.value)}
     />
   </div>
 </div>
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-residence`}>
     {t("residence_label")}
   </label>
   <div class="field-line">
     <span class="de" lang="de">{subject} {wohnt} in</span>
     <input
+      class="field"
       id={`${question.id}-residence`}
       type="text"
       value={values.residence ?? ""}
       {...noAutoCorrect}
-      data-status={statusOf("residence") ?? ""}
+      data-state={statusOf("residence") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) =>
         setAnswer(question.id, "residence", event.currentTarget.value)}
@@ -112,32 +116,34 @@
   </div>
 </div>
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-city`}>{t("city_label")}</label>
   <div class="field-line">
     <span class="de" lang="de">{subject} {wohnt} in</span>
     <input
+      class="field"
       id={`${question.id}-city`}
       type="text"
       value={values.city ?? ""}
       {...noAutoCorrect}
-      data-status={statusOf("city") ?? ""}
+      data-state={statusOf("city") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) => setAnswer(question.id, "city", event.currentTarget.value)}
     />
   </div>
 </div>
 
-<div class="field">
+<div>
   <label class="field-label" for={`${question.id}-street`}>{t("street_label")}</label>
   <div class="field-line">
     <span class="de" lang="de">…, in der</span>
     <input
+      class="field"
       id={`${question.id}-street`}
       type="text"
       value={values.street ?? ""}
       {...noAutoCorrect}
-      data-status={statusOf("street") ?? ""}
+      data-state={statusOf("street") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) => setAnswer(question.id, "street", event.currentTarget.value)}
     />

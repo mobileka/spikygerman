@@ -43,13 +43,14 @@
   }
 </script>
 
-<header class="hero">
+<header class="hero" data-od-id="home-hero">
   <h1>{t("home_hero")}</h1>
 </header>
 
 <button
-  class="button-primary lvl-btn"
+  class="btn btn-primary is-block"
   id="level-1"
+  data-od-id="level-1-toggle"
   type="button"
   aria-expanded={expanded}
   aria-controls="level-1-panel"
@@ -90,11 +91,11 @@
   </p>
 </div>
 
-<div id="level-1-panel" hidden={!expanded}>
-  <ol class="lvl-grid">
+<div id="level-1-panel" class="lvl-panel" hidden={!expanded}>
+  <ol class="sec-grid">
     {#each content.sections as section, index (section.id)}
       <li>
-        <a class="sec-tile" href={sectionHash(section.id)}>
+        <a class="sec-tile is-home" href={sectionHash(section.id)}>
           <span class="sec-n">
             <ProgressRing counts={counts.sections[index]} />
             {String(index + 1).padStart(2, "0")}
@@ -108,7 +109,7 @@
 
 <!-- level-2: следующий уровень добавить здесь. level-chip станет кликабельным переключателем уровня (список уровней, текущий отмечен). См. design-spec.md -->
 
-<button class="reset-button" type="button" onclick={onReset}>
+<button class="btn btn-secondary" type="button" onclick={onReset}>
   <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
     <path
       d="M16 10a6 6 0 1 1-1.8-4.3M16 3v4h-4"

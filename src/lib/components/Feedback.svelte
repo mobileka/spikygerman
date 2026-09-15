@@ -20,7 +20,7 @@
     correct: "✓",
     almost: "!",
     incorrect: "✕",
-    empty: "",
+    empty: "○",
   };
 
   function hintText(hint: Hint): string {
@@ -63,24 +63,28 @@
   const explanation = $derived(explanationText(question.id));
 </script>
 
-<div class="feedback" id={id} data-status={result.status} role="status">
-  <p class="st">
-    {#if statusIcon[result.status]}
-      <span aria-hidden="true">{statusIcon[result.status]}</span>
-    {/if}
-    <span>{t(statusLabel[result.status])}</span>
-  </p>
-  {#if result.status !== "empty"}
-    <p class="model">
-      {t("model_answer")}: <code lang="de">{result.model}</code>
-    </p>
-    {#each hints as hint (hint)}
-      <p class="tip">{hint}</p>
-    {/each}
-    {#if explanation}
-      <p class="tip">
-        {t("explanation_label")}: {explanation}
+<div
+  class={result.status === "empty"
+    ? "feedback is-empty"
+    : `feedback ${result.status}`}
+  id={id}
+  role="status"
+>
+  <span class="fb-glyph" aria-hidden="true">{statusIcon[result.status]}</span>
+  <div class="fb-main">
+    <strong>{t(statusLabel[result.status])}</strong>
+    {#if result.status !== "empty"}
+      <p class="model">
+        {t("model_answer")}: <code lang="de">{result.model}</code>
       </p>
+      {#each hints as hint (hint)}
+        <p class="tip">{hint}</p>
+      {/each}
+      {#if explanation}
+        <p class="tip">
+          {t("explanation_label")}: {explanation}
+        </p>
+      {/if}
     {/if}
-  {/if}
+  </div>
 </div>

@@ -28,14 +28,14 @@
   );
 </script>
 
-<p
+<span
   class="q-ask"
   id={askId}
   lang={question.type === "translate" ? "ru" : "de"}
 >
   <span class="qn">{number}.</span>
   {question.ask}
-</p>
+</span>
 
 {@render media?.()}
 

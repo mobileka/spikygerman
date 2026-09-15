@@ -18,16 +18,15 @@
   } = $props();
 </script>
 
-<label class="field" for={id}>
-  <span class="field-label">{label}</span>
-  <input
-    {id}
-    type="text"
-    {value}
-    {...noAutoCorrect}
-    data-status={status ?? ""}
-    aria-invalid={status === "incorrect" ? "true" : undefined}
-    aria-describedby={describedBy}
-    oninput={(event) => oninput(event.currentTarget.value)}
-  />
-</label>
+<label class="field-label" for={id}>{label}</label>
+<input
+  class="field"
+  {id}
+  type="text"
+  {value}
+  {...noAutoCorrect}
+  data-state={status ?? ""}
+  aria-invalid={status === "incorrect" ? "true" : undefined}
+  aria-describedby={describedBy}
+  oninput={(event) => oninput(event.currentTarget.value)}
+/>

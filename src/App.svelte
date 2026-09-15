@@ -49,7 +49,7 @@
       }
       const check = target
         .closest(".qcard")
-        ?.querySelector<HTMLButtonElement>(".check-button");
+        ?.querySelector<HTMLButtonElement>("[data-check]");
       if (!check) return;
       event.preventDefault();
       check.click();
@@ -59,12 +59,12 @@
   });
 </script>
 
-<a class="skip-link" href="#content">{t("skip_link")}</a>
+<a class="skip-link" href="#screens">{t("skip_link")}</a>
 
 <div class="app">
   <TopBar current={route.name} />
 
-  <main id="content" tabindex="-1">
+  <main class="screen" id="screens" tabindex="-1">
     {#if section}
       {#key section.id}
         <SectionView
@@ -79,7 +79,7 @@
     {/if}
   </main>
 
-  <footer class="app-footer">
+  <footer>
     <UmlautRow />
     <TabBar current={route.name} />
   </footer>

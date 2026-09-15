@@ -15,7 +15,7 @@
   );
 </script>
 
-<div class="progress-line" aria-hidden="true">
+<div class="progress-line is-segmented" aria-hidden="true">
   {#each parts as part (part.key)}
     <span
       class={`progress-seg seg-${part.key}`}

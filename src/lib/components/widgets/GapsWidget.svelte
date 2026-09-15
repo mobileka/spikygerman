@@ -33,7 +33,7 @@
   }
 </script>
 
-<p class="q-ask" id={askId} lang="de">
+<span class="q-ask" id={askId} lang="de">
   <span class="qn">{number}.</span>
   {#each parts as part, index (index)}
     <span>{part}</span>{#if index < parts.length - 1}<span class="blank-chip"
@@ -41,7 +41,7 @@
         ><span class="sr-only">пропуск {index + 1}</span></span
       >{/if}
   {/each}
-</p>
+</span>
 
 {@render media?.()}
 
@@ -49,14 +49,14 @@
   {@const field = gapField(index)}
   {@const choices = choicesFor(index)}
   {#if choices.length}
-    <div class="field">
-      <label class="field-label" for={`${question.id}-${field}`}>
-        {t("gap_label", { n: index + 1 })}
-      </label>
-      <select
-        id={`${question.id}-${field}`}
-        value={values[field] ?? ""}
-        data-status={fieldStatus(result, field) ?? ""}
+    <label class="field-label" for={`${question.id}-${field}`}>
+      {t("gap_label", { n: index + 1 })}
+    </label>
+    <select
+      class="field"
+      id={`${question.id}-${field}`}
+      value={values[field] ?? ""}
+      data-state={fieldStatus(result, field) ?? ""}
         aria-invalid={fieldStatus(result, field) === "incorrect" ? "true" : undefined}
         aria-describedby={describedBy}
         onchange={(event) => setAnswer(question.id, field, event.currentTarget.value)}
@@ -66,7 +66,6 @@
           <option value={choice} lang="de">{choice}</option>
         {/each}
       </select>
-    </div>
   {:else}
     <AnswerInput
       id={`${question.id}-${field}`}

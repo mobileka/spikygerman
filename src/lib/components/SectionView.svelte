@@ -57,9 +57,10 @@
 
 <header class="hero">
   <h1 class="sr-only">{section.title}</h1>
-  <div class="title-pick">
+  <div>
     <select
-      class="title-select"
+      id="secPick"
+      class="select-lg"
       aria-label={t("section_picker_label")}
       value={section.id}
       onchange={onPick}
@@ -108,15 +109,15 @@
   {/each}
 </ol>
 
-<div class="panel section-nav">
+<div class="panel">
   <div class="panel-b">
-    <div class="nav-row">
+    <div class="od-row">
       <a
-        class="btn btn-secondary"
+        class="btn btn-secondary od-fill"
         href={previous ? sectionHash(previous.id) : "#/"}>{t("back")}</a
       >
       <a
-        class="btn btn-secondary"
+        class="btn btn-secondary od-fill"
         href={next ? sectionHash(next.id) : "#/summary"}
       >
         {next ? t("next") : t("summary_title")}

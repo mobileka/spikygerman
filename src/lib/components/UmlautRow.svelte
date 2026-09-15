@@ -75,6 +75,10 @@
     };
   });
 
+  function toggleCase(): void {
+    inferredUpper = !inferredUpper;
+  }
+
   function insert(character: string): void {
     const element = active;
     if (!element) return;
@@ -86,18 +90,35 @@
   }
 </script>
 
-{#if active}
-  <div class="umlaut" role="group" aria-label="Немецкие буквы" bind:this={row}>
-    {#each upper ? UPPER : LOWER as character (character)}
+<div class="bottombar" hidden={!active}>
+  <div
+    class="umlaut"
+    id="umlautRow"
+    role="toolbar"
+    aria-label="Немецкие буквы"
+    bind:this={row}
+  >
+    {#if active}
+      {#each upper ? UPPER : LOWER as character (character)}
+        <button
+          type="button"
+          onmousedown={(event) => event.preventDefault()}
+          onpointerdown={(event) => event.preventDefault()}
+          onclick={() => insert(character)}
+          aria-label={`Вставить ${character}`}
+        >
+          {character}
+        </button>
+      {/each}
       <button
         type="button"
         onmousedown={(event) => event.preventDefault()}
         onpointerdown={(event) => event.preventDefault()}
-        onclick={() => insert(character)}
-        aria-label={`Вставить ${character}`}
+        onclick={toggleCase}
+        aria-label="Переключить регистр"
       >
-        {character}
+        {upper ? "⇧ а" : "⇧ А"}
       </button>
-    {/each}
+    {/if}
   </div>
-{/if}
+</div>
