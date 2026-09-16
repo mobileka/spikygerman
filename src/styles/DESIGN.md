@@ -114,7 +114,7 @@ components:
     padding: 2px 8px
   tabbar:
     backgroundColor: "{colors.surface}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.lg}"
     height: 64px
 ---
 
@@ -217,9 +217,9 @@ The system has exactly three elevation states, and no more:
   1px soft shadow. Always applied as a pair; a card with a shadow and no ring looks blurry in dark.
 - `--surface-warm` tint — the "pressed/selected" alternative to elevation for tab bars and choices.
 
-Radius ladder: 4px chips and swatches, 6px small controls and icon tiles, 8px cards, buttons,
-inputs and links, pill for badges, progress, segments and the tab bar. Device radii (52/42px) are
-geometry, not part of the ladder.
+Radius ladder: 4px chips and swatches, 6px small controls, tab items and icon tiles, 8px cards,
+buttons, the tab bar, inputs and links, pill for badges, progress and segments. Device radii
+(52/42px) are geometry, not part of the ladder.
 
 Focus is a single 4px blue halo (`--focus-ring`), plus a 2px accent outline for plain
 links and native controls. Both must stay visible against `--bg` and `--surface`.
