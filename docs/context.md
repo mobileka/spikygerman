@@ -6,12 +6,6 @@ the first time, start at the top and read it like a story. By the end you
 will know exactly what we are building, why, and what we deliberately
 left out.
 
-> **Update (September 2026): this file is frozen as the journal of Grill 1
-> (Level 1). Do not append new levels here.** Specs now live in `docs/specs/`,
-> one file per level. The first one is Уровень 0 «Учимся читать»:
-> `docs/specs/level-0-reading.md`. This file can move to
-> `docs/journal/grill-01.md` later without being split.
-
 Sample paper test this is based on: `resources/sample_test.pdf`
 (40 questions plus the Antworten section at the end).
 Earlier checkpoint from the same session: `docs/raw_input.md`.
