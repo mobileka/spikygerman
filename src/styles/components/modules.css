@@ -110,6 +110,10 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--elev-ring);
 }
+/* Wrapper for a real photo: kills the UA figure margin and the automatic
+   min-content floor that would otherwise let a grid track grow wider than its
+   column (`.food-photo` is `width: 100%` inside `.panel-b`'s auto track). */
+.photo { display: block; margin: 0; min-width: 0; }
 /* Placeholder for product shots that have not been art-directed yet. Uses the
    legacy --border-strong name, which the bridge now defines. */
 .photo-ph {

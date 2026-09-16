@@ -9,12 +9,9 @@
   const lines = $derived((srData ?? "").split("\n").filter((line) => line.trim()));
 </script>
 
-<figure class="photo-ph">
+<figure class="photo">
   <img class="food-photo" {src} alt={alt ?? ""} loading="lazy" decoding="async" />
   {#if lines.length}
-    <figcaption>
-      <strong>Фото:</strong> {lines[0]}
-      <p class="sr-only">{lines.join(" ")}</p>
-    </figcaption>
+    <figcaption class="sr-only">{lines.join(" ")}</figcaption>
   {/if}
 </figure>

@@ -251,7 +251,7 @@ Shared component layers live in `_design_system/components/`; load order is
 - **Modules** — exercise (`.qcard`, `.q-instr`, `.q-ask`, `.qn`, `.example`, `.gap-line`,
   `.feedback.correct|.almost|.incorrect|.is-empty` + `.fb-glyph`/`.fb-main`/`.model`/`.tip`,
   `.field[data-state]`), commerce (`.price-table`, `.price-row`, `.price-total`,
-  `.food-photo`, `.photo-ph`), summary (`.minibar`, `.kv`, `.sum-list`, `.issues-list`,
+  `.photo`/`.food-photo`, `.photo-ph`), summary (`.minibar`, `.kv`, `.sum-list`, `.issues-list`,
   `.issue-link` + `.is-almost`/`.is-empty` chip variants, `.issues`/`.issues-empty`/`.issues-more`), settings (`.set-row`, `.sr-i`, `.sr-t`, `.set-note`, `.set-reset`,
   `.set-status`, `.danger-zone`, `.confirm-actions`).
 
