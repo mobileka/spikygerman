@@ -3,6 +3,7 @@ dist
 src/generated
 .playwright-mcp
 .openchamber
+screenshot-harness.html
 .DS_Store
 *.local
 docs/specs
