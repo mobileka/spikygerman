@@ -13,9 +13,10 @@ guided by two hedgehog mascots: **der Igel** (the big one) and **die Igli** (the
 
 The interface is in Russian in the first MVP; German prompts stay side by side with it.
 
-| Home | A section, mid-test | Summary |
-| --- | --- | --- |
-| <img src="docs/screenshots/home.png" width="240" alt="Home screen with the level 1 button expanded into a list of six sections"> | <img src="docs/screenshots/section.png" width="240" alt="Was ist das? section with a checked answer, feedback and a progress bar at 58 percent"> | <img src="docs/screenshots/summary.png" width="240" alt="Summary screen with counts for correct, almost, wrong and unanswered, plus per-section percentages"> |
+| | Home | A section, mid-test | Summary |
+| --- | --- | --- | --- |
+| Light | <img src="docs/screenshots/home.png" width="240" alt="Light-themed home screen with the level 1 button expanded into a list of six sections"> | <img src="docs/screenshots/section.png" width="240" alt="Light-themed Was ist das? section with a checked answer, feedback and a progress bar at 58 percent"> | <img src="docs/screenshots/summary.png" width="240" alt="Light-themed summary screen with counts for correct, almost, wrong and unanswered, plus per-section percentages"> |
+| Dark | <img src="docs/screenshots/home-dark.png" width="240" alt="Dark-themed home screen with the level 1 button expanded into a list of six sections"> | <img src="docs/screenshots/section-dark.png" width="240" alt="Dark-themed Was ist das? section with a checked answer, feedback and a progress bar at 58 percent"> | <img src="docs/screenshots/summary-dark.png" width="240" alt="Dark-themed summary screen with counts for correct, almost, wrong and unanswered, plus per-section percentages"> |
 
 ## Values
 
