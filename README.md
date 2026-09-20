@@ -11,12 +11,12 @@ guided by two hedgehog mascots: **der Igel** (the big one) and **die Igli** (the
 
 ## Screenshots
 
-The interface is in Russian in the first MVP; German prompts stay side by side with it.
-
-| | Home | A section, mid-test | Summary |
-| --- | --- | --- | --- |
-| Light | <img src="docs/screenshots/home.png" width="240" alt="Light-themed home screen with the level 1 button expanded into a list of six sections"> | <img src="docs/screenshots/section.png" width="240" alt="Light-themed Was ist das? section with a checked answer, feedback and a progress bar at 58 percent"> | <img src="docs/screenshots/summary.png" width="240" alt="Light-themed summary screen with counts for correct, almost, wrong and unanswered, plus per-section percentages"> |
-| Dark | <img src="docs/screenshots/home-dark.png" width="240" alt="Dark-themed home screen with the level 1 button expanded into a list of six sections"> | <img src="docs/screenshots/section-dark.png" width="240" alt="Dark-themed Was ist das? section with a checked answer, feedback and a progress bar at 58 percent"> | <img src="docs/screenshots/summary-dark.png" width="240" alt="Dark-themed summary screen with counts for correct, almost, wrong and unanswered, plus per-section percentages"> |
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/preview-dark.png">
+    <img src="docs/screenshots/preview.png" width="880" alt="SpikyGerman on three phones: home with level 1 expanded into six sections, a Was ist das? question answered correctly with feedback, and the summary with per-section percentages">
+  </picture>
+</p>
 
 ## Values
 
