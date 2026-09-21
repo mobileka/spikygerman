@@ -26,7 +26,16 @@ If Vite picked another port (5173 was busy):
 BASE=http://localhost:5174 node .opencode/skills/app-screenshots/capture.mjs
 ```
 
-The script prints the output paths and the progress line of each phone, and warns if a top bar ended up off-screen. It takes ~30 seconds. It temporarily writes `screenshot-harness.html` to the repo root, serves it through Vite, and deletes it afterwards (the file name is in `.gitignore`, so a crashed run cannot pollute `git status`).
+The script prints the output paths and the progress line of each phone. It refuses to write a theme's PNG if any phone's top bar ended up off-screen, so a broken capture fails the run instead of silently replacing a good image. It takes ~30 seconds. It temporarily writes `screenshot-harness.html` to the repo root, serves it through Vite, and deletes it afterwards (the file name is in `.gitignore`, so a crashed run cannot pollute `git status`).
+
+## Caching: readers may still see the old image
+
+The output paths never change, so after a push GitHub's raw image endpoint and readers' browsers can keep serving the previous PNG. This has already produced a false "the middle phone is broken" report: the file on `main` was correct, the reader's browser had the old bytes. When you ship new previews, bump the `?v=N` query on both README image URLs (GitHub preserves it, which changes the cache key) and ask the reader to hard-refresh before debugging the capture itself. Check the live bytes if unsure:
+
+```sh
+shasum -a 256 docs/screenshots/preview.png
+curl -sL https://raw.githubusercontent.com/mobileka/spikygerman/main/docs/screenshots/preview.png | shasum -a 256
+```
 
 ## Verify before committing
 

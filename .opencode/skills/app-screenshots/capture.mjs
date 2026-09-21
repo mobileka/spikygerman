@@ -195,9 +195,6 @@ async function run(browser, theme) {
   }
   await wait(400);
 
-  const out = path.join(OUT_DIR, theme === "dark" ? "preview-dark.png" : "preview.png");
-  await page.locator(".od-stage").screenshot({ path: out });
-
   const state = await page.evaluate(() =>
     Array.from(document.querySelectorAll("iframe")).map((f) => ({
       title: f.title,
@@ -205,6 +202,15 @@ async function run(browser, theme) {
       topbarTop: Math.round(f.contentDocument.querySelector(".topbar")?.getBoundingClientRect().top ?? -1)
     }))
   );
+  const off = state.filter((row) => row.topbarTop < 0 || row.topbarTop > 4);
+  if (off.length) {
+    throw new Error(
+      `${theme}: top bar off-screen in ${off.map((row) => row.title).join(", ")} — refusing to write ${theme} preview`
+    );
+  }
+
+  const out = path.join(OUT_DIR, theme === "dark" ? "preview-dark.png" : "preview.png");
+  await page.locator(".od-stage").screenshot({ path: out });
   await ctx.close();
   return { out, state };
 }
@@ -217,8 +223,7 @@ try {
     const bytes = fs.statSync(out).size;
     console.log(`${theme}: ${out} (${bytes} bytes)`);
     for (const row of state) {
-      const off = row.topbarTop < 0 || row.topbarTop > 4 ? "  WARNING: top bar off-screen" : "";
-      console.log(`  ${row.title}: ${row.progress}${off}`);
+      console.log(`  ${row.title}: ${row.progress} (top bar at y=${row.topbarTop})`);
     }
   }
 } finally {
