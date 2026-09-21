@@ -12,11 +12,11 @@ guided by two hedgehog mascots: **der Igel** (the big one) and **die Igli** (the
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/preview.png?v=2" width="880" alt="Light theme: home with level 1 expanded into six sections, a Was ist das? question answered correctly with feedback, and the summary with per-section percentages">
+  <img src="docs/screenshots/preview.png?v=3" width="880" alt="Light theme: home with level 1 expanded into six sections, a Was ist das? question answered correctly with feedback, and the summary with per-section percentages">
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/preview-dark.png?v=2" width="880" alt="Dark theme: the same three screens">
+  <img src="docs/screenshots/preview-dark.png?v=3" width="880" alt="Dark theme: the same three screens">
 </p>
 
 ## Values
