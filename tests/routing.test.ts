@@ -11,7 +11,8 @@ describe("routing", () => {
   });
 
   it("parses the summary", () => {
-    expect(parseHash("#/summary")).toEqual({ name: "summary", level: 1 });
+    expect(parseHash("#/summary")).toEqual({ name: "summary" });
+    expect(parseHash("#/l1/summary")).toEqual({ name: "summary", level: 1 });
     expect(parseHash("#/l2/summary")).toEqual({ name: "summary", level: 2 });
   });
 
@@ -56,7 +57,7 @@ describe("routing", () => {
     expect(sectionHash(1, "preise", "q22")).toBe("#/s/preise/q22");
     expect(sectionHash(2, "familie")).toBe("#/l2/familie");
     expect(sectionHash(2, "familie", "q01")).toBe("#/l2/familie/q01");
-    expect(summaryHash(1)).toBe("#/summary");
+    expect(summaryHash(1)).toBe("#/l1/summary");
     expect(summaryHash(2)).toBe("#/l2/summary");
   });
 });

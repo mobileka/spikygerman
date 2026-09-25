@@ -1,9 +1,11 @@
 <script lang="ts">
   import { levels, t } from "./lib/content";
+  import { format } from "./lib/format";
   import { parseHash, type Route } from "./lib/routing";
   import Home from "./lib/components/Home.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
   import SummaryView from "./lib/components/SummaryView.svelte";
+  import SummaryOverview from "./lib/components/SummaryOverview.svelte";
   import TopBar from "./lib/components/TopBar.svelte";
   import TabBar from "./lib/components/TabBar.svelte";
   import UmlautRow from "./lib/components/UmlautRow.svelte";
@@ -32,12 +34,14 @@
   });
 
   $effect(() => {
-    const screen =
-      route.name === "summary"
-        ? t("summary_title")
-        : route.name === "section"
-          ? (section?.title ?? t("tab_home"))
-          : t("tab_home");
+    let screen = t("tab_home");
+    if (route.name === "summary") {
+      screen = level
+        ? `${t("summary_title")} – ${format(t("level_chip"), { level: level.number })}`
+        : t("summary_title");
+    } else if (route.name === "section") {
+      screen = section?.title ?? t("tab_home");
+    }
     document.title = `${screen} — SpikyGerman`;
   });
 
@@ -77,8 +81,12 @@
           questionId={route.name === "section" ? route.questionId : undefined}
         />
       {/key}
-    {:else if route.name === "summary" && level}
-      <SummaryView {level} />
+    {:else if route.name === "summary"}
+      {#if level}
+        <SummaryView {level} />
+      {:else}
+        <SummaryOverview />
+      {/if}
     {:else}
       <Home />
     {/if}

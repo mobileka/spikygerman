@@ -4,7 +4,7 @@
   import { summarize, type IssueStatus } from "../grading/summary";
   import { progressFor } from "../state.svelte";
   import { format } from "../format";
-  import { sectionHash } from "../routing";
+  import { sectionHash, SUMMARY_HASH } from "../routing";
   import ProgressRing from "./ProgressRing.svelte";
 
   let { level }: { level: CompiledLevel } = $props();
@@ -44,8 +44,26 @@
   });
 </script>
 
+<div class="od-row">
+  <a class="btn btn-secondary" href={SUMMARY_HASH}>
+    <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+      <path
+        d="M12 5l-5 5 5 5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <span>{t("summary_title")}</span>
+  </a>
+</div>
+
 <header class="hero">
-  <h1 tabindex="-1" bind:this={heading}>{t("summary_title")}</h1>
+  <h1 tabindex="-1" bind:this={heading}>
+    {t("summary_title")} – {format(t("level_chip"), { level: level.number })}
+  </h1>
 </header>
 
 <div class="stat-strip">

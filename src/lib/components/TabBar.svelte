@@ -2,7 +2,7 @@
   import type { CompiledLevel } from "../content/types";
   import { levels, t } from "../content";
   import { continueSectionId } from "../progress";
-  import { sectionHash, summaryHash, type Route } from "../routing";
+  import { sectionHash, summaryHash, SUMMARY_HASH, type Route } from "../routing";
   import { progressFor } from "../state.svelte";
 
   let {
@@ -30,7 +30,8 @@
   const continueHref = $derived(
     active && continueId ? sectionHash(active.number, continueId) : "#/",
   );
-  const summaryHref = $derived(active ? summaryHash(active.number) : "#/");
+  // Inside a level the tab shows that level; on home it shows every level.
+  const summaryHref = $derived(level ? summaryHash(level.number) : SUMMARY_HASH);
 </script>
 
 <nav class="tabbar" aria-label={t("main_nav_label")}>

@@ -67,7 +67,7 @@
         <span class="brand-name">SpikyGerman</span>
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
-      {#if current !== "home" && level}
+      {#if current !== "home" && current !== "summary" && level}
         <span class="level-chip" data-od-id="level-badge">
           {format(t("level_chip"), { level: level.number })}
         </span>
