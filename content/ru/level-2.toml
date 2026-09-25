@@ -12,6 +12,11 @@
 # Diese Datei ist russisch. Die deutschen Aufgaben und Antworten müssen in
 # allen Sprachen gleich sein — „bun run check“ vergleicht sie.
 #
+# Antworten mit mehreren richtigen Varianten (z. B. Ja/Nein-Fragen):
+#   answer  = "Ja, Anna ist seine Schwester."      # Musterlösung
+#   answers = ["Ja, Anna ist seine Schwester.",   # erste = answer
+#              "Ja, sie ist seine Schwester."]
+#
 # Die fünf Konzepte: Verbkonjugation, Akkusativ, Bitten (Gib mir / Geben Sie
 # mir), Ja/Nein-Fragen, Possessivpronomen.
 #
@@ -82,8 +87,9 @@ id = "q06"
 type = "yesno"
 ask = "Tom hat eine Schwester. Sie heißt Anna. Ist Anna seine Schwester?"
 instruction = "Ответьте полным предложением."
-explanation = "sein → seine Schwester (женский род)."
+explanation = "sein → seine Schwester (женский род). Вместо «Anna» можно сказать «sie»: Ja, sie ist seine Schwester."
 answer = "Ja, Anna ist seine Schwester."
+answers = ["Ja, Anna ist seine Schwester.", "Ja, sie ist seine Schwester."]
 
 [[section.question]]
 id = "q07"

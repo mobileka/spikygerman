@@ -127,6 +127,13 @@ describe("yesno alternatives", () => {
     ).toBe("correct");
   });
 
+  it("accepts a pronoun instead of the name in q06", () => {
+    expect(
+      gradeQuestion(byId("q06"), { answer: "Ja, sie ist seine Schwester." }, data.countries)
+        .status,
+    ).toBe("correct");
+  });
+
   it("keeps the first answer as the model", () => {
     const result = gradeQuestion(
       byId("q15"),
