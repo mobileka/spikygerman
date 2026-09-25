@@ -40,6 +40,8 @@
   font-size: var(--text-base);
 }
 .example b, .example strong { color: var(--fg); }
+/* Examples are teacher-authored and use line breaks to group the patterns. */
+.example-text { white-space: pre-line; }
 
 /* Cloze blank — the underline an answer is dropped into. */
 .gap-line {
@@ -84,12 +86,57 @@
 .fb-glyph { flex: none; width: 20px; height: 20px; display: grid; place-items: center; font-weight: 700; }
 .fb-main { display: grid; gap: var(--space-1); min-width: 0; }
 .feedback .model, .feedback .tip { color: var(--fg-2); font-size: var(--text-sm); }
+/* Russian translation of the model answer, right after it. */
+.feedback .translation { color: var(--muted); }
 /* Explanations are teacher-authored and may carry line breaks; keep them. */
 .feedback .tip.is-multiline { white-space: pre-line; }
 .feedback .model code { font-family: var(--font-mono); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: var(--radius-sm); overflow-wrap: anywhere; }
 
 /* ============================================ B. commerce  ================= */
-.price-table { display: flex; flex-direction: column; }
+/* Design-stage price list (div + .price-row children). */
+div.price-table { display: flex; flex-direction: column; }
+/* App price table. Rendered as a real <table> so screen readers get row and
+   column semantics (Level 1 uses it sr-only; Level 2 shows it). */
+table.price-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+table.price-table caption {
+  text-align: left;
+  color: var(--muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 0 0 var(--space-2);
+}
+table.price-table th,
+table.price-table td {
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border-soft);
+  text-align: left;
+}
+table.price-table thead th {
+  color: var(--muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+table.price-table tbody th {
+  color: var(--fg-2);
+  font-weight: 600;
+}
+table.price-table td {
+  text-align: right;
+  color: var(--fg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+table.price-table tbody tr:last-child th,
+table.price-table tbody tr:last-child td {
+  border-bottom: 0;
+}
 .price-row {
   display: flex;
   align-items: center;

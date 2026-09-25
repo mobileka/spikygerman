@@ -464,6 +464,32 @@ describe("compiled content", () => {
   });
 });
 
+describe("compiled translations", () => {
+  const data = content as unknown as CompiledContent;
+
+  it("has a translation on every question that needs one", () => {
+    for (const level of data.levels) {
+      for (const section of level.sections) {
+        for (const question of section.questions) {
+          if (!["gaps", "yesno", "price", "choice"].includes(question.type)) continue;
+          expect(question.translation, `${level.id} ${question.id}`).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  it("does not translate translate and sentence questions", () => {
+    for (const level of data.levels) {
+      for (const section of level.sections) {
+        for (const question of section.questions) {
+          if (!["translate", "sentence"].includes(question.type)) continue;
+          expect(question.translation, `${level.id} ${question.id}`).toBeUndefined();
+        }
+      }
+    }
+  });
+});
+
 describe("compiled level 2", () => {
   const data = content as unknown as CompiledContent;
   const level = data.levels[1];

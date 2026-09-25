@@ -335,23 +335,3 @@ fieldset.choice label:has(input:focus-visible) {
   box-shadow: var(--focus-ring);
 }
 
-/* Screen-reader price table (visible commerce uses photo-ph + food-photo;
-   the table itself stays sr-only like the frozen screens). */
-.price-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 10px;
-}
-
-.price-table caption {
-  text-align: left;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.price-table th,
-.price-table td {
-  border: 1px solid var(--border);
-  padding: 8px 10px;
-  text-align: left;
-}

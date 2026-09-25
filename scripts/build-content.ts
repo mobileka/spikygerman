@@ -48,6 +48,7 @@ function compileQuestion(raw: RawQuestion): Question {
     ask: String(raw.ask),
     ...(optionalString(raw.instruction) && { instruction: String(raw.instruction) }),
     ...(optionalString(raw.explanation) && { explanation: String(raw.explanation) }),
+    ...(optionalString(raw.translation) && { translation: String(raw.translation) }),
     ...(optionalString(raw.example) && { example: String(raw.example) }),
     ...(optionalString(raw.photo) && { photo: String(raw.photo) }),
     ...(optionalString(raw.alt) && { alt: String(raw.alt) }),

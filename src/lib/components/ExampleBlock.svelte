@@ -21,8 +21,8 @@
     <ImageBlock {photo} {alt} />
   {/if}
   {#if german}
-    <br /><span lang="de">{example}</span>
+    <br /><span class="example-text" lang="de">{example}</span>
   {:else}
-    <br /><span>{example}</span>
+    <br /><span class="example-text">{example}</span>
   {/if}
 </div>

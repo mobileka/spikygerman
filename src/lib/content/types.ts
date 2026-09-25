@@ -15,6 +15,7 @@ export interface Question {
   ask: string;
   instruction?: string;
   explanation?: string;
+  translation?: string;
   example?: string;
   photo?: string;
   alt?: string;

@@ -76,6 +76,9 @@
     {#if result.status !== "empty"}
       <p class="model">
         {t("model_answer")}: <code lang="de">{result.model}</code>
+        {#if question.translation}
+          <span class="translation" lang="ru">({question.translation})</span>
+        {/if}
       </p>
       {#each hints as hint (hint)}
         <p class="tip">{hint}</p>

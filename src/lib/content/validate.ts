@@ -124,6 +124,10 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
   if (!q.explanation) {
     warn(`${label}: no explanation. Add explanation = "…" in the file's language.`);
   }
+  const needsTranslation = ["gaps", "yesno", "price", "choice"].includes(type);
+  if (needsTranslation && !q.translation) {
+    warn(`${label}: no translation. Add translation = "…" in the file's language.`);
+  }
 
   if (q.photo) {
     if (!q.alt) err(`${label}: photo without alt. Add alt = "one short sentence".`);

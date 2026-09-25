@@ -251,6 +251,15 @@ function stripUnd(text: string): string {
     .trim();
 }
 
+// "Der Käse kostet drei Euro …" also passes as the bare price "drei Euro …":
+// the task is reading the price, the full sentence is the model.
+function priceAlternatives(expected: string): string[] {
+  const alternatives = [expected];
+  const part = expected.match(/\b(?:kostet|kosten)\s+(.+)$/i)?.[1]?.trim();
+  if (part) alternatives.push(part);
+  return alternatives;
+}
+
 function gradePrice(q: Question, values: Record<string, string>): QuestionResult {
   const input = values[ANSWER_FIELD] ?? "";
   const expected = q.answer ?? "";
@@ -258,8 +267,9 @@ function gradePrice(q: Question, values: Record<string, string>): QuestionResult
   if (!input.trim()) {
     return { status: "empty", fields: [field(ANSWER_FIELD, "empty")], model };
   }
-  if (stripUnd(input) === stripUnd(expected)) {
-    const tip = umlautTip(input, expected);
+  for (const alternative of priceAlternatives(expected)) {
+    if (stripUnd(input) !== stripUnd(alternative)) continue;
+    const tip = umlautTip(input, alternative);
     return {
       status: "correct",
       fields: [

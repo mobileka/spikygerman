@@ -173,6 +173,47 @@ describe("yesno alternatives", () => {
   });
 });
 
+describe("price answers", () => {
+  const level2 = data.levels[1];
+  const level2Questions = level2.sections.flatMap((section) => section.questions);
+
+  function byId(id: string): Question {
+    const question = level2Questions.find((candidate) => candidate.id === id);
+    if (!question) throw new Error(`question ${id} not found`);
+    return question;
+  }
+
+  it("accepts the full sentence and the bare price", () => {
+    expect(
+      gradeQuestion(
+        byId("q22"),
+        { answer: "Der Käse kostet drei Euro neunundvierzig Cent." },
+        data.countries,
+      ).status,
+    ).toBe("correct");
+    expect(
+      gradeQuestion(byId("q22"), { answer: "drei Euro neunundvierzig Cent" }, data.countries)
+        .status,
+    ).toBe("correct");
+    expect(
+      gradeQuestion(byId("q22"), { answer: "Drei Euro neunundvierzig Cent." }, data.countries)
+        .status,
+    ).toBe("correct");
+  });
+
+  it("keeps the full sentence as the model and fails a wrong price", () => {
+    expect(
+      gradeQuestion(byId("q22"), { answer: "drei Euro" }, data.countries).status,
+    ).toBe("incorrect");
+    const result = gradeQuestion(
+      byId("q22"),
+      { answer: "drei Euro neunundvierzig Cent" },
+      data.countries,
+    );
+    expect(result.model).toBe("Der Käse kostet drei Euro neunundvierzig Cent.");
+  });
+});
+
 describe("patterns about yourself (q01-q05)", () => {
   it("accepts any name after the frame", () => {
     expect(grade(byId("q01"), { answer: "Ich heiße Maria" }).status).toBe("correct");
