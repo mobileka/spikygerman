@@ -81,7 +81,7 @@
         <p class="tip">{hint}</p>
       {/each}
       {#if explanation}
-        <p class="tip">
+        <p class="tip is-multiline">
           {t("explanation_label")}: {explanation}
         </p>
       {/if}
