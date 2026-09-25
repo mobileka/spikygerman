@@ -64,7 +64,7 @@ id = "q04"
 type = "gaps"
 ask = "Das ist ___ Bruder. Das ist ___ Mutter."
 instruction = "Впишите mein или meine."
-explanation = "der Bruder → mein Bruder; die Mutter → meine Mutter."
+explanation = "der Bruder (мужской род), поэтому mein.\ndie Mutter (женский род), поэтому meine."
 answers = ["mein", "meine"]
 
 [[section.question]]
