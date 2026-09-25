@@ -14,6 +14,7 @@ export interface Question {
   type: QuestionType;
   ask: string;
   instruction?: string;
+  explanation?: string;
   example?: string;
   photo?: string;
   alt?: string;
@@ -67,19 +68,19 @@ export interface Country {
   ru: string;
 }
 
-export interface StringsData {
-  ui: Record<string, string>;
-  instruction: Record<string, string>;
-  explanation: Record<string, string>;
+export interface CompiledLevel {
+  id: string;
+  number: number;
+  title: string;
+  sections: Section[];
+  tables: Record<string, PriceTable>;
 }
 
 export interface CompiledContent {
-  test: { id: string; title: string };
   lang: string;
-  sections: Section[];
-  tables: Record<string, PriceTable>;
+  ui: Record<string, string>;
+  levels: CompiledLevel[];
   countries: Country[];
-  strings: StringsData;
 }
 
 // Raw shapes as parsed from TOML, before validation.
@@ -117,14 +118,15 @@ export interface RawPriceTable {
   row?: { item?: string; price?: string }[];
 }
 
-export interface RawTestFile {
-  test?: { id?: string; title?: string };
+// One level in one language: content/ru/level-1.toml.
+// German tasks and the file's own language live together.
+export interface RawLevelFile {
+  level?: { id?: string; number?: number; title?: string };
   section?: RawSection[];
   table?: Record<string, RawPriceTable>;
 }
 
-export interface RawStringsFile {
+// Raw UI strings, one file per language: content/ru/ui.toml.
+export interface RawUiFile {
   ui?: Record<string, unknown>;
-  instruction?: Record<string, unknown>;
-  explanation?: Record<string, unknown>;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import content from "../src/generated/content.json";
+import content from "../src/generated/content.ru.json";
 import {
   ANSWER_FIELD,
   CHOICE_FIELD,
@@ -11,7 +11,7 @@ import { countBlanks, fillBlanks, normalize } from "../src/lib/grading/normalize
 import type { CompiledContent, Question } from "../src/lib/content/types.ts";
 
 const data = content as unknown as CompiledContent;
-const questions = data.sections.flatMap((section) => section.questions);
+const questions = data.levels[0].sections.flatMap((section) => section.questions);
 
 function byId(id: string): Question {
   const question = questions.find((candidate) => candidate.id === id);

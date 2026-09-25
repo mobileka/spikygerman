@@ -1,0 +1,74 @@
+# ============================================================================
+# Русские тексты интерфейса.
+# ============================================================================
+#
+# Один язык = одна папка: content/ru/. Украинская версия — это content/uk/,
+# немецкий тест менять не нужно.
+#
+# [ui] — кнопки и подписи в интерфейсе.
+# Задания к разделам лежат в content/ru/level-N.toml.
+#
+# Подстановки в фигурных скобках: {expected}, {name}, {aus}, {keywords},
+# {n}, {correct}, {total}, {answered} — их заполняет приложение.
+
+[ui]
+# Оболочка приложения: шапка, нижняя навигация, пропуск к содержанию.
+skip_link = "К содержанию"
+logo_home_label = "SpikyGerman — на главную"
+brand_subtitle = "Немецкий без острых углов · Deutsch A0"
+level_chip = "Уровень 1"
+theme_to_dark = "Тёмная тема"
+theme_to_light = "Светлая тема"
+progress_answered = "Отвечено: {answered} из {total}"
+home_hero = "Выберите уровень"
+level_summary = "Уровень {level} · {sections} разделов · {questions} вопросов"
+main_nav_label = "Основная навигация"
+tab_home = "Главная"
+tab_continue = "Продолжить"
+
+check = "Проверить"
+back = "Назад"
+next = "Дальше"
+home = "К разделам"
+section_picker_label = "Раздел"
+select_placeholder = "Выберите…"
+example_label = "Пример"
+model_answer = "Правильный ответ"
+explanation_label = "Пояснение"
+result_correct = "Верно"
+result_almost = "Почти!"
+result_incorrect = "Ошибка"
+result_empty = "Нет ответа"
+hint_start_with = "Начните с «{expected}…»"
+hint_end_with = "Не забудьте: «…{expected}»"
+hint_country = "Почти! {name} — {article}: {aus}."
+hint_missing = "Не хватает: {keywords}."
+hint_missing_sentence = "Почти! Не хватает: «{expected}»"
+hint_frame = "Нужна конструкция «{expected}»."
+hint_umlaut = "Можно и так, но правильно: {expected}."
+article_die = "женский род"
+article_der = "мужской род"
+article_plural = "множественное число"
+gap_label = "Пропуск {n}"
+answer_label = "Ваш ответ"
+pronoun_label = "Местоимение"
+pronoun_er = "er (он)"
+pronoun_sie = "sie (она)"
+pronoun_sie_plural = "sie (они)"
+name_label = "Имя"
+from_label = "Откуда"
+residence_label = "Страна (где живёт)"
+city_label = "Город"
+street_label = "Улица"
+question_label = "Вопрос {n}"
+summary_title = "Итоги"
+summary_count_correct = "Верно"
+summary_count_almost = "Почти"
+summary_count_incorrect = "Ошибки"
+summary_count_empty = "Без ответа"
+summary_section_line = "верно {correct} из {total}"
+summary_issues_title = "Над чем ещё поработать"
+summary_show_more = "Показать ещё {n}"
+summary_no_issues = "Ошибок нет — всё верно."
+reset = "Сбросить все ответы"
+reset_confirm = "Удалить все ответы? Это нельзя отменить."

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Question, Section } from "../content/types";
   import type { QuestionResult as Result } from "../grading/grade";
-  import { content, instructionText, t } from "../content";
+  import { content, t } from "../content";
   import { sectionHash } from "../routing";
   import {
     getValues,
@@ -70,7 +70,7 @@
       {/each}
     </select>
   </div>
-  <p>{instructionText(section.instruction)}</p>
+  <p>{section.instruction}</p>
 </header>
 
 {#if section.photo}

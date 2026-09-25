@@ -1,4 +1,7 @@
-# Länder-Tabelle (P0) — die gemeinsame Quelle für „aus …“-Formen.
+# Länder-Tabelle (P0) — die Quelle für die „aus …“-Formen.
+#
+# Diese Datei ist russisch: sie liegt in content/ru/. Eine ukrainische Liste
+# wäre content/uk/countries.toml — der deutsche Test ändert sich nicht.
 #
 # article: "" (kein Artikel), "die", "der" oder "plural"
 # aus:     fertige Form nach „Ich komme aus …“

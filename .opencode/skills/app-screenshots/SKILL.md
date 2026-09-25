@@ -58,7 +58,7 @@ sips -g pixelWidth -g pixelHeight docs/screenshots/preview.png   # 2908 x 2088 a
 
 ## The seeded state
 
-The screens must tell the same story as before, so the script seeds `localStorage` key `spikygerman:sample-test-1:v2` (test id from `src/generated/content.json`; bump the `:vN` suffix if the progress schema changes) with:
+The screens must tell the same story as before, so the script seeds `localStorage` key `spikygerman:sample-test-1:v2` (level id from `src/generated/content.ru.json`; bump the `:vN` suffix if the progress schema changes) with:
 
 - 21 of 36 questions checked: q01–q07, q13–q15, q18, q22–q23, q26–q33.
 - q02 answered wrong on purpose (wrong prefix) and q07 missing its last gap → 19 correct, 1 almost, 1 wrong, 15 empty.

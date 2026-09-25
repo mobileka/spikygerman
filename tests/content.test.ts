@@ -3,48 +3,62 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "smol-toml";
 import { describe, expect, it } from "vitest";
-import { validateContent } from "../src/lib/content/validate.ts";
+import {
+  validateContent,
+  validateLanguageConsistency,
+} from "../src/lib/content/validate.ts";
 import type {
   CompiledContent,
   RawCountry,
-  RawStringsFile,
-  RawTestFile,
+  RawLevelFile,
+  RawUiFile,
 } from "../src/lib/content/types.ts";
-import content from "../src/generated/content.json";
+import content from "../src/generated/content.ru.json";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative: string) => readFileSync(join(root, relative), "utf8");
 
-const rawTest = parse(read("content/test.toml")) as unknown as RawTestFile;
-const rawStrings = parse(read("content/strings.ru.toml")) as unknown as RawStringsFile;
-const rawCountries = parse(read("content/countries.toml")) as unknown as {
+const LEVEL_FILE = "content/ru/level-1.toml";
+const UI_FILE = "content/ru/ui.toml";
+const COUNTRIES_FILE = "content/ru/countries.toml";
+
+const rawLevel = parse(read(LEVEL_FILE)) as unknown as RawLevelFile;
+const rawUi = parse(read(UI_FILE)) as unknown as RawUiFile;
+const rawCountries = parse(read(COUNTRIES_FILE)) as unknown as {
   country?: RawCountry[];
+};
+
+const realOptions = {
+  publicDir: join(root, "public"),
+  levelFile: LEVEL_FILE,
+  uiFile: UI_FILE,
+  countriesFile: COUNTRIES_FILE,
 };
 
 describe("content validation", () => {
   it("passes with no errors", () => {
     const report = validateContent(
-      rawTest,
-      rawStrings,
+      rawLevel,
+      rawUi,
       rawCountries.country ?? [],
-      { publicDir: join(root, "public") },
+      realOptions,
     );
     expect(report.errors).toEqual([]);
   });
 });
 
 describe("content validation errors are teacher-friendly", () => {
-  const strings = rawStrings as unknown as RawStringsFile;
+  const ui = rawUi;
 
   it("explains a wrong choice answer", () => {
     const report = validateContent(
       {
-        test: { id: "t", title: "T" },
+        level: { id: "t", number: 1, title: "T" },
         section: [
           {
             id: "s",
             title: "S",
-            instruction: "translate",
+            instruction: "Переведите на немецкий.",
             question: [
               {
                 id: "q01",
@@ -57,7 +71,7 @@ describe("content validation errors are teacher-friendly", () => {
           },
         ],
       },
-      strings,
+      ui,
       rawCountries.country ?? [],
       { publicDir: join(root, "public") },
     );
@@ -71,12 +85,12 @@ describe("content validation errors are teacher-friendly", () => {
   it("explains a gap count mismatch", () => {
     const report = validateContent(
       {
-        test: { id: "t", title: "T" },
+        level: { id: "t", number: 1, title: "T" },
         section: [
           {
             id: "s",
             title: "S",
-            instruction: "translate",
+            instruction: "Переведите на немецкий.",
             question: [
               {
                 id: "q01",
@@ -88,7 +102,7 @@ describe("content validation errors are teacher-friendly", () => {
           },
         ],
       },
-      strings,
+      ui,
       rawCountries.country ?? [],
       { publicDir: join(root, "public") },
     );
@@ -100,12 +114,12 @@ describe("content validation errors are teacher-friendly", () => {
   it("flags gap choices that do not contain the answer", () => {
     const report = validateContent(
       {
-        test: { id: "t", title: "T" },
+        level: { id: "t", number: 1, title: "T" },
         section: [
           {
             id: "s",
             title: "S",
-            instruction: "translate",
+            instruction: "Переведите на немецкий.",
             question: [
               {
                 id: "q01",
@@ -118,7 +132,7 @@ describe("content validation errors are teacher-friendly", () => {
           },
         ],
       },
-      strings,
+      ui,
       rawCountries.country ?? [],
       { publicDir: join(root, "public") },
     );
@@ -132,12 +146,12 @@ describe("content validation errors are teacher-friendly", () => {
   it("flags a section photo without alt", () => {
     const report = validateContent(
       {
-        test: { id: "t", title: "T" },
+        level: { id: "t", number: 1, title: "T" },
         section: [
           {
             id: "s",
             title: "S",
-            instruction: "translate",
+            instruction: "Переведите на немецкий.",
             photo: "img/fridge.webp",
             sr_data: "test",
             question: [
@@ -151,7 +165,7 @@ describe("content validation errors are teacher-friendly", () => {
           },
         ],
       },
-      strings,
+      ui,
       rawCountries.country ?? [],
       { publicDir: join(root, "public") },
     );
@@ -163,12 +177,12 @@ describe("content validation errors are teacher-friendly", () => {
   it("flags a photo that does not exist", () => {
     const report = validateContent(
       {
-        test: { id: "t", title: "T" },
+        level: { id: "t", number: 1, title: "T" },
         section: [
           {
             id: "s",
             title: "S",
-            instruction: "translate",
+            instruction: "Переведите на немецкий.",
             question: [
               {
                 id: "q01",
@@ -183,7 +197,7 @@ describe("content validation errors are teacher-friendly", () => {
           },
         ],
       },
-      strings,
+      ui,
       rawCountries.country ?? [],
       { publicDir: join(root, "public") },
     );
@@ -193,30 +207,135 @@ describe("content validation errors are teacher-friendly", () => {
   });
 });
 
+describe("language consistency", () => {
+  function question(overrides: Record<string, unknown> = {}) {
+    return {
+      id: "q01",
+      type: "gaps",
+      ask: "Ich ___ müde.",
+      explanation: "sein: ich bin.",
+      answers: ["bin"],
+      ...overrides,
+    };
+  }
+
+  function level(overrides: Record<string, unknown> = {}) {
+    return {
+      level: { id: "sample-test-1", number: 1, title: "Test 1" },
+      section: [
+        { id: "s", title: "S", instruction: "Задание", question: [question()] },
+      ],
+      ...overrides,
+    };
+  }
+
+  it("passes when two languages have the same answers", () => {
+    const report = validateLanguageConsistency(
+      [
+        { lang: "ru", path: "content/ru/level-1.toml", level: level() },
+        { lang: "uk", path: "content/uk/level-1.toml", level: level() },
+      ],
+      [],
+    );
+    expect(report.errors).toEqual([]);
+  });
+
+  it("allows translated instructions and explanations", () => {
+    const translated = level();
+    translated.section[0].instruction = "Завдання";
+    translated.section[0].question[0].explanation = "sein: я є.";
+    const report = validateLanguageConsistency(
+      [
+        { lang: "ru", path: "content/ru/level-1.toml", level: level() },
+        { lang: "uk", path: "content/uk/level-1.toml", level: translated },
+      ],
+      [],
+    );
+    expect(report.errors).toEqual([]);
+  });
+
+  it("flags an answer that differs between languages", () => {
+    const other = level();
+    other.section[0].question[0].answers = ["bist"];
+    const report = validateLanguageConsistency(
+      [
+        { lang: "ru", path: "content/ru/level-1.toml", level: level() },
+        { lang: "uk", path: "content/uk/level-1.toml", level: other },
+      ],
+      [],
+    );
+    expect(report.errors.some((error) => error.includes("answers must be"))).toBe(
+      true,
+    );
+  });
+
+  it("flags a missing question", () => {
+    const other = level();
+    other.section[0].question = [];
+    const report = validateLanguageConsistency(
+      [
+        { lang: "ru", path: "content/ru/level-1.toml", level: level() },
+        { lang: "uk", path: "content/uk/level-1.toml", level: other },
+      ],
+      [],
+    );
+    expect(
+      report.errors.some((error) => error.includes("Questions must match")),
+    ).toBe(true);
+  });
+
+  it("flags a country whose article differs", () => {
+    const country = { name: "Ukraine", article: "die", aus: "aus der Ukraine", ru: "Украина" };
+    const report = validateLanguageConsistency(
+      [],
+      [
+        {
+          lang: "ru",
+          path: "content/ru/countries.toml",
+          countries: [country],
+        },
+        {
+          lang: "uk",
+          path: "content/uk/countries.toml",
+          countries: [{ ...country, article: "" }],
+        },
+      ],
+    );
+    expect(
+      report.errors.some((error) => error.includes("article must be")),
+    ).toBe(true);
+  });
+});
+
 describe("compiled content", () => {
   const data = content as unknown as CompiledContent;
-  const questions = data.sections.flatMap((section) => section.questions);
+  const level = data.levels[0];
+  const questions = level.sections.flatMap((section) => section.questions);
+
+  it("carries the level number", () => {
+    expect(level.number).toBe(1);
+  });
 
   it("contains 36 questions without q12 and without Personen", () => {
     expect(questions).toHaveLength(36);
     expect(questions.some((question) => question.id === "q12")).toBe(false);
-    expect(data.sections.some((section) => section.id === "personen")).toBe(false);
+    expect(level.sections.some((section) => section.id === "personen")).toBe(false);
   });
 
   it("keeps every question inside a known section", () => {
-    const sectionIds = new Set(data.sections.map((section) => section.id));
+    const sectionIds = new Set(level.sections.map((section) => section.id));
     expect(sectionIds.size).toBe(6);
   });
 
   it("has an explanation for every question", () => {
     const missing = questions
-      .filter((question) => !(question.id in data.strings.explanation))
+      .filter((question) => !question.explanation)
       .map((question) => question.id);
     expect(missing).toEqual([]);
   });
 
   it("has a visible example on every section", () => {
-    const missing = data.sections
+    const missing = level.sections
       .filter((section) => !section.example)
       .map((section) => section.id);
     expect(missing).toEqual([]);
@@ -250,7 +369,7 @@ describe("compiled content", () => {
         expect(question.sr_data, question.id).toBeTruthy();
       }
     }
-    for (const section of data.sections) {
+    for (const section of level.sections) {
       if (section.photo) expect(section.alt, section.id).toBeTruthy();
       if (section.example_photo) expect(section.example_alt, section.id).toBeTruthy();
     }
@@ -258,7 +377,7 @@ describe("compiled content", () => {
 
   it("references existing tables and countries", () => {
     for (const question of questions) {
-      if (question.table) expect(data.tables[question.table], question.id).toBeTruthy();
+      if (question.table) expect(level.tables[question.table], question.id).toBeTruthy();
       for (const field of [question.from, question.residence]) {
         if (!field) continue;
         const known = data.countries.some(
@@ -267,8 +386,8 @@ describe("compiled content", () => {
         expect(known, `${question.id}: ${field}`).toBe(true);
       }
     }
-    for (const section of data.sections) {
-      if (section.table) expect(data.tables[section.table], section.id).toBeTruthy();
+    for (const section of level.sections) {
+      if (section.table) expect(level.tables[section.table], section.id).toBeTruthy();
     }
   });
 });

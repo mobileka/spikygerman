@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Question } from "../content/types";
   import type { QuestionResult } from "../grading/grade";
-  import { instructionText, t } from "../content";
+  import { t } from "../content";
   import { format } from "../format";
   import { markQuestionChecked } from "../state.svelte";
   import ExampleBlock from "./ExampleBlock.svelte";
@@ -57,7 +57,7 @@
   aria-label={format(t("question_label"), { n: number })}
 >
   {#if question.instruction}
-    <p class="q-instr">{instructionText(question.instruction)}</p>
+    <p class="q-instr">{question.instruction}</p>
   {/if}
   {#if question.type === "gaps"}
     <GapsWidget {question} {number} {values} {result} media={questionMedia} />

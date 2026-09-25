@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import content from "../src/generated/content.json";
+import content from "../src/generated/content.ru.json";
 import { summarize, summarizeProgress } from "../src/lib/grading/summary.ts";
 import { gapField } from "../src/lib/grading/grade.ts";
 import type {
@@ -270,15 +270,16 @@ describe("summarizeProgress", () => {
 
 describe("summarize with the real test", () => {
   const data = content as unknown as CompiledContent;
+  const level = data.levels[0];
 
   it("counts all 36 model answers as correct", () => {
     const answers: Record<string, Record<string, string>> = {};
-    for (const section of data.sections) {
+    for (const section of level.sections) {
       for (const question of section.questions) {
         answers[question.id] = modelValues(question);
       }
     }
-    const summary = summarize(data.sections, answers, data.countries);
+    const summary = summarize(level.sections, answers, data.countries);
     expect(summary.total).toBe(36);
     expect(summary.correct).toBe(36);
     expect(summary.issues).toEqual([]);
@@ -286,13 +287,13 @@ describe("summarize with the real test", () => {
 
   it("gives every section its own checked counts", () => {
     const answers: Record<string, Record<string, string>> = {};
-    for (const section of data.sections) {
+    for (const section of level.sections) {
       for (const question of section.questions) {
         answers[question.id] = modelValues(question);
       }
     }
     const counts = summarizeProgress(
-      data.sections,
+      level.sections,
       answers,
       data.countries,
       Object.keys(answers),

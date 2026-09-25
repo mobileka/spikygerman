@@ -1,43 +1,32 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "smol-toml";
-import { validateContent } from "../src/lib/content/validate.ts";
+import {
+  validateContent,
+  validateLanguageConsistency,
+  type LanguageCountries,
+  type LanguageLevel,
+} from "../src/lib/content/validate.ts";
 import type {
   CompiledContent,
+  CompiledLevel,
   Country,
-  Pronoun,
   PriceTable,
+  Pronoun,
   Question,
   QuestionType,
   RawCountry,
+  RawLevelFile,
   RawQuestion,
-  RawStringsFile,
-  RawTestFile,
+  RawUiFile,
   Section,
-  StringsData,
 } from "../src/lib/content/types.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const contentDir = join(root, "content");
+const generatedDir = join(root, "src/generated");
 const read = (relative: string) => readFileSync(join(root, relative), "utf8");
-
-const rawTest = parse(read("content/test.toml")) as unknown as RawTestFile;
-const rawStrings = parse(read("content/strings.ru.toml")) as unknown as RawStringsFile;
-const rawCountries = parse(read("content/countries.toml")) as unknown as {
-  country?: RawCountry[];
-};
-
-const report = validateContent(
-  rawTest,
-  rawStrings,
-  rawCountries.country ?? [],
-  { publicDir: join(root, "public") },
-);
-for (const warning of report.warnings) console.warn(`warning: ${warning}`);
-if (report.errors.length) {
-  for (const error of report.errors) console.error(`error: ${error}`);
-  process.exit(1);
-}
 
 function optionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.length ? value : undefined;
@@ -53,11 +42,12 @@ function parseGapChoices(raw: unknown): string[][] | undefined {
 }
 
 function compileQuestion(raw: RawQuestion): Question {
-  const question: Question = {
+  return {
     id: String(raw.id),
     type: raw.type as QuestionType,
     ask: String(raw.ask),
     ...(optionalString(raw.instruction) && { instruction: String(raw.instruction) }),
+    ...(optionalString(raw.explanation) && { explanation: String(raw.explanation) }),
     ...(optionalString(raw.example) && { example: String(raw.example) }),
     ...(optionalString(raw.photo) && { photo: String(raw.photo) }),
     ...(optionalString(raw.alt) && { alt: String(raw.alt) }),
@@ -87,7 +77,38 @@ function compileQuestion(raw: RawQuestion): Question {
       answer_keywords: raw.answer_keywords.map(String),
     }),
   };
-  return question;
+}
+
+function compileSections(rawLevel: RawLevelFile): Section[] {
+  return (rawLevel.section ?? []).map((section) => ({
+    id: String(section.id),
+    title: String(section.title),
+    instruction: section.instruction ? String(section.instruction) : "",
+    ...(optionalString(section.example) && { example: String(section.example) }),
+    ...(optionalString(section.example_photo) && {
+      example_photo: String(section.example_photo),
+    }),
+    ...(optionalString(section.example_alt) && { example_alt: String(section.example_alt) }),
+    ...(optionalString(section.photo) && { photo: String(section.photo) }),
+    ...(optionalString(section.alt) && { alt: String(section.alt) }),
+    ...(optionalString(section.sr_data) && { sr_data: String(section.sr_data) }),
+    ...(optionalString(section.table) && { table: String(section.table) }),
+    questions: (section.question ?? []).map(compileQuestion),
+  }));
+}
+
+function compileTables(rawLevel: RawLevelFile): Record<string, PriceTable> {
+  const tables: Record<string, PriceTable> = {};
+  for (const [id, table] of Object.entries(rawLevel.table ?? {})) {
+    tables[id] = {
+      title: String(table.title ?? id),
+      rows: (table.row ?? []).map((row) => ({
+        item: String(row.item ?? ""),
+        price: String(row.price ?? ""),
+      })),
+    };
+  }
+  return tables;
 }
 
 function stringRecord(source: Record<string, unknown> | undefined): Record<string, string> {
@@ -98,68 +119,125 @@ function stringRecord(source: Record<string, unknown> | undefined): Record<strin
   return out;
 }
 
-const sections: Section[] = (rawTest.section ?? []).map((section) => ({
-  id: String(section.id),
-  title: String(section.title),
-  instruction: section.instruction ? String(section.instruction) : "",
-  ...(optionalString(section.example) && { example: String(section.example) }),
-  ...(optionalString(section.example_photo) && {
-    example_photo: String(section.example_photo),
-  }),
-  ...(optionalString(section.example_alt) && { example_alt: String(section.example_alt) }),
-  ...(optionalString(section.photo) && { photo: String(section.photo) }),
-  ...(optionalString(section.alt) && { alt: String(section.alt) }),
-  ...(optionalString(section.sr_data) && { sr_data: String(section.sr_data) }),
-  ...(optionalString(section.table) && { table: String(section.table) }),
-  questions: (section.question ?? []).map(compileQuestion),
-}));
+// One directory per language: content/ru/, content/uk/, …
+function languageDirs(): string[] {
+  return readdirSync(contentDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((lang) => existsSync(join(contentDir, lang, "ui.toml")))
+    .sort();
+}
 
-const tables: Record<string, PriceTable> = {};
-for (const [id, table] of Object.entries(rawTest.table ?? {})) {
-  tables[id] = {
-    title: String(table.title ?? id),
-    rows: (table.row ?? []).map((row) => ({
-      item: String(row.item ?? ""),
-      price: String(row.price ?? ""),
+function levelFiles(lang: string): string[] {
+  return readdirSync(join(contentDir, lang))
+    .filter((name) => /^level-\d+\.toml$/.test(name))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+}
+
+interface LanguageBundle {
+  lang: string;
+  ui: RawUiFile;
+  countries: RawCountry[];
+  countriesPath: string;
+  levels: Array<{ path: string; raw: RawLevelFile }>;
+}
+
+function loadLanguage(lang: string): LanguageBundle {
+  const dir = join(contentDir, lang);
+  return {
+    lang,
+    ui: parse(readFileSync(join(dir, "ui.toml"), "utf8")) as unknown as RawUiFile,
+    countries: (
+      parse(readFileSync(join(dir, "countries.toml"), "utf8")) as unknown as {
+        country?: RawCountry[];
+      }
+    ).country ?? [],
+    countriesPath: `content/${lang}/countries.toml`,
+    levels: levelFiles(lang).map((name) => ({
+      path: `content/${lang}/${name}`,
+      raw: parse(readFileSync(join(dir, name), "utf8")) as unknown as RawLevelFile,
     })),
   };
 }
 
-const countries: Country[] = (rawCountries.country ?? []).map((country) => ({
-  name: String(country.name),
-  article: (country.article ?? "") as Country["article"],
-  aus: String(country.aus),
-  ru: String(country.ru ?? ""),
-}));
+const languages = languageDirs().map(loadLanguage);
 
-const strings: StringsData = {
-  ui: stringRecord(rawStrings.ui),
-  instruction: stringRecord(rawStrings.instruction),
-  explanation: stringRecord(rawStrings.explanation),
-};
+const errors: string[] = [];
+const warnings: string[] = [];
 
-const content: CompiledContent = {
-  test: {
-    id: String(rawTest.test?.id),
-    title: String(rawTest.test?.title ?? ""),
-  },
-  lang: "ru",
-  sections,
-  tables,
-  countries,
-  strings,
-};
+for (const language of languages) {
+  if (!language.levels.length) {
+    errors.push(`${language.countriesPath.replace(/countries\.toml$/, "")}: no level-*.toml file.`);
+  }
+  for (const level of language.levels) {
+    const report = validateContent(level.raw, language.ui, language.countries, {
+      publicDir: join(root, "public"),
+      levelFile: level.path,
+      uiFile: `content/${language.lang}/ui.toml`,
+      countriesFile: language.countriesPath,
+    });
+    errors.push(...report.errors);
+    warnings.push(...report.warnings);
+  }
+}
 
-const questionCount = sections.reduce(
-  (total, section) => total + section.questions.length,
-  0,
+const consistency = validateLanguageConsistency(
+  languages.flatMap<LanguageLevel>((language) =>
+    language.levels.map((level) => ({
+      lang: language.lang,
+      path: level.path,
+      level: level.raw,
+    })),
+  ),
+  languages.map<LanguageCountries>((language) => ({
+    lang: language.lang,
+    path: language.countriesPath,
+    countries: language.countries,
+  })),
 );
+errors.push(...consistency.errors);
+warnings.push(...consistency.warnings);
 
-mkdirSync(join(root, "src/generated"), { recursive: true });
-writeFileSync(
-  join(root, "src/generated/content.json"),
-  `${JSON.stringify(content, null, 2)}\n`,
-);
-console.log(
-  `content: ${questionCount} questions in ${sections.length} sections, ${countries.length} countries → src/generated/content.json`,
-);
+for (const warning of warnings) console.warn(`warning: ${warning}`);
+if (errors.length) {
+  for (const error of errors) console.error(`error: ${error}`);
+  process.exit(1);
+}
+
+mkdirSync(generatedDir, { recursive: true });
+
+for (const language of languages) {
+  const levels: CompiledLevel[] = language.levels.map((entry) => ({
+    id: String(entry.raw.level?.id),
+    number: Number(entry.raw.level?.number),
+    title: String(entry.raw.level?.title ?? ""),
+    sections: compileSections(entry.raw),
+    tables: compileTables(entry.raw),
+  }));
+
+  const countries: Country[] = language.countries.map((country) => ({
+    name: String(country.name),
+    article: (country.article ?? "") as Country["article"],
+    aus: String(country.aus),
+    ru: String(country.ru ?? ""),
+  }));
+
+  const content: CompiledContent = {
+    lang: language.lang,
+    ui: stringRecord(language.ui.ui),
+    levels,
+    countries,
+  };
+
+  const file = join(generatedDir, `content.${language.lang}.json`);
+  writeFileSync(file, `${JSON.stringify(content, null, 2)}\n`);
+
+  const questionCount = levels.reduce(
+    (total, level) =>
+      total + level.sections.reduce((sum, section) => sum + section.questions.length, 0),
+    0,
+  );
+  console.log(
+    `content: ${language.lang} — ${levels.length} level(s), ${questionCount} questions, ${countries.length} countries → src/generated/content.${language.lang}.json`,
+  );
+}

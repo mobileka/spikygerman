@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Question } from "../content/types";
   import type { Hint, QuestionResult, Status } from "../grading/grade";
-  import { explanationText, t } from "../content";
+  import { t } from "../content";
 
   let {
     question,
@@ -60,7 +60,7 @@
     return out;
   });
 
-  const explanation = $derived(explanationText(question.id));
+  const explanation = $derived(question.explanation);
 </script>
 
 <div

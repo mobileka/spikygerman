@@ -1,27 +1,42 @@
 # ============================================================================
-# SpikyGerman — Test 1 (für den Lehrer)
+# SpikyGerman — Уровень 1 (для учителя)
 # ============================================================================
 #
-# Diese Datei ist der ganze Test. Du kannst sie in Zed öffnen und ändern.
+# Eine Datei = ein Уровень in einer Sprache. Hier steht alles zusammen:
+# die deutschen Aufgaben und die russischen Texte. Du kannst sie in Zed
+# öffnen und ändern.
+#
+# Diese Datei ist russisch. Eine ukrainische Version wäre
+# content/uk/level-1.toml: die deutschen Aufgaben bleiben gleich, nur die
+# Texte in der Landessprache werden übersetzt. „bun run check“ prüft, dass
+# die Antworten in allen Sprachen gleich sind.
 #
 # So ist die Datei aufgebaut:
+#   [level]              = der Уровень selbst
 #   [[section]]          = ein Abschnitt (z. B. „Dialoge“)
 #   [[section.question]] = eine Frage in diesem Abschnitt
+#
+# Der Уровень hat:
+#   id     = kurzer Name, z. B. "sample-test-1"
+#   number = die Nummer des Уровня (1, 2, …) — in allen Sprachen gleich
+#   title  = Name auf Deutsch
 #
 # Ein Abschnitt hat:
 #   id          = kurzer Name, z. B. "dialoge"
 #   title       = Überschrift auf Deutsch
-#   instruction = Aufgabe auf Russisch (Text steht in strings.ru.toml)
+#   instruction = Aufgabe in der Sprache der Datei (hier Russisch)
 #   example     = Beispiel, das immer sichtbar ist (freiwillig)
 #   example_photo / example_alt = Bild zum Beispiel (freiwillig)
 #   photo / alt / sr_data / table = Bild und Text für die ganze Aufgabe
 #
 # Jede Frage hat:
-#   type    = die Art der Aufgabe (siehe Liste unten)
-#   ask     = die Aufgabe auf Deutsch (so wie auf dem Papier)
-#   answer  = die Lösung (je nach type)
-#   example = nur wenn die Frage eine eigene Aufgabe hat (z. B. Übersetzen);
-#             Beispiele stehen sonst oben im Abschnitt, nicht in der Frage.
+#   type        = die Art der Aufgabe (siehe Liste unten)
+#   ask         = die Aufgabe auf Deutsch (bei „translate“: der Satz in der
+#                 Sprache der Datei, der übersetzt werden soll)
+#   explanation = kurze Erklärung in der Sprache der Datei (nach dem Prüfen)
+#   answer      = die Lösung (je nach type)
+#   example     = nur wenn die Frage eine eigene Aufgabe hat (z. B. Übersetzen);
+#                 Beispiele stehen sonst oben im Abschnitt, nicht in der Frage.
 #
 # ----------------------------------------------------------------------------
 # Die sieben Aufgabentypen mit Beispiel
@@ -34,7 +49,8 @@
 #      ends_with   = "Jahre alt"        # nur wenn nötig
 #      country     = true               # nur bei „Ich komme aus …“
 #
-#    „country = true“ bedeutet: Der App schaut in content/countries.toml nach.
+#    „country = true“ bedeutet: Der App schaut in content/ru/countries.toml nach
+#    (pro Sprache eine eigene Liste).
 #    Schreibt jemand „Ich komme aus Ukraine“, kommt ein gelber Hinweis:
 #    „Почти! die Ukraine → aus der Ukraine.“
 #
@@ -101,29 +117,31 @@
 # das Flyer-Bild.
 #
 # ----------------------------------------------------------------------------
-# Erklärungen auf Russisch
+# Erklärungen
 # ----------------------------------------------------------------------------
 #
-# Erklärungen stehen in content/strings.ru.toml im Abschnitt [explanation],
-# nach Frage-ID sortiert:
+# Jede Frage hat direkt unter „ask“ eine explanation in der Sprache der Datei:
 #
-#   q06 = "du → -st; формальное Sie → -en"
+#   ask = "Herr Meier, woher ___ ___?"
+#   explanation = "du → -st; формальное Sie → -en"
 #
-# Die Datei heißt strings.ru.toml, weil sie russisch ist. Eine ukrainische
-# Version wäre strings.uk.toml — an dieser Testdatei ändert sich nichts.
+# Diese Erklärung sieht der Lernende nach dem Prüfen. Fehlt sie, meldet
+# „bun run check“ eine Warnung.
 #
 # ----------------------------------------------------------------------------
 # Prüfen
 # ----------------------------------------------------------------------------
 #
-# Nach jeder Änderung:  npm run check
+# Nach jeder Änderung:  bun run check
 # Die Prüfung spricht klar: „q22: … did you mean one of der/die/das?“
+# Sie vergleicht auch alle Sprachen: gleiche Fragen, gleiche Antworten darin.
 #
 # ============================================================================
 
 
-[test]
+[level]
 id = "sample-test-1"
+number = 1
 title = "Test 1"
 
 
@@ -132,19 +150,21 @@ title = "Test 1"
 [[section]]
 id = "sich-vorstellen"
 title = "Sich vorstellen"
-instruction = "sich_vorstellen"
+instruction = "Ответьте на вопросы полными предложениями, как в примере."
 example = "Wie heißen Sie? — Ich heiße Anna.\nWoher kommen Sie? — Ich komme aus Syrien.\nWo wohnen Sie? — Ich wohne in Berlin.\nWas sprechen Sie? — Ich spreche Russisch.\nWie alt sind Sie? — Ich bin 30 Jahre alt."
 
 [[section.question]]
 id = "q01"
 type = "sentence"
 ask = "Wie heißen Sie?"
+explanation = "Ответьте полным предложением: Ich heiße + имя."
 starts_with = "Ich heiße"
 
 [[section.question]]
 id = "q02"
 type = "sentence"
 ask = "Woher kommen Sie?"
+explanation = "die Ukraine — женский род: aus der Ukraine."
 starts_with = "Ich komme aus"
 country = true
 
@@ -152,18 +172,21 @@ country = true
 id = "q03"
 type = "sentence"
 ask = "Wo wohnen Sie?"
+explanation = "Ich wohne in … — где вы живёте."
 starts_with = "Ich wohne in"
 
 [[section.question]]
 id = "q04"
 type = "sentence"
 ask = "Was sprechen Sie?"
+explanation = "Ich spreche … — на каком языке вы говорите."
 starts_with = "Ich spreche"
 
 [[section.question]]
 id = "q05"
 type = "sentence"
 ask = "Wie alt sind Sie?"
+explanation = "Не забудьте: Ich bin … Jahre alt."
 starts_with = "Ich bin"
 ends_with = "Jahre alt"
 
@@ -173,13 +196,14 @@ ends_with = "Jahre alt"
 [[section]]
 id = "dialoge"
 title = "Dialoge"
-instruction = "dialoge"
+instruction = "Заполните пропуски в диалогах. Там, где нужно, выберите правильную форму глагола из списка."
 example = "Herr Ali, woher kommst du?\nIch komme aus Syrien."
 
 [[section.question]]
 id = "q06"
 type = "gaps"
 ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
+explanation = "Вежливо (Sie): kommen Sie. С «du» тоже правильно: kommst du."
 answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
 gap_choices = ["kommen|kommst|komme", "", ""]
 
@@ -187,6 +211,7 @@ gap_choices = ["kommen|kommst|komme", "", ""]
 id = "q07"
 type = "gaps"
 ask = "Petro, woher ___ du?\nIch ___ aus ___ Ukraine."
+explanation = "du → форма на -st: kommst. die Ukraine — женский род, поэтому aus der Ukraine."
 answers = ["kommst", "komme", "der"]
 gap_choices = ["kommen|kommst|komme", "kommen|kommst|komme", ""]
 
@@ -194,6 +219,7 @@ gap_choices = ["kommen|kommst|komme", "kommen|kommst|komme", ""]
 id = "q08"
 type = "gaps"
 ask = "Frau Saccon, woher ___ ___?\nAus Italien."
+explanation = "Вежливо: kommen Sie. Разговорно: kommst du."
 answers = [["kommen", "kommst"], ["Sie", "du"]]
 gap_choices = ["kommen|kommst|komme", ""]
 
@@ -203,7 +229,7 @@ gap_choices = ["kommen|kommst|komme", ""]
 [[section]]
 id = "einkaufen"
 title = "Einkaufen"
-instruction = "einkaufen"
+instruction = "Помогите Сандре и Тому составить список покупок. Посмотрите на холодильник и ответьте на вопросы полными предложениями."
 photo = "img/fridge.webp"
 alt = "Рисунок: холодильник с продуктами."
 sr_data = "На рисунке холодильник. В холодильнике лежат бананы и помидоры. Яиц в холодильнике нет. Перца (Paprika) в холодильнике тоже нет."
@@ -213,31 +239,36 @@ example = "Haben wir Milch?\nJa, wir haben Milch. / Nein, wir haben keine Milch.
 id = "q13"
 type = "yesno"
 ask = "Haben wir Bananen?"
+explanation = "Бананы есть: Ja, wir haben Bananen."
 answer = "Ja, wir haben Bananen."
 
 [[section.question]]
 id = "q14"
 type = "yesno"
 ask = "Haben wir Eier?"
+explanation = "Eier — множественное число: keine Eier."
 answer = "Nein, wir haben keine Eier."
 
 [[section.question]]
 id = "q15"
 type = "yesno"
 ask = "Haben wir Paprika?"
+explanation = "Paprika — без артикля: keine Paprika."
 answer = "Nein, wir haben keine Paprika."
 
 [[section.question]]
 id = "q16"
 type = "yesno"
 ask = "Haben wir Tomaten?"
+explanation = "Помидоры есть: Ja, wir haben Tomaten."
 answer = "Ja, wir haben Tomaten."
 
 [[section.question]]
 id = "q17"
 type = "translate"
 ask = "Нам нужны перец, яйца и рыба."
-instruction = "translate"
+explanation = "Paprika и Fisch — без артикля. Eier — множественное число, тоже без артикля."
+instruction = "Переведите на немецкий."
 frame = "wir brauchen"
 answer_keywords = ["Paprika", "Eier", "Fisch"]
 answer = "Wir brauchen Paprika, Eier und Fisch."
@@ -249,13 +280,14 @@ example = "Нам нужен сыр. → Wir brauchen Käse."
 [[section]]
 id = "was-ist-das"
 title = "Was ist das?"
-instruction = "was_ist_das"
+instruction = "Посмотрите на фотографию и ответьте полным предложением. Если предмет назван правильно, напишите: «Ja, das ist ein/eine …». Если неправильно, напишите: «Nein, das ist kein/keine …» и укажите, что это на самом деле."
 example = "Ist das eine Birne? — Ja, das ist eine Birne.\nIst das ein Apfel? — Nein, das ist kein Apfel. Das ist eine Birne."
 
 [[section.question]]
 id = "q18"
 type = "yesno"
 ask = "Ist das eine Tomate?"
+explanation = "eine Tomate — женский род."
 answer = "Ja, das ist eine Tomate."
 photo = "img/food-tomate.webp"
 alt = "Фотография: помидор."
@@ -265,6 +297,7 @@ sr_data = "На фотографии помидор: красный, кругл�
 id = "q19"
 type = "yesno"
 ask = "Ist das ein Brötchen?"
+explanation = "kein Brötchen (das), ein Fisch (der)."
 answer = "Nein, das ist kein Brötchen. Das ist ein Fisch."
 photo = "img/food-fisch.webp"
 alt = "Фотография: рыба."
@@ -274,6 +307,7 @@ sr_data = "На фотографии рыба на тарелке. Это не �
 id = "q20"
 type = "yesno"
 ask = "Ist das ein Kuchen?"
+explanation = "ein Kuchen — мужской род."
 answer = "Ja, das ist ein Kuchen."
 photo = "img/food-kuchen.webp"
 alt = "Фотография: пирог."
@@ -283,6 +317,7 @@ sr_data = "На фотографии пирог (Kuchen) — сладкая вы
 id = "q21"
 type = "yesno"
 ask = "Ist das eine Banane?"
+explanation = "keine Banane (женский род), eine Paprika (женский род)."
 answer = "Nein, das ist keine Banane. Das ist eine Paprika."
 photo = "img/food-paprika.webp"
 alt = "Фотография: красный перец."
@@ -294,7 +329,7 @@ sr_data = "На фотографии красный болгарский пер�
 [[section]]
 id = "preise"
 title = "Preise"
-instruction = "preise"
+instruction = "Посмотрите на рекламный проспект и ответьте полными предложениями, сколько что стоит. Цены напишите словами."
 photo = "img/rewe.webp"
 alt = "Фотография: рекламный проспект REWE с ценами."
 table = "rewe"
@@ -304,24 +339,28 @@ example = "Wie viel kosten die Pringles? — Die Pringles kosten ein Euro vierun
 id = "q22"
 type = "price"
 ask = "Wie viel kosten Tomaten?"
+explanation = "kosten — для множественного числа: Die Tomaten kosten. Прописью: ein Euro elf Cent."
 answer = "Die Tomaten kosten ein Euro elf Cent."
 
 [[section.question]]
 id = "q23"
 type = "price"
 ask = "Wie viel kostet der Käse?"
+explanation = "kostet — для единственного числа: Der Käse kostet. Прописью: sechsundsechzig Cent."
 answer = "Der Käse kostet sechsundsechzig Cent."
 
 [[section.question]]
 id = "q24"
 type = "price"
 ask = "Wie viel kostet der Joghurt?"
+explanation = "kostet — единственное число: Der Joghurt kostet. Прописью: achtundzwanzig Cent."
 answer = "Der Joghurt kostet achtundzwanzig Cent."
 
 [[section.question]]
 id = "q25"
 type = "price"
 ask = "Wie viel kostet der Kaffee?"
+explanation = "kostet — единственное число: Der Kaffee kostet. Прописью: drei Euro zweiundvierzig Cent."
 answer = "Der Kaffee kostet drei Euro zweiundvierzig Cent."
 
 
@@ -330,14 +369,15 @@ answer = "Der Kaffee kostet drei Euro zweiundvierzig Cent."
 [[section]]
 id = "artikel-und-verben"
 title = "Artikel und Verben"
-instruction = "artikel_und_verben"
+instruction = "Заполните пропуски или выберите правильный вариант. Слова пишите полностью."
 example = "Ich möchte eine Orange. Ich habe keine Orange.\nHunger (haben) → Ich habe Hunger."
 
 [[section.question]]
 id = "q26"
 type = "choice"
 ask = "___ Käse ist gelb."
-instruction = "choice_der_die_das"
+explanation = "der Käse — мужской род."
+instruction = "Выберите правильный определённый артикль."
 options = ["der", "die", "das"]
 answer = "der"
 
@@ -345,7 +385,8 @@ answer = "der"
 id = "q27"
 type = "choice"
 ask = "Ist das ___ Tomate?"
-instruction = "choice_ein_eine"
+explanation = "eine Tomate — женский род."
+instruction = "Выберите правильный неопределённый артикль."
 options = ["ein", "eine"]
 answer = "eine"
 
@@ -353,35 +394,40 @@ answer = "eine"
 id = "q28"
 type = "gaps"
 ask = "Ich möchte ___ Apfel."
-instruction = "akkusativ"
+explanation = "Akkusativ, мужской род: einen Apfel."
+instruction = "Впишите правильный артикль в Akkusativ."
 answers = ["einen"]
 
 [[section.question]]
 id = "q29"
 type = "gaps"
 ask = "Ich brauche ___ Joghurt."
-instruction = "akkusativ"
+explanation = "Akkusativ, мужской род: einen Joghurt."
+instruction = "Впишите правильный артикль в Akkusativ."
 answers = ["einen"]
 
 [[section.question]]
 id = "q30"
 type = "gaps"
 ask = "a) Das ist ___ Apfel.\nb) Ich habe ___ Apfel."
-instruction = "kein_keinen"
+explanation = "kein Apfel (Nominativ), keinen Apfel (Akkusativ)."
+instruction = "Впишите kein или keinen."
 answers = ["kein", "keinen"]
 
 [[section.question]]
 id = "q31"
 type = "gaps"
 ask = "Ich brauche Milch, aber ich habe ___ Milch."
-instruction = "negation"
+explanation = "Milch — женский род: keine Milch."
+instruction = "Впишите правильную форму отрицания."
 answers = ["keine"]
 
 [[section.question]]
 id = "q32"
 type = "gaps"
 ask = "Ich ___ (sein) müde."
-instruction = "verb_sein"
+explanation = "sein: ich bin."
+instruction = "Выберите правильную форму глагола sein."
 answers = ["bin"]
 gap_choices = ["bin|bist|ist|sind"]
 
@@ -389,7 +435,8 @@ gap_choices = ["bin|bist|ist|sind"]
 id = "q33"
 type = "gaps"
 ask = "Wir ___ (haben) keine Tomaten."
-instruction = "verb_haben"
+explanation = "haben: wir haben."
+instruction = "Выберите правильную форму глагола haben."
 answers = ["haben"]
 gap_choices = ["habe|hast|hat|haben"]
 
@@ -397,7 +444,8 @@ gap_choices = ["habe|hast|hat|haben"]
 id = "q34"
 type = "gaps"
 ask = "Er ___ (wohnen) in Berlin."
-instruction = "verb_wohnen"
+explanation = "wohnen: er/sie/es wohnt."
+instruction = "Выберите правильную форму глагола wohnen."
 answers = ["wohnt"]
 gap_choices = ["wohne|wohnst|wohnt|wohnen"]
 
@@ -405,7 +453,8 @@ gap_choices = ["wohne|wohnst|wohnt|wohnen"]
 id = "q35"
 type = "gaps"
 ask = "Du ___ (kommen) aus Polen?"
-instruction = "verb_kommen"
+explanation = "kommen: du kommst."
+instruction = "Выберите правильную форму глагола kommen."
 answers = ["kommst"]
 gap_choices = ["komme|kommst|kommt|kommen"]
 
@@ -413,7 +462,8 @@ gap_choices = ["komme|kommst|kommt|kommen"]
 id = "q36"
 type = "gaps"
 ask = "Ich ___ (möchten) einen Apfel."
-instruction = "verb_moechten"
+explanation = "möchten: ich möchte."
+instruction = "Выберите правильную форму глагола möchten."
 answers = ["möchte"]
 gap_choices = ["möchte|möchtest|möchten"]
 
@@ -421,7 +471,8 @@ gap_choices = ["möchte|möchtest|möchten"]
 id = "q37"
 type = "gaps"
 ask = "Wir ___ (brauchen) Milch."
-instruction = "verb_brauchen"
+explanation = "brauchen: wir brauchen."
+instruction = "Выберите правильную форму глагола brauchen."
 answers = ["brauchen"]
 gap_choices = ["brauche|brauchst|braucht|brauchen"]
 
@@ -429,7 +480,8 @@ gap_choices = ["brauche|brauchst|braucht|brauchen"]
 id = "q38"
 type = "gaps"
 ask = "Sie (она) ___ (essen) gern Obst."
-instruction = "verb_essen"
+explanation = "essen — неправильный глагол: er/sie/es isst."
+instruction = "Выберите правильную форму глагола essen."
 answers = ["isst"]
 gap_choices = ["esse|isst|esst|essen"]
 
@@ -437,7 +489,8 @@ gap_choices = ["esse|isst|esst|essen"]
 id = "q39"
 type = "choice"
 ask = "___ Äpfel sind rot."
-instruction = "choice_plural"
+explanation = "Множественное число всегда die: die Äpfel."
+instruction = "Выберите правильный артикль во множественном числе."
 options = ["der", "die", "das"]
 answer = "die"
 
@@ -445,7 +498,8 @@ answer = "die"
 id = "q40"
 type = "translate"
 ask = "Мне нужен йогурт, но у меня нет молока."
-instruction = "translate"
+explanation = "Joghurt — мужской род: einen Joghurt. Milch — женский род: keine Milch."
+instruction = "Переведите на немецкий."
 frame = "ich brauche"
 answer_keywords = ["Joghurt", "einen", "keine", "Milch"]
 answer = "Ich brauche einen Joghurt, aber ich habe keine Milch."

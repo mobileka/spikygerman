@@ -3,10 +3,10 @@ import { join } from "node:path";
 import { countBlanks } from "../grading/normalize";
 import type {
   RawCountry,
+  RawLevelFile,
   RawQuestion,
   RawSection,
-  RawStringsFile,
-  RawTestFile,
+  RawUiFile,
 } from "./types";
 
 export interface ValidationReport {
@@ -16,7 +16,15 @@ export interface ValidationReport {
 
 export interface ValidateOptions {
   publicDir: string;
+  /** Teacher-facing paths, used in messages. */
+  levelFile?: string;
+  uiFile?: string;
+  countriesFile?: string;
 }
+
+const DEFAULT_LEVEL_FILE = "level.toml";
+const DEFAULT_UI_FILE = "ui.toml";
+const DEFAULT_COUNTRIES_FILE = "countries.toml";
 
 const QUESTION_TYPES = [
   "sentence",
@@ -93,10 +101,10 @@ const REQUIRED_UI_KEYS = [
 
 interface QuestionContext {
   label: string;
-  instructionKeys: Set<string>;
   countryNames: Set<string>;
   tables: Set<string>;
   publicDir: string;
+  countriesFile: string;
   err: (message: string) => void;
   warn: (message: string) => void;
 }
@@ -113,10 +121,8 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
     );
   }
   if (!q.ask) err(`${label}: you forgot ask = "..." (the task in German).`);
-  if (q.instruction && !ctx.instructionKeys.has(String(q.instruction))) {
-    err(
-      `${label}: instruction = "${q.instruction}" is not in strings.ru.toml under [instruction].`,
-    );
+  if (!q.explanation) {
+    warn(`${label}: no explanation. Add explanation = "…" in the file's language.`);
   }
 
   if (q.photo) {
@@ -221,7 +227,7 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
         const value = q[fieldName];
         if (value && !ctx.countryNames.has(String(value).toLowerCase())) {
           warn(
-            `${label}: ${fieldName} = "${value}" is not in content/countries.toml — no article hint there.`,
+            `${label}: ${fieldName} = "${value}" is not in ${ctx.countriesFile} — no article hint there.`,
           );
         }
       }
@@ -266,10 +272,11 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
 
 function validateCountries(
   countries: RawCountry[],
+  countriesFile: string,
   err: (message: string) => void,
   warn: (message: string) => void,
 ): void {
-  if (!countries.length) warn("content/countries.toml: no countries yet.");
+  if (!countries.length) warn(`${countriesFile}: no countries yet.`);
   const seen = new Set<string>();
   countries.forEach((country, index) => {
     const label = country.name ? `country "${country.name}"` : `country #${index + 1}`;
@@ -343,8 +350,8 @@ function validateSectionAssets(
 }
 
 export function validateContent(
-  test: RawTestFile,
-  strings: RawStringsFile,
+  level: RawLevelFile,
+  ui: RawUiFile,
   countries: RawCountry[],
   options: ValidateOptions,
 ): ValidationReport {
@@ -352,22 +359,27 @@ export function validateContent(
   const warnings: string[] = [];
   const err = (message: string) => errors.push(message);
   const warn = (message: string) => warnings.push(message);
+  const levelFile = options.levelFile ?? DEFAULT_LEVEL_FILE;
+  const uiFile = options.uiFile ?? DEFAULT_UI_FILE;
+  const countriesFile = options.countriesFile ?? DEFAULT_COUNTRIES_FILE;
 
-  if (!test.test?.id) err('test.toml [test]: you forgot id = "..."');
-  if (!test.test?.title) warn("test.toml [test]: no title.");
+  if (!level.level?.id) err(`${levelFile} [level]: you forgot id = "..."`);
+  if (typeof level.level?.number !== "number") {
+    err(`${levelFile} [level]: you forgot number = 1 (or 2, …).`);
+  }
+  if (!level.level?.title) warn(`${levelFile} [level]: no title.`);
 
-  const instructionKeys = new Set(Object.keys(strings.instruction ?? {}));
-  const uiKeys = new Set(Object.keys(strings.ui ?? {}));
+  const uiKeys = new Set(Object.keys(ui.ui ?? {}));
   for (const key of REQUIRED_UI_KEYS) {
-    if (!uiKeys.has(key)) err(`strings.ru.toml [ui]: you forgot ${key} = "..."`);
+    if (!uiKeys.has(key)) err(`${uiFile} [ui]: you forgot ${key} = "..."`);
   }
 
-  validateCountries(countries, err, warn);
+  validateCountries(countries, countriesFile, err, warn);
   const countryNames = new Set(
     countries.map((country) => String(country.name ?? "").toLowerCase()),
   );
 
-  const tables = test.table ?? {};
+  const tables = level.table ?? {};
   for (const [id, table] of Object.entries(tables)) {
     if (!table.title) warn(`[table.${id}]: no title.`);
     const rows = table.row ?? [];
@@ -378,8 +390,8 @@ export function validateContent(
     });
   }
 
-  const sections = test.section ?? [];
-  if (!sections.length) err("test.toml: at least one [[section]] is needed.");
+  const sections = level.section ?? [];
+  if (!sections.length) err(`${levelFile}: at least one [[section]] is needed.`);
 
   const seenSectionIds = new Set<string>();
   const seenQuestionIds = new Set<string>();
@@ -394,10 +406,8 @@ export function validateContent(
     seenSectionIds.add(String(section.id ?? ""));
 
     if (!section.title) warn(`${where}: no title.`);
-    if (section.instruction && !instructionKeys.has(String(section.instruction))) {
-      err(
-        `${where}: instruction = "${section.instruction}" is not in strings.ru.toml under [instruction].`,
-      );
+    if (section.instruction !== undefined && !String(section.instruction).trim()) {
+      warn(`${where}: instruction is empty. Remove the line or write the task.`);
     }
 
     validateSectionAssets(section, {
@@ -420,10 +430,10 @@ export function validateContent(
 
       validateQuestion(question, {
         label,
-        instructionKeys,
         countryNames,
         tables: new Set(Object.keys(tables)),
         publicDir: options.publicDir,
+        countriesFile,
         err,
         warn,
       });
@@ -431,7 +441,236 @@ export function validateContent(
   });
 
   if (questionCount && questionCount !== seenQuestionIds.size) {
-    warn("test.toml: some questions have no id, so progress cannot be saved for them.");
+    warn(`${levelFile}: some questions have no id, so progress cannot be saved for them.`);
+  }
+
+  return { errors, warnings };
+}
+
+// ---------------------------------------------------------------------------
+// Cross-language consistency
+// ---------------------------------------------------------------------------
+//
+// Every language carries its own copy of a level. The German task and the
+// answers must not drift apart, while instructions, explanations, alt and
+// sr_data are allowed (and expected) to differ. This check compares the
+// answer-bearing parts of every language against the first language.
+
+export interface LanguageLevel {
+  lang: string;
+  path: string;
+  level: RawLevelFile;
+}
+
+export interface LanguageCountries {
+  lang: string;
+  path: string;
+  countries: RawCountry[];
+}
+
+// Fields that must match in every language. Text fields — ask (for translate),
+// instruction, explanation, example, alt, sr_data — are intentionally absent.
+const COMPARED_QUESTION_FIELDS = [
+  "type",
+  "starts_with",
+  "ends_with",
+  "country",
+  "answers",
+  "gap_choices",
+  "pronoun",
+  "name",
+  "from",
+  "residence",
+  "city",
+  "street",
+  "options",
+  "answer",
+  "table",
+  "frame",
+  "answer_keywords",
+  "photo",
+] as const;
+
+function sameValue(a: unknown, b: unknown): boolean {
+  return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+}
+
+function show(value: unknown): string {
+  return JSON.stringify(value ?? null);
+}
+
+function compareLevels(
+  reference: LanguageLevel,
+  other: LanguageLevel,
+  err: (message: string) => void,
+): void {
+  const subject = `${other.path}`;
+  const referencePath = reference.path;
+  const referenceLevel = reference.level.level ?? {};
+  const otherLevel = other.level.level ?? {};
+
+  if (otherLevel.id !== referenceLevel.id) {
+    err(
+      `${subject} [level]: id = "${otherLevel.id}" must match "${referenceLevel.id}" in ${referencePath}.`,
+    );
+  }
+
+  const referenceSections = reference.level.section ?? [];
+  const otherSections = other.level.section ?? [];
+
+  if (otherSections.length !== referenceSections.length) {
+    err(
+      `${subject}: ${otherSections.length} section(s) but ${referencePath} has ${referenceSections.length}. Sections must match.`,
+    );
+  }
+
+  const count = Math.max(referenceSections.length, otherSections.length);
+  for (let index = 0; index < count; index++) {
+    const referenceSection = referenceSections[index];
+    const otherSection = otherSections[index];
+    if (!referenceSection) {
+      err(`${subject}: section "${otherSection?.id}" is not in ${referencePath}.`);
+      continue;
+    }
+    if (!otherSection) {
+      err(`${subject}: section "${referenceSection.id}" is missing.`);
+      continue;
+    }
+
+    const where = `section "${otherSection.id ?? index + 1}"`;
+    if (otherSection.id !== referenceSection.id) {
+      err(
+        `${subject}: ${where}: id must be "${referenceSection.id}" (as in ${referencePath}).`,
+      );
+      continue;
+    }
+    for (const field of ["photo", "example_photo", "table"] as const) {
+      if (!sameValue(otherSection[field], referenceSection[field])) {
+        err(
+          `${subject}: ${where}: ${field} must be ${show(referenceSection[field])} (as in ${referencePath}).`,
+        );
+      }
+    }
+
+    const referenceQuestions = referenceSection.question ?? [];
+    const otherQuestions = otherSection.question ?? [];
+    if (otherQuestions.length !== referenceQuestions.length) {
+      err(
+        `${subject}: ${where}: ${otherQuestions.length} question(s) but ${referencePath} has ${referenceQuestions.length}. Questions must match.`,
+      );
+    }
+
+    const questionCount = Math.max(referenceQuestions.length, otherQuestions.length);
+    for (let qIndex = 0; qIndex < questionCount; qIndex++) {
+      const referenceQuestion = referenceQuestions[qIndex];
+      const otherQuestion = otherQuestions[qIndex];
+      if (!referenceQuestion) {
+        err(`${subject}: ${where}: question "${otherQuestion?.id}" is not in ${referencePath}.`);
+        continue;
+      }
+      if (!otherQuestion) {
+        err(`${subject}: ${where}: question "${referenceQuestion.id}" is missing.`);
+        continue;
+      }
+      const label = `${where} ${otherQuestion.id ?? qIndex + 1}`;
+      if (otherQuestion.id !== referenceQuestion.id) {
+        err(
+          `${subject}: ${where} #${qIndex + 1}: question id must be "${referenceQuestion.id}" (as in ${referencePath}).`,
+        );
+        continue;
+      }
+      for (const field of COMPARED_QUESTION_FIELDS) {
+        if (!sameValue(otherQuestion[field], referenceQuestion[field])) {
+          err(
+            `${subject}: ${label}: ${field} must be ${show(referenceQuestion[field])} (as in ${referencePath}).`,
+          );
+        }
+      }
+      // The ask is German for every type except translate, where it is the
+      // sentence to translate and therefore written in the file's language.
+      if (
+        referenceQuestion.type === otherQuestion.type &&
+        referenceQuestion.type !== "translate" &&
+        !sameValue(otherQuestion.ask, referenceQuestion.ask)
+      ) {
+        err(
+          `${subject}: ${label}: ask must be "${referenceQuestion.ask}" (as in ${referencePath}).`,
+        );
+      }
+    }
+  }
+
+  const referenceTables = reference.level.table ?? {};
+  const otherTables = other.level.table ?? {};
+  const tableNames = new Set([
+    ...Object.keys(referenceTables),
+    ...Object.keys(otherTables),
+  ]);
+  for (const name of tableNames) {
+    if (!sameValue(otherTables[name]?.row, referenceTables[name]?.row)) {
+      err(
+        `${subject}: [table.${name}] rows must match ${referencePath}. The prices are part of the answers.`,
+      );
+    }
+  }
+}
+
+function compareCountries(
+  reference: LanguageCountries,
+  other: LanguageCountries,
+  err: (message: string) => void,
+): void {
+  const key = (country: RawCountry) => String(country.name ?? "").toLowerCase();
+  const byName = new Map(reference.countries.map((country) => [key(country), country]));
+
+  for (const country of other.countries) {
+    const match = byName.get(key(country));
+    if (!match) {
+      err(`${other.path}: "${country.name}" is not in ${reference.path}. Country lists must match.`);
+      continue;
+    }
+    for (const field of ["article", "aus"] as const) {
+      if (!sameValue(country[field], match[field])) {
+        err(
+          `${other.path}: ${country.name}: ${field} must be ${show(match[field])} (as in ${reference.path}).`,
+        );
+      }
+    }
+    byName.delete(key(country));
+  }
+
+  for (const missing of byName.values()) {
+    err(`${other.path}: "${missing.name}" is missing (it is in ${reference.path}).`);
+  }
+}
+
+export function validateLanguageConsistency(
+  levels: LanguageLevel[],
+  countryLists: LanguageCountries[],
+): ValidationReport {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const err = (message: string) => errors.push(message);
+
+  if (levels.length >= 2) {
+    const byNumber = new Map<number, LanguageLevel[]>();
+    for (const entry of levels) {
+      const number = entry.level.level?.number;
+      if (typeof number !== "number") continue;
+      const group = byNumber.get(number) ?? [];
+      group.push(entry);
+      byNumber.set(number, group);
+    }
+
+    for (const group of byNumber.values()) {
+      const [reference, ...others] = group;
+      for (const other of others) compareLevels(reference, other, err);
+    }
+  }
+
+  if (countryLists.length >= 2) {
+    const [reference, ...others] = countryLists;
+    for (const other of others) compareCountries(reference, other, err);
   }
 
   return { errors, warnings };
