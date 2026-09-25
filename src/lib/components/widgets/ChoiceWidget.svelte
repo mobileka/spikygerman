@@ -7,12 +7,14 @@
   import { setAnswer } from "../../state.svelte";
 
   let {
+    levelId,
     question,
     number,
     values,
     result,
     media,
   }: {
+    levelId: string;
     question: Question;
     number: number;
     values: Record<string, string>;
@@ -53,7 +55,7 @@
         name={question.id}
         value={option}
         checked={selected === option}
-        onchange={() => setAnswer(question.id, CHOICE_FIELD, option)}
+        onchange={() => setAnswer(levelId, question.id, CHOICE_FIELD, option)}
       />
       <span lang="de">{option}</span>
     </label>

@@ -8,12 +8,14 @@
   import AnswerInput from "../AnswerInput.svelte";
 
   let {
+    levelId,
     question,
     number,
     values,
     result,
     media,
   }: {
+    levelId: string;
     question: Question;
     number: number;
     values: Record<string, string>;
@@ -59,7 +61,7 @@
       data-state={fieldStatus(result, field) ?? ""}
         aria-invalid={fieldStatus(result, field) === "incorrect" ? "true" : undefined}
         aria-describedby={describedBy}
-        onchange={(event) => setAnswer(question.id, field, event.currentTarget.value)}
+        onchange={(event) => setAnswer(levelId, question.id, field, event.currentTarget.value)}
       >
         <option value="">{t("select_placeholder")}</option>
         {#each choices as choice (choice)}
@@ -73,7 +75,7 @@
       value={values[field] ?? ""}
       status={fieldStatus(result, field)}
       {describedBy}
-      oninput={(value) => setAnswer(question.id, field, value)}
+      oninput={(value) => setAnswer(levelId, question.id, field, value)}
     />
   {/if}
 {/each}

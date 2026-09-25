@@ -1,15 +1,36 @@
 <script lang="ts">
-  import { content, t } from "../content";
+  import type { CompiledLevel } from "../content/types";
+  import { levels, t } from "../content";
   import { continueSectionId } from "../progress";
-  import { sectionHash, type Route } from "../routing";
-  import { progress } from "../state.svelte";
+  import { sectionHash, summaryHash, type Route } from "../routing";
+  import { progressFor } from "../state.svelte";
 
-  let { current }: { current: Route["name"] } = $props();
+  let {
+    current,
+    level = null,
+  }: { current: Route["name"]; level?: CompiledLevel | null } = $props();
+
+  function hasUnfinished(level: CompiledLevel): boolean {
+    const done = new Set(progressFor(level.id).checked);
+    return level.sections.some((section) =>
+      section.questions.some((question) => !done.has(question.id)),
+    );
+  }
+
+  // Off a level route, continue where the learner left off: the first level
+  // with unanswered questions, otherwise the first level.
+  const active = $derived.by(() => {
+    if (level) return level;
+    return levels.find((candidate) => hasUnfinished(candidate)) ?? levels[0] ?? null;
+  });
 
   const continueId = $derived(
-    continueSectionId(content.sections, progress.checked),
+    active ? continueSectionId(active.sections, progressFor(active.id).checked) : null,
   );
-  const continueHref = $derived(continueId ? sectionHash(continueId) : "#/");
+  const continueHref = $derived(
+    active && continueId ? sectionHash(active.number, continueId) : "#/",
+  );
+  const summaryHref = $derived(active ? summaryHash(active.number) : "#/");
 </script>
 
 <nav class="tabbar" aria-label={t("main_nav_label")}>
@@ -35,7 +56,7 @@
   </a>
   <a
     class="tab"
-    href="#/summary"
+    href={summaryHref}
     aria-current={current === "summary" ? "page" : undefined}
   >
     <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">

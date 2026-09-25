@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { content, t } from "./lib/content";
+  import { levels, t } from "./lib/content";
   import { parseHash, type Route } from "./lib/routing";
   import Home from "./lib/components/Home.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
@@ -10,12 +10,16 @@
 
   let route = $state<Route>(parseHash(window.location.hash) ?? { name: "home" });
 
+  const level = $derived.by(() => {
+    const current = route;
+    if (current.name === "home") return null;
+    return levels.find((candidate) => candidate.number === current.level) ?? null;
+  });
+
   const section = $derived.by(() => {
     const current = route;
-    if (current.name !== "section") return null;
-    return (
-      content.sections.find((candidate) => candidate.id === current.id) ?? null
-    );
+    if (current.name !== "section" || !level) return null;
+    return level.sections.find((candidate) => candidate.id === current.id) ?? null;
   });
 
   $effect(() => {
@@ -62,18 +66,19 @@
 <a class="skip-link" href="#screens">{t("skip_link")}</a>
 
 <div class="app">
-  <TopBar current={route.name} />
+  <TopBar current={route.name} {level} />
 
   <main class="screen" id="screens" tabindex="-1">
-    {#if section}
-      {#key section.id}
+    {#if section && level}
+      {#key `${level.id}:${section.id}`}
         <SectionView
+          {level}
           {section}
           questionId={route.name === "section" ? route.questionId : undefined}
         />
       {/key}
-    {:else if route.name === "summary"}
-      <SummaryView />
+    {:else if route.name === "summary" && level}
+      <SummaryView {level} />
     {:else}
       <Home />
     {/if}
@@ -81,6 +86,6 @@
 
   <footer>
     <UmlautRow />
-    <TabBar current={route.name} />
+    <TabBar current={route.name} {level} />
   </footer>
 </div>

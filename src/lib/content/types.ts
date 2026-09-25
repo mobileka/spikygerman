@@ -23,6 +23,7 @@ export interface Question {
   ends_with?: string;
   country?: boolean;
   answers?: string[][];
+  answer_alternatives?: string[];
   gap_choices?: string[][];
   pronoun?: Pronoun;
   name?: string;

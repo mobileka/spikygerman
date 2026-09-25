@@ -55,7 +55,10 @@ function compileQuestion(raw: RawQuestion): Question {
     ...(optionalString(raw.starts_with) && { starts_with: String(raw.starts_with) }),
     ...(optionalString(raw.ends_with) && { ends_with: String(raw.ends_with) }),
     ...(raw.country === true && { country: true }),
-    ...(Array.isArray(raw.answers) && {
+    ...(raw.type === "yesno" && Array.isArray(raw.answers) && {
+      answer_alternatives: raw.answers.map(String),
+    }),
+    ...(raw.type !== "yesno" && Array.isArray(raw.answers) && {
       answers: raw.answers.map((entry) =>
         Array.isArray(entry) ? entry.map(String) : [String(entry)],
       ),

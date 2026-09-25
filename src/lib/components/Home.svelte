@@ -1,39 +1,47 @@
 <script lang="ts">
-  import { content, t } from "../content";
+  import { countries, levels, t } from "../content";
   import { summarizeProgress } from "../grading/summary";
   import { totalQuestions } from "../progress";
-  import { resetAll, progress } from "../state.svelte";
+  import { progressFor, resetAll } from "../state.svelte";
   import { sectionHash, LEVEL_HASH } from "../routing";
   import { format } from "../format";
   import ProgressBar from "./ProgressBar.svelte";
   import ProgressRing from "./ProgressRing.svelte";
 
-  const total = totalQuestions(content.sections);
-  const totalSections = content.sections.length;
-
-  const counts = $derived(
-    summarizeProgress(
-      content.sections,
-      progress.answers,
-      content.countries,
-      progress.checked,
-    ),
+  const rows = $derived(
+    levels.map((level) => {
+      const store = progressFor(level.id);
+      return {
+        level,
+        total: totalQuestions(level.sections),
+        counts: summarizeProgress(
+          level.sections,
+          store.answers,
+          countries,
+          store.checked,
+        ),
+      };
+    }),
   );
 
-  let expanded = $state(
-    typeof window !== "undefined" && window.location.hash === LEVEL_HASH,
+  const firstLevelId = levels.find((level) => level.number === 1)?.id ?? null;
+
+  let expandedId = $state<string | null>(
+    typeof window !== "undefined" && window.location.hash === LEVEL_HASH
+      ? firstLevelId
+      : null,
   );
 
   $effect(() => {
     const onHashChange = () => {
-      if (window.location.hash === LEVEL_HASH) expanded = true;
+      if (window.location.hash === LEVEL_HASH) expandedId = firstLevelId;
     };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   });
 
-  function onToggle(): void {
-    expanded = !expanded;
+  function onToggle(levelId: string): void {
+    expandedId = expandedId === levelId ? null : levelId;
   }
 
   function onReset(): void {
@@ -47,67 +55,71 @@
   <h1>{t("home_hero")}</h1>
 </header>
 
-<button
-  class="btn btn-primary is-block"
-  id="level-1"
-  data-od-id="level-1-toggle"
-  type="button"
-  aria-expanded={expanded}
-  aria-controls="level-1-panel"
-  onclick={onToggle}
->
-  <span>
-    {format(t("level_summary"), {
-      level: 1,
-      sections: totalSections,
-      questions: total,
-    })}
-  </span>
-  <svg
-    class="chev"
-    width="18"
-    height="18"
-    viewBox="0 0 20 20"
-    aria-hidden="true"
+{#each rows as row (row.level.id)}
+  <button
+    class="btn btn-primary is-block"
+    id={`level-${row.level.number}`}
+    data-od-id={`level-${row.level.number}-toggle`}
+    type="button"
+    aria-expanded={expandedId === row.level.id}
+    aria-controls={`level-${row.level.number}-panel`}
+    onclick={() => onToggle(row.level.id)}
   >
-    <path
-      d="M5 8l5 5 5-5"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-</button>
+    <span>
+      {format(t("level_summary"), {
+        level: row.level.number,
+        sections: row.level.sections.length,
+        questions: row.total,
+      })}
+    </span>
+    <svg
+      class="chev"
+      width="18"
+      height="18"
+      viewBox="0 0 20 20"
+      aria-hidden="true"
+    >
+      <path
+        d="M5 8l5 5 5-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
 
-<div class="lvl-progress">
-  <ProgressBar {counts} />
-  <p class="progress-text" role="status">
-    {format(t("progress_answered"), {
-      answered: counts.answered,
-      total: counts.total,
-    })}
-  </p>
-</div>
+  <div class="lvl-progress">
+    <ProgressBar counts={row.counts} />
+    <p class="progress-text" role="status">
+      {format(t("progress_answered"), {
+        answered: row.counts.answered,
+        total: row.counts.total,
+      })}
+    </p>
+  </div>
 
-<div id="level-1-panel" class="lvl-panel" hidden={!expanded}>
-  <ol class="sec-grid">
-    {#each content.sections as section, index (section.id)}
-      <li>
-        <a class="sec-tile is-home" href={sectionHash(section.id)}>
-          <span class="sec-n">
-            <ProgressRing counts={counts.sections[index]} />
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span class="sec-t">{section.title}</span>
-        </a>
-      </li>
-    {/each}
-  </ol>
-</div>
-
-<!-- level-2: следующий уровень добавить здесь. level-chip станет кликабельным переключателем уровня (список уровней, текущий отмечен). См. design-spec.md -->
+  <div
+    id={`level-${row.level.number}-panel`}
+    class="lvl-panel"
+    hidden={expandedId !== row.level.id}
+  >
+    <ol class="sec-grid">
+      {#each row.level.sections as section, index (section.id)}
+        <li>
+          <a class="sec-tile is-home" href={sectionHash(row.level.number, section.id)}>
+            <span class="sec-n">
+              <ProgressRing counts={row.counts.sections[index]} />
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span class="sec-t">{section.title}</span>
+          </a>
+        </li>
+      {/each}
+    </ol>
+  </div>
+{/each}
 
 <button class="btn btn-secondary" type="button" onclick={onReset}>
   <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">

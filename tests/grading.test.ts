@@ -82,6 +82,90 @@ describe("model answers", () => {
   );
 });
 
+describe("level 2 model answers", () => {
+  const level2 = data.levels[1];
+  const level2Questions = level2.sections.flatMap((section) => section.questions);
+
+  it("has 40 questions in 5 sections", () => {
+    expect(level2Questions).toHaveLength(40);
+    expect(level2.sections).toHaveLength(5);
+  });
+
+  it.each(level2Questions.map((question) => [question.id, question] as const))(
+    "%s grades as correct with its model answer",
+    (_id, question) => {
+      const result = gradeQuestion(question, modelValues(question), data.countries);
+      expect(result.status, JSON.stringify(result)).toBe("correct");
+    },
+  );
+
+  it.each(level2Questions.map((question) => [question.id, question] as const))(
+    "%s grades as empty when unanswered",
+    (_id, question) => {
+      const result = gradeQuestion(question, {}, data.countries);
+      expect(result.status).toBe("empty");
+    },
+  );
+});
+
+describe("yesno alternatives", () => {
+  const level2 = data.levels[1];
+  const level2Questions = level2.sections.flatMap((section) => section.questions);
+
+  function byId(id: string): Question {
+    const question = level2Questions.find((candidate) => candidate.id === id);
+    if (!question) throw new Error(`question ${id} not found`);
+    return question;
+  }
+
+  it("accepts both Ja and Nein for a personal question", () => {
+    expect(gradeQuestion(byId("q15"), { answer: "Ja, ich trinke Kaffee." }, data.countries).status).toBe(
+      "correct",
+    );
+    expect(
+      gradeQuestion(byId("q15"), { answer: "Nein, ich trinke keinen Kaffee." }, data.countries).status,
+    ).toBe("correct");
+  });
+
+  it("keeps the first answer as the model", () => {
+    const result = gradeQuestion(
+      byId("q15"),
+      { answer: "Nein, ich trinke keinen Kaffee." },
+      data.countries,
+    );
+    expect(result.model).toBe("Ja, ich trinke Kaffee.");
+  });
+
+  it("rejects a sentence that is neither answer", () => {
+    expect(
+      gradeQuestion(byId("q15"), { answer: "Ich trinke Tee." }, data.countries).status,
+    ).toBe("incorrect");
+  });
+
+  it("still shows almost for a missing second sentence", () => {
+    const question: Question = {
+      id: "x01",
+      type: "yesno",
+      ask: "Ist das ein Apfel?",
+      answer: "Nein, das ist kein Apfel. Das ist eine Birne.",
+      answer_alternatives: [
+        "Nein, das ist kein Apfel. Das ist eine Birne.",
+        "Ja, das ist ein Apfel.",
+      ],
+    };
+    const result = gradeQuestion(
+      question,
+      { answer: "Nein, das ist kein Apfel." },
+      data.countries,
+    );
+    expect(result.status).toBe("almost");
+    expect(result.fields[0].hint).toEqual({
+      kind: "missing_sentence",
+      expected: "Das ist eine Birne.",
+    });
+  });
+});
+
 describe("patterns about yourself (q01-q05)", () => {
   it("accepts any name after the frame", () => {
     expect(grade(byId("q01"), { answer: "Ich heiße Maria" }).status).toBe("correct");

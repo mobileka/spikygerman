@@ -16,7 +16,7 @@
 skip_link = "К содержанию"
 logo_home_label = "SpikyGerman — на главную"
 brand_subtitle = "Немецкий без острых углов · Deutsch A0"
-level_chip = "Уровень 1"
+level_chip = "Уровень {level}"
 theme_to_dark = "Тёмная тема"
 theme_to_light = "Светлая тема"
 progress_answered = "Отвечено: {answered} из {total}"

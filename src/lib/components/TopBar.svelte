@@ -1,22 +1,28 @@
 <script lang="ts">
-  import { content, t } from "../content";
+  import type { CompiledLevel } from "../content/types";
+  import { countries, t } from "../content";
   import { format } from "../format";
   import { summarizeProgress } from "../grading/summary";
   import type { Route } from "../routing";
-  import { progress } from "../state.svelte";
+  import { progressFor } from "../state.svelte";
   import { getTheme, toggleTheme } from "../theme.svelte";
   import ProgressBar from "./ProgressBar.svelte";
 
-  let { current }: { current: Route["name"] } = $props();
+  let {
+    current,
+    level = null,
+  }: { current: Route["name"]; level?: CompiledLevel | null } = $props();
 
-  const counts = $derived(
-    summarizeProgress(
-      content.sections,
-      progress.answers,
-      content.countries,
-      progress.checked,
-    ),
-  );
+  const counts = $derived.by(() => {
+    if (!level) return null;
+    const store = progressFor(level.id);
+    return summarizeProgress(
+      level.sections,
+      store.answers,
+      countries,
+      store.checked,
+    );
+  });
   const dark = $derived(getTheme() === "dark");
   const themeLabel = $derived(dark ? t("theme_to_light") : t("theme_to_dark"));
 </script>
@@ -43,7 +49,7 @@
             <path d="M18.8 23.9 17.9 22.4l1.2-1.3.1-1.7 1.7-.6 1.2-1.3 1.7.5 1.7-.5 1.2 1.3 1.7.6.1 1.7 1.2 1.3-.9 1.5Z" fill="#5d6472" />
             <circle cx="20.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
             <circle cx="27.3" cy="19.8" r="1.25" fill="#fdf4e0" stroke="#2e3138" stroke-width="0.8" />
-            <path d="M19.6 27.5V23a4.2 4 0 0 1 8.4 0v4.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1" stroke-linejoin="round" />
+            <path d="M19.6 27.5V23a4.2 4.2 0 0 1 8.4 0v4.5Z" fill="#fdf4e0" stroke="#2e3138" stroke-width="1" stroke-linejoin="round" />
             <ellipse cx="20.6" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
             <ellipse cx="27" cy="25" rx="0.65" ry="0.4" fill="#e8a080" opacity="0.6" />
             <circle cx="21.9" cy="23" r="1.8" fill="#ffffff" stroke="#2e3138" stroke-width="0.9" />
@@ -61,8 +67,10 @@
         <span class="brand-name">SpikyGerman</span>
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
-      {#if current !== "home"}
-        <span class="level-chip" data-od-id="level-badge">{t("level_chip")}</span>
+      {#if current !== "home" && level}
+        <span class="level-chip" data-od-id="level-badge">
+          {format(t("level_chip"), { level: level.number })}
+        </span>
       {/if}
       <button
         class="theme-toggle"
@@ -85,7 +93,7 @@
         </svg>
       </button>
     </div>
-    {#if current !== "home"}
+    {#if current !== "home" && level && counts}
       <div class="lvl-progress">
         <ProgressBar {counts} />
         <p class="progress-text" role="status">

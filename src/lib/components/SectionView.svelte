@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Question, Section } from "../content/types";
+  import type { CompiledLevel, Question, Section } from "../content/types";
   import type { QuestionResult as Result } from "../grading/grade";
-  import { content, t } from "../content";
-  import { sectionHash } from "../routing";
+  import { countries, t } from "../content";
+  import { sectionHash, summaryHash } from "../routing";
   import {
     getValues,
     isQuestionChecked,
@@ -16,35 +16,39 @@
   import QuestionCard from "./QuestionCard.svelte";
 
   let {
+    level,
     section,
     questionId,
-  }: { section: Section; questionId?: string } = $props();
+  }: { level: CompiledLevel; section: Section; questionId?: string } = $props();
 
-  const sectionIndex = content.sections.findIndex(
-    (candidate) => candidate.id === section.id,
+  const sectionIndex = $derived(
+    level.sections.findIndex((candidate) => candidate.id === section.id),
   );
-  const previous = sectionIndex > 0 ? content.sections[sectionIndex - 1] : null;
-  const next =
-    sectionIndex < content.sections.length - 1
-      ? content.sections[sectionIndex + 1]
-      : null;
+  const previous = $derived(
+    sectionIndex > 0 ? level.sections[sectionIndex - 1] : null,
+  );
+  const next = $derived(
+    sectionIndex < level.sections.length - 1
+      ? level.sections[sectionIndex + 1]
+      : null,
+  );
 
   function onPick(event: Event): void {
     const target = event.currentTarget as HTMLSelectElement;
     if (target.value && target.value !== section.id) {
-      window.location.hash = sectionHash(target.value);
+      window.location.hash = sectionHash(level.number, target.value);
     }
   }
 
   function resultFor(question: Question): Result | undefined {
-    if (!isQuestionChecked(question.id)) return undefined;
-    return gradeQuestion(question, getValues(question.id), content.countries);
+    if (!isQuestionChecked(level.id, question.id)) return undefined;
+    return gradeQuestion(question, getValues(level.id, question.id), countries);
   }
 
   $effect(() => {
     const target = questionId;
     if (!target) return;
-    untrack(() => markQuestionChecked(target));
+    untrack(() => markQuestionChecked(level.id, target));
     const frame = requestAnimationFrame(() => {
       const element = document.getElementById(target);
       if (!element) return;
@@ -65,7 +69,7 @@
       value={section.id}
       onchange={onPick}
     >
-      {#each content.sections as candidate (candidate.id)}
+      {#each level.sections as candidate (candidate.id)}
         <option value={candidate.id}>{candidate.title}</option>
       {/each}
     </select>
@@ -85,9 +89,17 @@
   </div>
 {/if}
 {#if section.table}
-  <div class="sr-only">
-    <PriceTable table={content.tables[section.table]} />
-  </div>
+  {#if section.photo}
+    <div class="sr-only">
+      <PriceTable table={level.tables[section.table]} />
+    </div>
+  {:else}
+    <div class="panel">
+      <div class="panel-b">
+        <PriceTable table={level.tables[section.table]} />
+      </div>
+    </div>
+  {/if}
 {/if}
 {#if section.example}
   <ExampleBlock
@@ -101,8 +113,9 @@
   {#each section.questions as question (question.id)}
     <li>
       <QuestionCard
+        levelId={level.id}
         {question}
-        values={getValues(question.id)}
+        values={getValues(level.id, question.id)}
         result={resultFor(question)}
       />
     </li>
@@ -114,11 +127,12 @@
     <div class="od-row">
       <a
         class="btn btn-secondary od-fill"
-        href={previous ? sectionHash(previous.id) : "#/"}>{t("back")}</a
+        href={previous ? sectionHash(level.number, previous.id) : "#/"}
+        >{t("back")}</a
       >
       <a
         class="btn btn-secondary od-fill"
-        href={next ? sectionHash(next.id) : "#/summary"}
+        href={next ? sectionHash(level.number, next.id) : summaryHash(level.number)}
       >
         {next ? t("next") : t("summary_title")}
       </a>

@@ -249,6 +249,25 @@ function validateQuestion(q: RawQuestion, ctx: QuestionContext): void {
     }
     case "yesno": {
       if (!q.answer) err(`${label}: yesno needs answer = "..." (the full sentence).`);
+      const answers = q.answers;
+      if (answers !== undefined) {
+        if (!Array.isArray(answers) || !answers.length) {
+          err(
+            `${label}: answers must be a list of full sentences, e.g. ["Ja, …", "Nein, …"].`,
+          );
+        } else {
+          answers.forEach((entry, index) => {
+            if (typeof entry !== "string" || !entry.trim()) {
+              err(`${label}: answers[${index}] is empty. Write the full sentence.`);
+            }
+          });
+          if (q.answer && answers[0] !== q.answer) {
+            warn(
+              `${label}: answers[0] should be the model answer ("${q.answer}").`,
+            );
+          }
+        }
+      }
       break;
     }
     case "price": {

@@ -8,11 +8,13 @@
   import { noAutoCorrect } from "../../html-attrs";
 
   let {
+    levelId,
     question,
     values,
     result,
     media,
   }: {
+    levelId: string;
     question: Question;
     values: Record<string, string>;
     result?: QuestionResult;
@@ -53,7 +55,7 @@
     data-state={statusOf(PRONOUN_FIELD) ?? ""}
     aria-describedby={describedBy}
     onchange={(event) =>
-      setAnswer(question.id, PRONOUN_FIELD, event.currentTarget.value)}
+      setAnswer(levelId, question.id, PRONOUN_FIELD, event.currentTarget.value)}
   >
     <option value="">—</option>
     <option value="er">{t("pronoun_er")}</option>
@@ -74,7 +76,7 @@
       {...noAutoCorrect}
       data-state={statusOf("name") ?? ""}
       aria-describedby={describedBy}
-      oninput={(event) => setAnswer(question.id, "name", event.currentTarget.value)}
+      oninput={(event) => setAnswer(levelId, question.id, "name", event.currentTarget.value)}
     />
   </div>
 </div>
@@ -91,7 +93,7 @@
       {...noAutoCorrect}
       data-state={statusOf("from") ?? ""}
       aria-describedby={describedBy}
-      oninput={(event) => setAnswer(question.id, "from", event.currentTarget.value)}
+      oninput={(event) => setAnswer(levelId, question.id, "from", event.currentTarget.value)}
     />
   </div>
 </div>
@@ -111,7 +113,7 @@
       data-state={statusOf("residence") ?? ""}
       aria-describedby={describedBy}
       oninput={(event) =>
-        setAnswer(question.id, "residence", event.currentTarget.value)}
+        setAnswer(levelId, question.id, "residence", event.currentTarget.value)}
     />
   </div>
 </div>
@@ -128,7 +130,7 @@
       {...noAutoCorrect}
       data-state={statusOf("city") ?? ""}
       aria-describedby={describedBy}
-      oninput={(event) => setAnswer(question.id, "city", event.currentTarget.value)}
+      oninput={(event) => setAnswer(levelId, question.id, "city", event.currentTarget.value)}
     />
   </div>
 </div>
@@ -145,7 +147,7 @@
       {...noAutoCorrect}
       data-state={statusOf("street") ?? ""}
       aria-describedby={describedBy}
-      oninput={(event) => setAnswer(question.id, "street", event.currentTarget.value)}
+      oninput={(event) => setAnswer(levelId, question.id, "street", event.currentTarget.value)}
     />
   </div>
 </div>

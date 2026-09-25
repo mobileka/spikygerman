@@ -8,12 +8,14 @@
   import AnswerInput from "../AnswerInput.svelte";
 
   let {
+    levelId,
     question,
     number,
     values,
     result,
     media,
   }: {
+    levelId: string;
     question: Question;
     number: number;
     values: Record<string, string>;
@@ -45,5 +47,5 @@
   value={values[ANSWER_FIELD] ?? ""}
   {status}
   {describedBy}
-  oninput={(value) => setAnswer(question.id, ANSWER_FIELD, value)}
+  oninput={(value) => setAnswer(levelId, question.id, ANSWER_FIELD, value)}
 />

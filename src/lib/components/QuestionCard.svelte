@@ -13,10 +13,12 @@
   import PersonWidget from "./widgets/PersonWidget.svelte";
 
   let {
+    levelId,
     question,
     values,
     result,
   }: {
+    levelId: string;
     question: Question;
     values: Record<string, string>;
     result?: QuestionResult;
@@ -27,7 +29,7 @@
   let feedbackAnchor: HTMLDivElement | undefined = $state();
 
   function onCheck(): void {
-    markQuestionChecked(question.id);
+    markQuestionChecked(levelId, question.id);
     requestAnimationFrame(() => feedbackAnchor?.focus());
   }
 </script>
@@ -60,13 +62,13 @@
     <p class="q-instr">{question.instruction}</p>
   {/if}
   {#if question.type === "gaps"}
-    <GapsWidget {question} {number} {values} {result} media={questionMedia} />
+    <GapsWidget {levelId} {question} {number} {values} {result} media={questionMedia} />
   {:else if question.type === "choice"}
-    <ChoiceWidget {question} {number} {values} {result} media={questionMedia} />
+    <ChoiceWidget {levelId} {question} {number} {values} {result} media={questionMedia} />
   {:else if question.type === "person"}
-    <PersonWidget {question} {values} {result} media={questionMedia} />
+    <PersonWidget {levelId} {question} {values} {result} media={questionMedia} />
   {:else}
-    <FreeTextWidget {question} {number} {values} {result} media={questionMedia} />
+    <FreeTextWidget {levelId} {question} {number} {values} {result} media={questionMedia} />
   {/if}
   <button
     type="button"

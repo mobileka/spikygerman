@@ -268,24 +268,32 @@ describe("summarizeProgress", () => {
   });
 });
 
-describe("summarize with the real test", () => {
+describe("summarize with the real content", () => {
   const data = content as unknown as CompiledContent;
-  const level = data.levels[0];
 
-  it("counts all 36 model answers as correct", () => {
-    const answers: Record<string, Record<string, string>> = {};
-    for (const section of level.sections) {
-      for (const question of section.questions) {
+  it("counts every level's model answers as correct", () => {
+    for (const level of data.levels) {
+      const answers: Record<string, Record<string, string>> = {};
+      const questions = level.sections.flatMap((section) => section.questions);
+      for (const question of questions) {
         answers[question.id] = modelValues(question);
       }
+      const summary = summarize(level.sections, answers, data.countries);
+      expect(summary.total, level.id).toBe(questions.length);
+      expect(summary.correct, level.id).toBe(questions.length);
+      expect(summary.issues, level.id).toEqual([]);
     }
-    const summary = summarize(level.sections, answers, data.countries);
-    expect(summary.total).toBe(36);
-    expect(summary.correct).toBe(36);
-    expect(summary.issues).toEqual([]);
+  });
+
+  it("counts 36 and 40 questions in the two real levels", () => {
+    const totals = data.levels.map((level) =>
+      level.sections.reduce((total, section) => total + section.questions.length, 0),
+    );
+    expect(totals).toEqual([36, 40]);
   });
 
   it("gives every section its own checked counts", () => {
+    const level = data.levels[0];
     const answers: Record<string, Record<string, string>> = {};
     for (const section of level.sections) {
       for (const question of section.questions) {

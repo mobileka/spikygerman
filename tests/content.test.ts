@@ -18,32 +18,40 @@ import content from "../src/generated/content.ru.json";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative: string) => readFileSync(join(root, relative), "utf8");
 
-const LEVEL_FILE = "content/ru/level-1.toml";
+const LEVEL_FILES = ["content/ru/level-1.toml", "content/ru/level-2.toml"];
 const UI_FILE = "content/ru/ui.toml";
 const COUNTRIES_FILE = "content/ru/countries.toml";
 
-const rawLevel = parse(read(LEVEL_FILE)) as unknown as RawLevelFile;
+const levels = LEVEL_FILES.map((path) => ({
+  path,
+  raw: parse(read(path)) as unknown as RawLevelFile,
+}));
 const rawUi = parse(read(UI_FILE)) as unknown as RawUiFile;
 const rawCountries = parse(read(COUNTRIES_FILE)) as unknown as {
   country?: RawCountry[];
 };
 
-const realOptions = {
-  publicDir: join(root, "public"),
-  levelFile: LEVEL_FILE,
-  uiFile: UI_FILE,
-  countriesFile: COUNTRIES_FILE,
-};
+function optionsFor(levelFile: string) {
+  return {
+    publicDir: join(root, "public"),
+    levelFile,
+    uiFile: UI_FILE,
+    countriesFile: COUNTRIES_FILE,
+  };
+}
 
 describe("content validation", () => {
-  it("passes with no errors", () => {
-    const report = validateContent(
-      rawLevel,
-      rawUi,
-      rawCountries.country ?? [],
-      realOptions,
-    );
-    expect(report.errors).toEqual([]);
+  it("passes with no errors and no warnings", () => {
+    for (const { path, raw } of levels) {
+      const report = validateContent(
+        raw,
+        rawUi,
+        rawCountries.country ?? [],
+        optionsFor(path),
+      );
+      expect(report.errors, path).toEqual([]);
+      expect(report.warnings, path).toEqual([]);
+    }
   });
 });
 
@@ -205,6 +213,66 @@ describe("content validation errors are teacher-friendly", () => {
       report.errors.some((error) => error.includes("was not found in public/")),
     ).toBe(true);
   });
+
+  it("flags an empty answers list on yesno", () => {
+    const report = validateContent(
+      {
+        level: { id: "t", number: 1, title: "T" },
+        section: [
+          {
+            id: "s",
+            title: "S",
+            instruction: "Ответьте.",
+            question: [
+              {
+                id: "q01",
+                type: "yesno",
+                ask: "Trinkst du Kaffee?",
+                answer: "Ja, ich trinke Kaffee.",
+                answers: [],
+              },
+            ],
+          },
+        ],
+      },
+      ui,
+      rawCountries.country ?? [],
+      { publicDir: join(root, "public") },
+    );
+    expect(
+      report.errors.some((error) => error.includes("list of full sentences")),
+    ).toBe(true);
+  });
+
+  it("warns when the first yesno answer is not the model", () => {
+    const report = validateContent(
+      {
+        level: { id: "t", number: 1, title: "T" },
+        section: [
+          {
+            id: "s",
+            title: "S",
+            instruction: "Ответьте.",
+            question: [
+              {
+                id: "q01",
+                type: "yesno",
+                ask: "Trinkst du Kaffee?",
+                answer: "Ja, ich trinke Kaffee.",
+                answers: ["Nein, ich trinke keinen Kaffee."],
+              },
+            ],
+          },
+        ],
+      },
+      ui,
+      rawCountries.country ?? [],
+      { publicDir: join(root, "public") },
+    );
+    expect(
+      report.warnings.some((warning) => warning.includes("answers[0]")),
+    ).toBe(true);
+  });
 });
 
 describe("language consistency", () => {
@@ -312,6 +380,10 @@ describe("compiled content", () => {
   const level = data.levels[0];
   const questions = level.sections.flatMap((section) => section.questions);
 
+  it("orders the levels by number", () => {
+    expect(data.levels.map((candidate) => candidate.number)).toEqual([1, 2]);
+  });
+
   it("carries the level number", () => {
     expect(level.number).toBe(1);
   });
@@ -388,6 +460,62 @@ describe("compiled content", () => {
     }
     for (const section of level.sections) {
       if (section.table) expect(level.tables[section.table], section.id).toBeTruthy();
+    }
+  });
+});
+
+describe("compiled level 2", () => {
+  const data = content as unknown as CompiledContent;
+  const level = data.levels[1];
+  const questions = level.sections.flatMap((section) => section.questions);
+
+  it("is the second level with 40 questions in 5 sections", () => {
+    expect(level.id).toBe("level-2");
+    expect(level.number).toBe(2);
+    expect(level.sections).toHaveLength(5);
+    expect(questions).toHaveLength(40);
+  });
+
+  it("gives every question an explanation", () => {
+    const missing = questions
+      .filter((question) => !question.explanation)
+      .map((question) => question.id);
+    expect(missing).toEqual([]);
+  });
+
+  it("gives every section a visible example and an instruction", () => {
+    for (const section of level.sections) {
+      expect(section.example, section.id).toBeTruthy();
+      expect(section.instruction, section.id).toBeTruthy();
+    }
+  });
+
+  it("keeps question ids unique inside the level", () => {
+    const ids = questions.map((question) => question.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("offers alternatives on the personal yesno questions", () => {
+    for (const id of ["q15", "q39"]) {
+      const question = questions.find((candidate) => candidate.id === id);
+      expect(question?.answer_alternatives, id).toHaveLength(2);
+      expect(question?.answer_alternatives?.[0]).toBe(question?.answer);
+    }
+  });
+
+  it("references the markt table and existing countries", () => {
+    const sectionsWithTable = level.sections.filter((section) => section.table);
+    expect(sectionsWithTable.map((section) => section.table)).toEqual(["markt"]);
+    expect(level.tables.markt?.rows.length).toBeGreaterThan(3);
+    for (const question of questions) {
+      if (question.table) expect(level.tables[question.table], question.id).toBeTruthy();
+      for (const field of [question.from, question.residence]) {
+        if (!field) continue;
+        const known = data.countries.some(
+          (country) => country.name.toLowerCase() === field.toLowerCase(),
+        );
+        expect(known, `${question.id}: ${field}`).toBe(true);
+      }
     }
   });
 });

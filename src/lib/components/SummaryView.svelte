@@ -1,24 +1,23 @@
 <script lang="ts">
-  import { content, t } from "../content";
+  import type { CompiledLevel } from "../content/types";
+  import { countries, t } from "../content";
   import { summarize, type IssueStatus } from "../grading/summary";
-  import { progress } from "../state.svelte";
+  import { progressFor } from "../state.svelte";
   import { format } from "../format";
   import { sectionHash } from "../routing";
   import ProgressRing from "./ProgressRing.svelte";
+
+  let { level }: { level: CompiledLevel } = $props();
 
   const batch = 3;
 
   let heading: HTMLHeadingElement | undefined = $state();
   let shown = $state(batch);
 
-  const summary = $derived(
-    summarize(
-      content.sections,
-      progress.answers,
-      content.countries,
-      progress.checked,
-    ),
-  );
+  const summary = $derived.by(() => {
+    const store = progressFor(level.id);
+    return summarize(level.sections, store.answers, countries, store.checked);
+  });
   const visibleIssues = $derived(summary.issues.slice(0, shown));
   const remaining = $derived(summary.issues.length - shown);
 
@@ -70,7 +69,7 @@
 
 <div class="sum-list">
   {#each summary.sections as entry, index (entry.section.id)}
-    <a class="section-link" href={sectionHash(entry.section.id)}>
+    <a class="section-link" href={sectionHash(level.number, entry.section.id)}>
       <span class="sec-n">
         <ProgressRing
           counts={{
@@ -117,7 +116,7 @@
         {#each visibleIssues as issue (issue.question.id)}
           <a
             class="issue-link is-{issue.status}"
-            href={sectionHash(issue.section.id, issue.question.id)}
+            href={sectionHash(level.number, issue.section.id, issue.question.id)}
           >
             <span class="issue-txt">
               <span class="issue-title">

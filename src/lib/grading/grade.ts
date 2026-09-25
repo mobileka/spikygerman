@@ -207,8 +207,13 @@ function gradeYesNo(q: Question, values: Record<string, string>): QuestionResult
   if (!input.trim()) {
     return { status: "empty", fields: [field(ANSWER_FIELD, "empty")], model };
   }
-  if (expectedEquals(input, expected)) {
-    const tip = umlautTip(input, expected);
+  const alternatives = q.answer_alternatives?.length
+    ? q.answer_alternatives
+    : [expected];
+
+  for (const alternative of alternatives) {
+    if (!expectedEquals(input, alternative)) continue;
+    const tip = umlautTip(input, alternative);
     return {
       status: "correct",
       fields: [
@@ -219,19 +224,23 @@ function gradeYesNo(q: Question, values: Record<string, string>): QuestionResult
       model,
     };
   }
-  const sentences = splitSentences(expected);
-  if (sentences.length > 1 && expectedEquals(input, sentences[0])) {
-    return {
-      status: "almost",
-      fields: [
-        field(ANSWER_FIELD, "almost", {
-          kind: "missing_sentence",
-          expected: sentences.slice(1).join(" "),
-        }),
-      ],
-      model,
-    };
+
+  for (const alternative of alternatives) {
+    const sentences = splitSentences(alternative);
+    if (sentences.length > 1 && expectedEquals(input, sentences[0])) {
+      return {
+        status: "almost",
+        fields: [
+          field(ANSWER_FIELD, "almost", {
+            kind: "missing_sentence",
+            expected: sentences.slice(1).join(" "),
+          }),
+        ],
+        model,
+      };
+    }
   }
+
   return { status: "incorrect", fields: [field(ANSWER_FIELD, "incorrect")], model };
 }
 
