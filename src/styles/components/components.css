@@ -321,11 +321,14 @@ p { margin: 0; }
   transition: box-shadow var(--motion-fast) var(--ease-standard), background-color var(--motion-fast) var(--ease-standard);
 }
 .sec-tile:hover { background: var(--surface-warm); box-shadow: 0 0 0 1px var(--accent), var(--elev-raised); }
-/* Home tile — the tall centered level-1 card from the reference design (mirrors
-   the production app's Home.svelte tiles). Centers the stack and grows the
-   counter; the ring inside .sec-n scales with it. */
-.sec-tile.is-home { align-items: center; justify-content: center; gap: var(--space-3); min-height: 128px; padding: var(--space-5) var(--space-4); text-align: center; }
-.sec-tile.is-home .sec-t { display: flex; align-items: center; justify-content: center; min-height: calc(var(--text-lg) * var(--leading-body) * 2); text-wrap: balance; }
+/* Home tile — the tall centered card from the reference design. The visible
+   content is the pie ring plus the title, centered together as one group.
+   The ring is drawn 6px outside its 56px counter, so the group's visual top
+   sits ~3px above its layout box; a 2px downward nudge with the padding keeps
+   the ink centered. (No two-line title reservation: it pushed short titles
+   away from their pie.) */
+.sec-tile.is-home { align-items: center; justify-content: center; gap: var(--space-3); min-height: 128px; padding: calc(var(--space-5) + 2px) var(--space-4) calc(var(--space-5) - 2px); text-align: center; }
+.sec-tile.is-home .sec-t { text-wrap: balance; }
 .sec-tile.is-home .sec-n:has(.sec-ring) { min-width: 56px; height: 56px; font-size: var(--text-lg); }
 .sec-n { font-size: var(--text-xs); font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 .sec-t { font-size: var(--text-lg); font-weight: 600; letter-spacing: -.01em; }
@@ -334,7 +337,8 @@ p { margin: 0; }
    Home.svelte level-1 tiles). Reusable: any .sec-n containing a .sec-ring
    becomes the 44px pill counter; the SVG draws track + up to three status arcs
    (correct → almost → incorrect, clockwise from 12 o'clock via rotate(-90)).
-   Unanswered/empty is the --surface-warm track. Ring is aria-hidden; the
+   Unanswered/empty is the --border track: it stays visible when a hover turns
+   the tile --surface-warm. Ring is aria-hidden; the
    number + adjacent .progress-text carry the meaning. Geometry mirrors the app
    (56 viewBox, r=24, 3.5 stroke) so dash math ports 1:1. */
 .sec-n:has(.sec-ring) {
@@ -361,7 +365,7 @@ p { margin: 0; }
   pointer-events: none;
 }
 .sec-ring .ring-track, .sec-ring .ring-seg { fill: none; stroke-width: 3.5; }
-.sec-ring .ring-track { stroke: var(--surface-warm); }
+.sec-ring .ring-track { stroke: var(--border); }
 .sec-ring .ring-correct { stroke: var(--success); }
 .sec-ring .ring-almost { stroke: var(--warn); }
 .sec-ring .ring-incorrect { stroke: var(--danger); }
