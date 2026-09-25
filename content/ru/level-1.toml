@@ -34,6 +34,9 @@
 #   ask         = die Aufgabe auf Deutsch (bei „translate“: der Satz in der
 #                 Sprache der Datei, der übersetzt werden soll)
 #   explanation = kurze Erklärung in der Sprache der Datei (nach dem Prüfen)
+#   translation = Übersetzung der Lösung in der Sprache der Datei (nach dem
+#                 Prüfen). Nicht bei „translate“ (der Satz steht schon in der
+#                 Aufgabe) und nicht bei „sentence“ (die Lösung ist ein Anfang).
 #   answer      = die Lösung (je nach type)
 #   example     = nur wenn die Frage eine eigene Aufgabe hat (z. B. Übersetzen);
 #                 Beispiele stehen sonst oben im Abschnitt, nicht in der Frage.
@@ -87,6 +90,7 @@
 #
 # 6) type = "price" — ganzer Satz mit Preis, die Zahl in Worten.
 #    „ein Euro und elf Cent“ und „ein Euro elf Cent“ sind beide richtig.
+#    Auch nur der Preis ohne Satz ist richtig: „elf Cent“.
 #
 #      answer = "Der Käse kostet sechsundsechzig Cent."
 #
@@ -204,6 +208,7 @@ id = "q06"
 type = "gaps"
 ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
 explanation = "Вежливо (Sie): kommen Sie. С «du» тоже правильно: kommst du."
+translation = "Господин Майер, откуда вы? Я из Германии."
 answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
 gap_choices = ["kommen|kommst|komme", "", ""]
 
@@ -212,6 +217,7 @@ id = "q07"
 type = "gaps"
 ask = "Petro, woher ___ du?\nIch ___ aus ___ Ukraine."
 explanation = "du → форма на -st: kommst. die Ukraine — женский род, поэтому aus der Ukraine."
+translation = "Петро, откуда ты? Я из Украины."
 answers = ["kommst", "komme", "der"]
 gap_choices = ["kommen|kommst|komme", "kommen|kommst|komme", ""]
 
@@ -220,6 +226,7 @@ id = "q08"
 type = "gaps"
 ask = "Frau Saccon, woher ___ ___?\nAus Italien."
 explanation = "Вежливо: kommen Sie. Разговорно: kommst du."
+translation = "Госпожа Саккон, откуда вы? Из Италии."
 answers = [["kommen", "kommst"], ["Sie", "du"]]
 gap_choices = ["kommen|kommst|komme", ""]
 
@@ -240,6 +247,7 @@ id = "q13"
 type = "yesno"
 ask = "Haben wir Bananen?"
 explanation = "Бананы есть: Ja, wir haben Bananen."
+translation = "Да, у нас есть бананы."
 answer = "Ja, wir haben Bananen."
 
 [[section.question]]
@@ -247,6 +255,7 @@ id = "q14"
 type = "yesno"
 ask = "Haben wir Eier?"
 explanation = "Eier — множественное число: keine Eier."
+translation = "Нет, у нас нет яиц."
 answer = "Nein, wir haben keine Eier."
 
 [[section.question]]
@@ -254,6 +263,7 @@ id = "q15"
 type = "yesno"
 ask = "Haben wir Paprika?"
 explanation = "Paprika — без артикля: keine Paprika."
+translation = "Нет, у нас нет болгарского перца."
 answer = "Nein, wir haben keine Paprika."
 
 [[section.question]]
@@ -261,6 +271,7 @@ id = "q16"
 type = "yesno"
 ask = "Haben wir Tomaten?"
 explanation = "Помидоры есть: Ja, wir haben Tomaten."
+translation = "Да, у нас есть помидоры."
 answer = "Ja, wir haben Tomaten."
 
 [[section.question]]
@@ -288,6 +299,7 @@ id = "q18"
 type = "yesno"
 ask = "Ist das eine Tomate?"
 explanation = "eine Tomate — женский род."
+translation = "Да, это помидор."
 answer = "Ja, das ist eine Tomate."
 photo = "img/food-tomate.webp"
 alt = "Фотография: помидор."
@@ -298,6 +310,7 @@ id = "q19"
 type = "yesno"
 ask = "Ist das ein Brötchen?"
 explanation = "kein Brötchen (das), ein Fisch (der)."
+translation = "Нет, это не булочка. Это рыба."
 answer = "Nein, das ist kein Brötchen. Das ist ein Fisch."
 photo = "img/food-fisch.webp"
 alt = "Фотография: рыба."
@@ -308,6 +321,7 @@ id = "q20"
 type = "yesno"
 ask = "Ist das ein Kuchen?"
 explanation = "ein Kuchen — мужской род."
+translation = "Да, это пирог."
 answer = "Ja, das ist ein Kuchen."
 photo = "img/food-kuchen.webp"
 alt = "Фотография: пирог."
@@ -318,6 +332,7 @@ id = "q21"
 type = "yesno"
 ask = "Ist das eine Banane?"
 explanation = "keine Banane (женский род), eine Paprika (женский род)."
+translation = "Нет, это не банан. Это болгарский перец."
 answer = "Nein, das ist keine Banane. Das ist eine Paprika."
 photo = "img/food-paprika.webp"
 alt = "Фотография: красный перец."
@@ -340,6 +355,7 @@ id = "q22"
 type = "price"
 ask = "Wie viel kosten Tomaten?"
 explanation = "kosten — для множественного числа: Die Tomaten kosten. Прописью: ein Euro elf Cent."
+translation = "Помидоры стоят 1,11 €."
 answer = "Die Tomaten kosten ein Euro elf Cent."
 
 [[section.question]]
@@ -347,6 +363,7 @@ id = "q23"
 type = "price"
 ask = "Wie viel kostet der Käse?"
 explanation = "kostet — для единственного числа: Der Käse kostet. Прописью: sechsundsechzig Cent."
+translation = "Сыр стоит 66 центов."
 answer = "Der Käse kostet sechsundsechzig Cent."
 
 [[section.question]]
@@ -354,6 +371,7 @@ id = "q24"
 type = "price"
 ask = "Wie viel kostet der Joghurt?"
 explanation = "kostet — единственное число: Der Joghurt kostet. Прописью: achtundzwanzig Cent."
+translation = "Йогурт стоит 28 центов."
 answer = "Der Joghurt kostet achtundzwanzig Cent."
 
 [[section.question]]
@@ -361,6 +379,7 @@ id = "q25"
 type = "price"
 ask = "Wie viel kostet der Kaffee?"
 explanation = "kostet — единственное число: Der Kaffee kostet. Прописью: drei Euro zweiundvierzig Cent."
+translation = "Кофе стоит 3,42 €."
 answer = "Der Kaffee kostet drei Euro zweiundvierzig Cent."
 
 
@@ -377,6 +396,7 @@ id = "q26"
 type = "choice"
 ask = "___ Käse ist gelb."
 explanation = "der Käse — мужской род."
+translation = "Сыр жёлтый."
 instruction = "Выберите правильный определённый артикль."
 options = ["der", "die", "das"]
 answer = "der"
@@ -386,6 +406,7 @@ id = "q27"
 type = "choice"
 ask = "Ist das ___ Tomate?"
 explanation = "eine Tomate — женский род."
+translation = "Это помидор?"
 instruction = "Выберите правильный неопределённый артикль."
 options = ["ein", "eine"]
 answer = "eine"
@@ -395,6 +416,7 @@ id = "q28"
 type = "gaps"
 ask = "Ich möchte ___ Apfel."
 explanation = "Akkusativ, мужской род: einen Apfel."
+translation = "Я хочу яблоко."
 instruction = "Впишите правильный артикль в Akkusativ."
 answers = ["einen"]
 
@@ -403,6 +425,7 @@ id = "q29"
 type = "gaps"
 ask = "Ich brauche ___ Joghurt."
 explanation = "Akkusativ, мужской род: einen Joghurt."
+translation = "Мне нужен йогурт."
 instruction = "Впишите правильный артикль в Akkusativ."
 answers = ["einen"]
 
@@ -411,6 +434,7 @@ id = "q30"
 type = "gaps"
 ask = "a) Das ist ___ Apfel.\nb) Ich habe ___ Apfel."
 explanation = "kein Apfel (Nominativ), keinen Apfel (Akkusativ)."
+translation = "а) Это не яблоко. б) У меня нет яблока."
 instruction = "Впишите kein или keinen."
 answers = ["kein", "keinen"]
 
@@ -419,6 +443,7 @@ id = "q31"
 type = "gaps"
 ask = "Ich brauche Milch, aber ich habe ___ Milch."
 explanation = "Milch — женский род: keine Milch."
+translation = "Мне нужно молоко, но у меня нет молока."
 instruction = "Впишите правильную форму отрицания."
 answers = ["keine"]
 
@@ -427,6 +452,7 @@ id = "q32"
 type = "gaps"
 ask = "Ich ___ (sein) müde."
 explanation = "sein: ich bin."
+translation = "Я устал(а)."
 instruction = "Выберите правильную форму глагола sein."
 answers = ["bin"]
 gap_choices = ["bin|bist|ist|sind"]
@@ -436,6 +462,7 @@ id = "q33"
 type = "gaps"
 ask = "Wir ___ (haben) keine Tomaten."
 explanation = "haben: wir haben."
+translation = "У нас нет помидоров."
 instruction = "Выберите правильную форму глагола haben."
 answers = ["haben"]
 gap_choices = ["habe|hast|hat|haben"]
@@ -445,6 +472,7 @@ id = "q34"
 type = "gaps"
 ask = "Er ___ (wohnen) in Berlin."
 explanation = "wohnen: er/sie/es wohnt."
+translation = "Он живёт в Берлине."
 instruction = "Выберите правильную форму глагола wohnen."
 answers = ["wohnt"]
 gap_choices = ["wohne|wohnst|wohnt|wohnen"]
@@ -454,6 +482,7 @@ id = "q35"
 type = "gaps"
 ask = "Du ___ (kommen) aus Polen?"
 explanation = "kommen: du kommst."
+translation = "Ты из Польши?"
 instruction = "Выберите правильную форму глагола kommen."
 answers = ["kommst"]
 gap_choices = ["komme|kommst|kommt|kommen"]
@@ -463,6 +492,7 @@ id = "q36"
 type = "gaps"
 ask = "Ich ___ (möchten) einen Apfel."
 explanation = "möchten: ich möchte."
+translation = "Я хочу яблоко."
 instruction = "Выберите правильную форму глагола möchten."
 answers = ["möchte"]
 gap_choices = ["möchte|möchtest|möchten"]
@@ -472,6 +502,7 @@ id = "q37"
 type = "gaps"
 ask = "Wir ___ (brauchen) Milch."
 explanation = "brauchen: wir brauchen."
+translation = "Нам нужно молоко."
 instruction = "Выберите правильную форму глагола brauchen."
 answers = ["brauchen"]
 gap_choices = ["brauche|brauchst|braucht|brauchen"]
@@ -481,6 +512,7 @@ id = "q38"
 type = "gaps"
 ask = "Sie (она) ___ (essen) gern Obst."
 explanation = "essen — неправильный глагол: er/sie/es isst."
+translation = "Она любит фрукты."
 instruction = "Выберите правильную форму глагола essen."
 answers = ["isst"]
 gap_choices = ["esse|isst|esst|essen"]
@@ -490,6 +522,7 @@ id = "q39"
 type = "choice"
 ask = "___ Äpfel sind rot."
 explanation = "Множественное число всегда die: die Äpfel."
+translation = "Яблоки красные."
 instruction = "Выберите правильный артикль во множественном числе."
 options = ["der", "die", "das"]
 answer = "die"

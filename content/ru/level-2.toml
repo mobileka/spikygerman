@@ -5,8 +5,8 @@
 # Eine Datei = ein Уровень in einer Sprache. Aufbau wie in level-1.toml:
 #   [level]              = der Уровень (id, number, title)
 #   [[section]]          = ein Abschnitt mit instruction auf Russisch
-#   [[section.question]] = eine Frage mit ask (deutsch), explanation (russisch)
-#                          und der Lösung
+#   [[section.question]] = eine Frage mit ask (deutsch), explanation und
+#                          translation (russisch) und der Lösung
 #   [table.*]            = Preistabelle
 #
 # Diese Datei ist russisch. Die deutschen Aufgaben und Antworten müssen in
@@ -39,7 +39,7 @@ title = "Familie und Einkaufen"
 id = "familie"
 title = "Meine Familie"
 instruction = "Посмотрите на слова в примере и напишите о своей семье. Помните: Ich habe einen … / eine … / zwei …"
-example = "der Vater, die Mutter, die Eltern, das Kind, die Kinder\nder Sohn, die Tochter, der Bruder, die Schwester\nIch habe eine Tochter und zwei Söhne.\nDas ist mein Bruder. Das ist meine Schwester."
+example = "der Vater, die Mutter, die Eltern, das Kind, die Kinder\nder Sohn, die Tochter, der Bruder, die Schwester\n\nIch habe eine Tochter und zwei Söhne.\nDas ist mein Bruder. Das ist meine Schwester."
 
 [[section.question]]
 id = "q01"
@@ -47,6 +47,7 @@ type = "choice"
 ask = "Das ist ___ Vater."
 instruction = "Выберите правильный определённый артикль."
 explanation = "Слово Vater мужского рода, поэтому говорим der Vater."
+translation = "Это отец."
 options = ["der", "die", "das"]
 answer = "der"
 
@@ -56,6 +57,7 @@ type = "gaps"
 ask = "Ich habe ___ Tochter und zwei ___."
 instruction = "Впишите артикль и слово во множественном числе."
 explanation = "Слово Tochter женского рода, поэтому eine Tochter.\nВо множественном числе артикль не нужен: zwei Söhne."
+translation = "У меня есть дочь и два сына."
 answers = ["eine", "Söhne"]
 
 [[section.question]]
@@ -64,6 +66,7 @@ type = "gaps"
 ask = "Meine Schwester ___ (heißen) Anna."
 instruction = "Выберите правильную форму глагола heißen."
 explanation = "После «она» (sie) у глагола heißen окончание -t: sie heißt."
+translation = "Мою сестру зовут Анна."
 answers = ["heißt"]
 gap_choices = ["heiße|heißt|heißen"]
 
@@ -73,6 +76,7 @@ type = "gaps"
 ask = "Das ist ___ Bruder. Das ist ___ Mutter."
 instruction = "Впишите mein или meine."
 explanation = "Слово Bruder мужского рода, поэтому mein Bruder.\nСлово Mutter женского рода, поэтому meine Mutter."
+translation = "Это мой брат. Это моя мама."
 answers = ["mein", "meine"]
 
 [[section.question]]
@@ -91,6 +95,7 @@ type = "yesno"
 ask = "Tom hat eine Schwester. Sie heißt Anna. Ist Anna seine Schwester?"
 instruction = "Ответьте полным предложением."
 explanation = "«Его сестра» — это seine Schwester: слово Schwester женского рода.\nВместо имени можно сказать sie: «Ja, sie ist seine Schwester»."
+translation = "Да, Анна — его сестра."
 answer = "Ja, Anna ist seine Schwester."
 answers = ["Ja, Anna ist seine Schwester.", "Ja, sie ist seine Schwester."]
 
@@ -108,6 +113,7 @@ type = "gaps"
 ask = "Das ist Petro. ___ Frau heißt Olena. Das ist Anna. ___ Mann heißt Tom."
 instruction = "Впишите sein или ihr."
 explanation = "Пётр — мужчина, о нём говорим seine Frau («его жена»).\nАнна — женщина, о ней говорим ihr Mann («её муж»)."
+translation = "Это Петро. Его жену зовут Олена. Это Анна. Её мужа зовут Том."
 answers = ["Seine", "Ihr"]
 
 
@@ -117,7 +123,7 @@ answers = ["Seine", "Ihr"]
 id = "verben-fragen"
 title = "Verben und Fragen"
 instruction = "Впишите правильную форму глагола. Из утверждения сделайте вопрос: глагол стоит на первом месте."
-example = "Ich mache – du machst – er macht – wir machen\nDu gehst ins Kino. → Gehst du ins Kino?"
+example = "ich mache, du machst, er macht, wir machen\n\nDu gehst ins Kino.\nGehst du ins Kino?"
 
 [[section.question]]
 id = "q09"
@@ -125,6 +131,7 @@ type = "gaps"
 ask = "Ich ___ (arbeiten) in Berlin."
 instruction = "Выберите правильную форму глагола arbeiten."
 explanation = "После «я» (ich) у глагола arbeiten окончание -e: ich arbeite."
+translation = "Я работаю в Берлине."
 answers = ["arbeite"]
 gap_choices = ["arbeite|arbeitest|arbeitet|arbeiten"]
 
@@ -134,6 +141,7 @@ type = "gaps"
 ask = "Du ___ (kaufen) Brot."
 instruction = "Выберите правильную форму глагола kaufen."
 explanation = "После «ты» (du) у глагола kaufen окончание -st: du kaufst."
+translation = "Ты покупаешь хлеб."
 answers = ["kaufst"]
 gap_choices = ["kaufe|kaufst|kauft|kaufen"]
 
@@ -143,6 +151,7 @@ type = "gaps"
 ask = "Er ___ (spielen) Fußball."
 instruction = "Выберите правильную форму глагола spielen."
 explanation = "После «он» (er) у глагола spielen окончание -t: er spielt."
+translation = "Он играет в футбол."
 answers = ["spielt"]
 gap_choices = ["spiele|spielst|spielt|spielen"]
 
@@ -152,6 +161,7 @@ type = "gaps"
 ask = "Wir ___ (machen) Frühstück."
 instruction = "Выберите правильную форму глагола machen."
 explanation = "После «мы» (wir) глагол стоит в основной форме: wir machen."
+translation = "Мы готовим завтрак."
 answers = ["machen"]
 gap_choices = ["mache|machst|macht|machen"]
 
@@ -175,8 +185,9 @@ starts_with = "Kaufst du"
 id = "q15"
 type = "yesno"
 ask = "Trinkst du Kaffee?"
-instruction = "Ответьте за себя. Возможны оба ответа."
+instruction = "Ответьте за себя полным предложением. Возможны оба ответа."
 explanation = "Ответ «да»: «Ja, ich trinke Kaffee». Ответ «нет»: «Nein, ich trinke keinen Kaffee».\nСлово Kaffee мужского рода, поэтому в отрицании keinen."
+translation = "Да, я пью кофе."
 answer = "Ja, ich trinke Kaffee."
 answers = ["Ja, ich trinke Kaffee.", "Nein, ich trinke keinen Kaffee."]
 
@@ -186,6 +197,7 @@ type = "gaps"
 ask = "Er ___ (trinken) Tee."
 instruction = "Выберите правильную форму глагола trinken."
 explanation = "После «он» (er) у глагола trinken окончание -t: er trinkt."
+translation = "Он пьёт чай."
 answers = ["trinkt"]
 gap_choices = ["trinke|trinkst|trinkt|trinken"]
 
@@ -197,7 +209,7 @@ id = "supermarkt"
 title = "Im Supermarkt"
 instruction = "Вы в супермаркете. Впишите артикль или количество и напишите цену словами."
 table = "markt"
-example = "ein Kilo Tomaten, eine Flasche Milch, ein Stück Käse\nIch kaufe einen Apfel. Ich brauche eine Milch."
+example = "ein Kilo Tomaten, ein Kilo Äpfel\n\nIch kaufe einen Apfel.\nIch brauche einen Joghurt."
 
 [[section.question]]
 id = "q17"
@@ -205,14 +217,16 @@ type = "gaps"
 ask = "Ich kaufe ___ Kilo Tomaten und ___ Flasche Wasser."
 instruction = "Впишите ein или eine."
 explanation = "Слово Kilo среднего рода: ein Kilo.\nСлово Flasche женского рода: eine Flasche."
+translation = "Я покупаю килограмм помидоров и бутылку воды."
 answers = ["ein", "eine"]
 
 [[section.question]]
 id = "q18"
 type = "gaps"
-ask = "Ich brauche ___ Käse und ___ Milch."
-instruction = "Впишите артикль в Akkusativ."
-explanation = "Слово Käse мужского рода; в Akkusativ артикль einen: einen Käse.\nСлово Milch женского рода: eine Milch."
+ask = "Ich brauche ___ Joghurt und ___ Tomate."
+instruction = "Впишите неопределённый артикль (ein, eine или einen)."
+explanation = "Слово Joghurt мужского рода; в Akkusativ артикль einen: einen Joghurt.\nСлово Tomate женского рода: eine Tomate."
+translation = "Мне нужен йогурт и помидор."
 answers = ["einen", "eine"]
 
 [[section.question]]
@@ -221,6 +235,7 @@ type = "choice"
 ask = "Ich kaufe ___ Äpfel."
 instruction = "Выберите правильный артикль во множественном числе."
 explanation = "Во множественном числе артикль всегда die: die Äpfel."
+translation = "Я покупаю яблоки."
 options = ["den", "die", "das"]
 answer = "die"
 
@@ -230,6 +245,7 @@ type = "gaps"
 ask = "Es ___ hier keinen Käse."
 instruction = "Выберите правильную форму глагола geben."
 explanation = "Оборот es gibt переводится «есть, имеется».\n«Es gibt keinen Käse» — «Сыра нет»."
+translation = "Здесь нет сыра."
 answers = ["gibt"]
 gap_choices = ["gebe|gibst|gibt|geben"]
 
@@ -239,6 +255,7 @@ type = "yesno"
 ask = "Ist das ein Apfel?"
 instruction = "Посмотрите на фотографию и ответьте полным предложением."
 explanation = "На фотографии помидор, а не яблоко: «Das ist kein Apfel» (слово Apfel мужского рода).\nПравильно: «Das ist eine Tomate» — слово Tomate женского рода."
+translation = "Нет, это не яблоко. Это помидор."
 answer = "Nein, das ist kein Apfel. Das ist eine Tomate."
 photo = "img/food-tomate.webp"
 alt = "Фотография: помидор."
@@ -250,6 +267,7 @@ type = "price"
 ask = "Wie viel kostet der Käse?"
 instruction = "Напишите цену словами."
 explanation = "Слово Käse стоит в единственном числе, поэтому kostet: «Der Käse kostet …».\nЦена словами: drei Euro neunundvierzig Cent."
+translation = "Сыр стоит 3,49 €."
 answer = "Der Käse kostet drei Euro neunundvierzig Cent."
 
 [[section.question]]
@@ -258,6 +276,7 @@ type = "price"
 ask = "Wie viel kosten die Tomaten?"
 instruction = "Напишите цену словами."
 explanation = "Слово Tomaten стоит во множественном числе, поэтому kosten: «Die Tomaten kosten …».\nЦена словами: ein Euro neunundneunzig Cent."
+translation = "Помидоры стоят 1,99 €."
 answer = "Die Tomaten kosten ein Euro neunundneunzig Cent."
 
 [[section.question]]
@@ -265,7 +284,7 @@ id = "q24"
 type = "translate"
 ask = "Есть хлеб, но нет молока."
 instruction = "Переведите на немецкий."
-explanation = "После оборота es gibt идёт Akkusativ: «Es gibt Brot».\nСлово Milch женского рода, поэтому в отрицании keine Milch."
+explanation = "Оборот es gibt значит «есть, имеется»: «Es gibt Brot».\nСлово Milch женского рода, поэтому в отрицании keine Milch."
 frame = "es gibt"
 answer_keywords = ["Brot", "keine", "Milch"]
 answer = "Es gibt Brot, aber es gibt keine Milch."
@@ -277,7 +296,7 @@ answer = "Es gibt Brot, aber es gibt keine Milch."
 id = "bitten"
 title = "Bitten und Wünsche"
 instruction = "Попросите вежливо. С «du» — Gib/Nimm, с «Sie» — Geben Sie/Nehmen Sie."
-example = "du: Gib mir bitte das Brot. Nimm deine Tasche!\nSie: Geben Sie mir bitte die Milch. Nehmen Sie das Buch."
+example = "du: Gib mir bitte das Brot.\ndu: Nimm deine Tasche!\n\nSie: Geben Sie mir bitte die Milch.\nSie: Nehmen Sie das Buch."
 
 [[section.question]]
 id = "q25"
@@ -285,6 +304,7 @@ type = "gaps"
 ask = "___ mir bitte das Brot."
 instruction = "Выберите форму для «du»."
 explanation = "Просьба к «ты» (du): «Gib mir bitte das Brot» — «Дай мне, пожалуйста, хлеб»."
+translation = "Дай мне, пожалуйста, хлеб."
 answers = ["Gib"]
 gap_choices = ["Gib|Gibst|Geben"]
 
@@ -294,6 +314,7 @@ type = "gaps"
 ask = "___ Sie mir bitte die Milch."
 instruction = "Выберите форму для «Sie»."
 explanation = "Вежливая просьба к «Вы» (Sie): «Geben Sie mir bitte die Milch». Глагол geben стоит в форме geben."
+translation = "Дайте мне, пожалуйста, молоко."
 answers = ["Geben"]
 gap_choices = ["Gebe|Gib|Geben"]
 
@@ -303,6 +324,7 @@ type = "gaps"
 ask = "___ deine Tasche!"
 instruction = "Выберите форму для «du»."
 explanation = "Просьба к «ты» (du): «Nimm deine Tasche!» Глагол nehmen в этой форме — nimm."
+translation = "Возьми свою сумку!"
 answers = ["Nimm"]
 gap_choices = ["Nimm|Nimmst|Nehmen"]
 
@@ -312,6 +334,7 @@ type = "gaps"
 ask = "___ Sie bitte das Buch."
 instruction = "Выберите форму для «Sie»."
 explanation = "Вежливая просьба к «Вы» (Sie): «Nehmen Sie bitte das Buch». Глагол nehmen стоит в форме nehmen."
+translation = "Возьмите, пожалуйста, книгу."
 answers = ["Nehmen"]
 gap_choices = ["Nehme|Nimm|Nehmen"]
 
@@ -346,9 +369,10 @@ answer = "Nimm deine Jacke."
 [[section.question]]
 id = "q32"
 type = "gaps"
-ask = "Was möchten Sie?\n— Ich ___ ein Kilo Äpfel, bitte.\n— Sonst noch etwas?\n— ___ , danke."
+ask = "Was möchten Sie?\n— Ich ___ ein Kilo Äpfel, bitte.\n— Sonst noch etwas?\n— ___, danke."
 instruction = "Заполните диалог."
 explanation = "С «я» (ich) глагол möchten становится möchte: «Ich möchte …».\n«Nein, danke» — вежливый отказ."
+translation = "— Что бы вы хотели?\n— Я хочу килограмм яблок, пожалуйста.\n— Что-нибудь ещё?\n— Нет, спасибо."
 answers = ["möchte", "Nein"]
 gap_choices = ["möchte|möchtest|möchten", ""]
 
@@ -358,15 +382,16 @@ gap_choices = ["möchte|möchtest|möchten", ""]
 [[section]]
 id = "akkusativ-possessiv"
 title = "Akkusativ und Possessivpronomen"
-instruction = "Впишите правильный артикль или притяжательное местоимение в Akkusativ."
-example = "der → den, ein → einen, kein → keinen\nmein → meinen; meine bleibt meine\nIch kaufe den Käse. Ich sehe meinen Bruder."
+instruction = "Впишите артикль или местоимение в Akkusativ. В каждом задании указано, что именно: определённый артикль, неопределённый, отрицание или притяжательное местоимение."
+example = "Ich kaufe den Käse.\nIch kaufe einen Apfel.\nIch brauche keinen Zucker.\n\nIch sehe meinen Bruder.\nIch nehme meine Jacke."
 
 [[section.question]]
 id = "q33"
 type = "choice"
 ask = "Ich kaufe ___ Käse."
-instruction = "Выберите правильный артикль в Akkusativ."
+instruction = "Выберите определённый артикль в Akkusativ."
 explanation = "Слово Käse мужского рода; в Akkusativ артикль den: den Käse."
+translation = "Я покупаю сыр."
 options = ["den", "die", "das"]
 answer = "den"
 
@@ -374,48 +399,54 @@ answer = "den"
 id = "q34"
 type = "gaps"
 ask = "Ich sehe ___ Mann."
-instruction = "Впишите артикль в Akkusativ."
+instruction = "Впишите неопределённый артикль (ein, eine или einen)."
 explanation = "Слово Mann мужского рода; в Akkusativ артикль einen: einen Mann."
+translation = "Я вижу мужчину."
 answers = ["einen"]
 
 [[section.question]]
 id = "q35"
 type = "gaps"
 ask = "Ich habe ___ Zeit."
-instruction = "Впишите правильную форму отрицания."
+instruction = "Впишите отрицание (kein, keine или keinen)."
 explanation = "Слово Zeit женского рода, поэтому в отрицании keine Zeit."
+translation = "У меня нет времени."
 answers = ["keine"]
 
 [[section.question]]
 id = "q36"
 type = "gaps"
 ask = "Wir brauchen ___ Zucker."
-instruction = "Впишите правильную форму отрицания."
+instruction = "Впишите отрицание (kein, keine или keinen)."
 explanation = "Слово Zucker мужского рода; в Akkusativ отрицание keinen: keinen Zucker."
+translation = "Нам не нужен сахар."
 answers = ["keinen"]
 
 [[section.question]]
 id = "q37"
 type = "gaps"
 ask = "Ich nehme ___ Jacke."
-instruction = "Впишите притяжательное местоимение."
+instruction = "Впишите притяжательное местоимение (mein, meine или meinen)."
 explanation = "Слово Jacke женского рода, поэтому meine Jacke."
+translation = "Я беру свою куртку."
 answers = ["meine"]
 
 [[section.question]]
 id = "q38"
 type = "gaps"
 ask = "Ich sehe ___ Bruder."
-instruction = "Впишите притяжательное местоимение."
+instruction = "Впишите притяжательное местоимение (mein, meine или meinen)."
 explanation = "Слово Bruder мужского рода; в Akkusativ притяжательное местоимение получает -en: meinen Bruder."
+translation = "Я вижу своего брата."
 answers = ["meinen"]
 
 [[section.question]]
 id = "q39"
 type = "yesno"
 ask = "Hast du deinen Schlüssel?"
-instruction = "Ответьте за себя. Возможны оба ответа."
+instruction = "Ответьте за себя полным предложением. Возможны оба ответа."
 explanation = "Слово Schlüssel мужского рода; в Akkusativ meinen Schlüssel.\nОтвет «нет»: «Nein, ich habe meinen Schlüssel nicht»."
+translation = "Да, у меня есть (свой) ключ."
 answer = "Ja, ich habe meinen Schlüssel."
 answers = ["Ja, ich habe meinen Schlüssel.", "Nein, ich habe meinen Schlüssel nicht."]
 
