@@ -100,11 +100,15 @@ export function markQuestionChecked(levelId: string, questionId: string): void {
   save(levelId);
 }
 
+export function resetLevel(levelId: string): void {
+  const store = progressFor(levelId);
+  store.answers = {};
+  store.checked = [];
+  save(levelId);
+}
+
 export function resetAll(): void {
   for (const level of levels) {
-    const store = progressFor(level.id);
-    store.answers = {};
-    store.checked = [];
-    save(level.id);
+    resetLevel(level.id);
   }
 }

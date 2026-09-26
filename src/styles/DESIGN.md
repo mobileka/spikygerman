@@ -247,7 +247,7 @@ Shared component layers live in `_design_system/components/`; load order is
   `.sec-grid`/`.sec-tile` (+`.is-home` tall centered home card)/`.sec-n` (+`.sec-ring` with `.ring-track`/`.ring-correct|.almost|.incorrect`
   for section progress pies; empty is the track), `.badge.is-done`/`.is-soon`, `.stat-strip`/`.od-stat`.
 - **Controls** — `.btn` with `-primary`/`-secondary`/`-danger`/`-danger-solid`, `.field`,
-  `.select-lg`, `.choice`, `.lvl-btn`, `.lvl-panel` (tiles under the level head), `.lvl-progress` (shared bar + caption pair on index, drills, summary), `.umlaut`, `.seg`, `.swatch`.
+  `.select-lg`, `.choice`, `.lvl-btn`, `.lvl-panel` (tiles under the level head), `.lvl-progress` (shared bar + caption pair on index, drills, summary; `.lvl-progress-foot`/`.lvl-reset` add the per-level reset under the home caption), `.umlaut`, `.seg`, `.swatch`.
 - **Modules** — exercise (`.qcard`, `.q-instr`, `.q-ask`, `.qn`, `.example`, `.gap-line`,
   `.feedback.correct|.almost|.incorrect|.is-empty` + `.fb-glyph`/`.fb-main`/`.model`/`.tip`,
   `.field[data-state]`), commerce (`.price-table`, `.price-row`, `.price-total`,

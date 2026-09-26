@@ -543,6 +543,29 @@ p { margin: 0; }
    (index level block, drills, summary). Tight pair rhythm per the reference. */
 .lvl-progress { display: grid; gap: var(--space-1); }
 .lvl-progress .progress-text { padding: 0; }
+/* Caption + that level's own reset action, under the level head. Stays outside
+   the collapsible panel so it is reachable when the level is open or closed. */
+.lvl-progress-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.lvl-reset {
+  min-height: 44px;                                   /* hardened: compact controls still meet the tap target */
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-standard);
+}
+.lvl-reset:hover { color: var(--accent-hover); }
 
 .umlaut { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .umlaut button {

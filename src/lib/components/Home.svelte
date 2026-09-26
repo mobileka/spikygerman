@@ -2,7 +2,7 @@
   import { countries, levels, t } from "../content";
   import { summarizeProgress } from "../grading/summary";
   import { totalQuestions } from "../progress";
-  import { progressFor, resetAll } from "../state.svelte";
+  import { progressFor, resetAll, resetLevel } from "../state.svelte";
   import { sectionHash, LEVEL_HASH } from "../routing";
   import { format } from "../format";
   import ProgressBar from "./ProgressBar.svelte";
@@ -49,6 +49,12 @@
       resetAll();
     }
   }
+
+  function onResetLevel(number: number, levelId: string): void {
+    if (window.confirm(format(t("reset_level_confirm"), { level: number }))) {
+      resetLevel(levelId);
+    }
+  }
 </script>
 
 <header class="hero" data-od-id="home-hero">
@@ -92,12 +98,24 @@
 
   <div class="lvl-progress">
     <ProgressBar counts={row.counts} />
-    <p class="progress-text" role="status">
-      {format(t("progress_answered"), {
-        answered: row.counts.answered,
-        total: row.counts.total,
-      })}
-    </p>
+    <div class="lvl-progress-foot">
+      <p class="progress-text" role="status">
+        {format(t("progress_answered"), {
+          answered: row.counts.answered,
+          total: row.counts.total,
+        })}
+      </p>
+      <button
+        class="lvl-reset"
+        type="button"
+        aria-label={format(t("reset_level_label"), {
+          level: row.level.number,
+        })}
+        onclick={() => onResetLevel(row.level.number, row.level.id)}
+      >
+        {t("reset_level")}
+      </button>
+    </div>
   </div>
 
   <div
