@@ -510,7 +510,7 @@ gap_choices = ["brauche|brauchst|braucht|brauchen"]
 [[section.question]]
 id = "q38"
 type = "gaps"
-ask = "Sie (она) ___ (essen) gern Obst."
+ask = "Das ist Anna. Sie ___ (essen) gern Obst."
 explanation = "essen — неправильный глагол: er/sie/es isst."
 translation = "Она любит фрукты."
 instruction = "Выберите правильную форму глагола essen."
