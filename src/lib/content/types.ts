@@ -70,6 +70,14 @@ export interface Country {
   local: string;
 }
 
+// One entry of src/generated/languages.json: what the language calls itself.
+// The settings picker is built from this list only, so a new content/<code>/
+// folder appears there without code changes.
+export interface LanguageInfo {
+  code: string;
+  name: string;
+}
+
 export interface CompiledLevel {
   id: string;
   number: number;
@@ -128,7 +136,13 @@ export interface RawLevelFile {
   table?: Record<string, RawPriceTable>;
 }
 
+// How a language presents itself in the settings picker.
+export interface RawLanguage {
+  name?: string;
+}
+
 // Raw UI strings, one file per language: content/ru/ui.toml.
 export interface RawUiFile {
+  language?: RawLanguage;
   ui?: Record<string, unknown>;
 }

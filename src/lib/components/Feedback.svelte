@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Question } from "../content/types";
   import type { Hint, QuestionResult, Status } from "../grading/grade";
-  import { t } from "../content";
+  import { t } from "../content.svelte";
 
   let {
     question,

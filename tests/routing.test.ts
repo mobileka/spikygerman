@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { parseHash, sectionHash, summaryHash } from "../src/lib/routing.ts";
+import {
+  parseHash,
+  sectionHash,
+  SETTINGS_HASH,
+  summaryHash,
+} from "../src/lib/routing.ts";
 
 describe("routing", () => {
   it("parses home", () => {
@@ -8,6 +13,11 @@ describe("routing", () => {
     expect(parseHash("#/")).toEqual({ name: "home" });
     expect(parseHash("#level-1")).toEqual({ name: "home" });
     expect(parseHash("#/l2")).toEqual({ name: "home" });
+  });
+
+  it("parses the settings screen", () => {
+    expect(SETTINGS_HASH).toBe("#/settings");
+    expect(parseHash(SETTINGS_HASH)).toEqual({ name: "settings" });
   });
 
   it("parses the summary", () => {

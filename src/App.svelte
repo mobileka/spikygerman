@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { levels, t } from "./lib/content";
+  import { getLevels, t } from "./lib/content.svelte";
   import { format } from "./lib/format";
   import { parseHash, type Route } from "./lib/routing";
   import Home from "./lib/components/Home.svelte";
+  import Settings from "./lib/components/Settings.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
   import SummaryView from "./lib/components/SummaryView.svelte";
   import SummaryOverview from "./lib/components/SummaryOverview.svelte";
@@ -14,8 +15,10 @@
 
   const level = $derived.by(() => {
     const current = route;
-    if (current.name === "home") return null;
-    return levels.find((candidate) => candidate.number === current.level) ?? null;
+    if (current.name === "home" || current.name === "settings") return null;
+    return (
+      getLevels().find((candidate) => candidate.number === current.level) ?? null
+    );
   });
 
   const section = $derived.by(() => {
@@ -35,7 +38,9 @@
 
   $effect(() => {
     let screen = t("tab_home");
-    if (route.name === "summary") {
+    if (route.name === "settings") {
+      screen = t("settings_title");
+    } else if (route.name === "summary") {
       screen = level
         ? `${t("summary_title")} – ${format(t("level_chip"), { level: level.number })}`
         : t("summary_title");
@@ -70,10 +75,12 @@
 <a class="skip-link" href="#screens">{t("skip_link")}</a>
 
 <div class="app">
-  <TopBar current={route.name} {level} />
+  <TopBar current={route.name} />
 
   <main class="screen" id="screens" tabindex="-1">
-    {#if section && level}
+    {#if route.name === "settings"}
+      <Settings />
+    {:else if section && level}
       {#key `${level.id}:${section.id}`}
         <SectionView
           {level}

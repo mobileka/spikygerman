@@ -1,4 +1,4 @@
-import { levels } from "./content";
+import { getLevels } from "./content.svelte";
 
 interface Progress {
   answers: Record<string, Record<string, string>>;
@@ -44,16 +44,14 @@ function load(levelId: string): Progress {
   }
 }
 
+// Stores are created on first access: level ids are the same in every
+// language, so switching the UI language never touches progress.
 const stores = new Map<string, Progress>();
-for (const level of levels) {
-  const store = $state<Progress>(load(level.id));
-  stores.set(level.id, store);
-}
 
 export function progressFor(levelId: string): Progress {
   const existing = stores.get(levelId);
   if (existing) return existing;
-  const created = $state<Progress>(empty());
+  const created = $state<Progress>(load(levelId));
   stores.set(levelId, created);
   return created;
 }
@@ -108,7 +106,7 @@ export function resetLevel(levelId: string): void {
 }
 
 export function resetAll(): void {
-  for (const level of levels) {
+  for (const level of getLevels()) {
     resetLevel(level.id);
   }
 }

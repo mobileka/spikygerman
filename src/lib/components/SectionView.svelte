@@ -1,18 +1,22 @@
 <script lang="ts">
   import type { CompiledLevel, Question, Section } from "../content/types";
   import type { QuestionResult as Result } from "../grading/grade";
-  import { countries, t } from "../content";
+  import { getCountries, t } from "../content.svelte";
+  import { format } from "../format";
   import { sectionHash, summaryHash } from "../routing";
   import {
     getValues,
     isQuestionChecked,
     markQuestionChecked,
+    progressFor,
   } from "../state.svelte";
   import { gradeQuestion } from "../grading/grade";
+  import { summarizeProgress } from "../grading/summary";
   import { untrack } from "svelte";
   import ExampleBlock from "./ExampleBlock.svelte";
   import ImageBlock from "./ImageBlock.svelte";
   import PriceTable from "./PriceTable.svelte";
+  import ProgressBar from "./ProgressBar.svelte";
   import QuestionCard from "./QuestionCard.svelte";
 
   let {
@@ -33,6 +37,18 @@
       : null,
   );
 
+  // The level indicator and the progress of this level live with the session
+  // itself, not in the app header: they are session context, not chrome.
+  const counts = $derived.by(() => {
+    const store = progressFor(level.id);
+    return summarizeProgress(
+      level.sections,
+      store.answers,
+      getCountries(),
+      store.checked,
+    );
+  });
+
   function onPick(event: Event): void {
     const target = event.currentTarget as HTMLSelectElement;
     if (target.value && target.value !== section.id) {
@@ -42,7 +58,7 @@
 
   function resultFor(question: Question): Result | undefined {
     if (!isQuestionChecked(level.id, question.id)) return undefined;
-    return gradeQuestion(question, getValues(level.id, question.id), countries);
+    return gradeQuestion(question, getValues(level.id, question.id), getCountries());
   }
 
   $effect(() => {
@@ -58,6 +74,21 @@
     return () => cancelAnimationFrame(frame);
   });
 </script>
+
+<div class="lvl-progress">
+  <div class="lvl-progress-head">
+    <span class="level-chip" data-od-id="level-badge">
+      {format(t("level_chip"), { level: level.number })}
+    </span>
+    <p class="progress-text" role="status">
+      {format(t("progress_answered"), {
+        answered: counts.answered,
+        total: counts.total,
+      })}
+    </p>
+  </div>
+  <ProgressBar {counts} />
+</div>
 
 <header class="hero">
   <h1 class="sr-only">{section.title}</h1>

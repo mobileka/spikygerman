@@ -1,28 +1,10 @@
 <script lang="ts">
-  import type { CompiledLevel } from "../content/types";
-  import { countries, t } from "../content";
-  import { format } from "../format";
-  import { summarizeProgress } from "../grading/summary";
-  import type { Route } from "../routing";
-  import { progressFor } from "../state.svelte";
+  import { t } from "../content.svelte";
+  import { SETTINGS_HASH, type Route } from "../routing";
   import { getTheme, toggleTheme } from "../theme.svelte";
-  import ProgressBar from "./ProgressBar.svelte";
 
-  let {
-    current,
-    level = null,
-  }: { current: Route["name"]; level?: CompiledLevel | null } = $props();
+  let { current }: { current: Route["name"] } = $props();
 
-  const counts = $derived.by(() => {
-    if (!level) return null;
-    const store = progressFor(level.id);
-    return summarizeProgress(
-      level.sections,
-      store.answers,
-      countries,
-      store.checked,
-    );
-  });
   const dark = $derived(getTheme() === "dark");
   const themeLabel = $derived(dark ? t("theme_to_light") : t("theme_to_dark"));
 </script>
@@ -67,41 +49,42 @@
         <span class="brand-name">SpikyGerman</span>
         <span class="brand-sub">{t("brand_subtitle")}</span>
       </span>
-      {#if current !== "home" && current !== "summary" && level}
-        <span class="level-chip" data-od-id="level-badge">
-          {format(t("level_chip"), { level: level.number })}
-        </span>
-      {/if}
-      <button
-        class="theme-toggle"
-        type="button"
-        data-theme-toggle
-        data-od-id="theme-toggle"
-        aria-pressed={dark}
-        aria-label={themeLabel}
-        title={themeLabel}
-        onclick={toggleTheme}
-      >
-        <svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.2" />
-          <path
-            d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
-          />
-        </svg>
-        <svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z" />
-        </svg>
-      </button>
-    </div>
-    {#if current !== "home" && level && counts}
-      <div class="lvl-progress">
-        <ProgressBar {counts} />
-        <p class="progress-text" role="status">
-          {format(t("progress_answered"), {
-            answered: counts.answered,
-            total: counts.total,
-          })}
-        </p>
+      <div class="bar-actions">
+        <a
+          class="topbar-icon"
+          href={SETTINGS_HASH}
+          data-od-id="settings-entry"
+          aria-current={current === "settings" ? "page" : undefined}
+          aria-label={t("settings_open")}
+          title={t("settings_open")}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.2" />
+            <path
+              d="M19.1 14.4a1.5 1.5 0 0 0 .3 1.65l.05.06a1.8 1.8 0 1 1-2.55 2.55l-.06-.06a1.5 1.5 0 0 0-1.65-.3 1.5 1.5 0 0 0-.9 1.37v.17a1.8 1.8 0 1 1-3.6 0v-.09a1.5 1.5 0 0 0-.98-1.37 1.5 1.5 0 0 0-1.65.3l-.06.06a1.8 1.8 0 1 1-2.55-2.55l.06-.06a1.5 1.5 0 0 0 .3-1.65 1.5 1.5 0 0 0-1.37-.9H4.2a1.8 1.8 0 1 1 0-3.6h.09a1.5 1.5 0 0 0 1.37-.98 1.5 1.5 0 0 0-.3-1.65l-.06-.06A1.8 1.8 0 1 1 7.85 4.59l.06.06a1.5 1.5 0 0 0 1.65.3h.07a1.5 1.5 0 0 0 .9-1.37V3.4a1.8 1.8 0 1 1 3.6 0v.09a1.5 1.5 0 0 0 .9 1.37 1.5 1.5 0 0 0 1.65-.3l.06-.06a1.8 1.8 0 1 1 2.55 2.55l-.06.06a1.5 1.5 0 0 0-.3 1.65v.07a1.5 1.5 0 0 0 1.37.9h.17a1.8 1.8 0 1 1 0 3.6h-.09a1.5 1.5 0 0 0-1.37.9Z"
+            />
+          </svg>
+        </a>
+        <button
+          class="theme-toggle"
+          type="button"
+          data-theme-toggle
+          data-od-id="theme-toggle"
+          aria-pressed={dark}
+          aria-label={themeLabel}
+          title={themeLabel}
+          onclick={toggleTheme}
+        >
+          <svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" />
+            <path
+              d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+            />
+          </svg>
+          <svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z" />
+          </svg>
+        </button>
       </div>
-    {/if}
+    </div>
 </header>

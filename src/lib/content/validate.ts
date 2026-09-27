@@ -97,6 +97,12 @@ const REQUIRED_UI_KEYS = [
   "summary_no_issues",
   "reset",
   "reset_confirm",
+  "settings_open",
+  "settings_title",
+  "settings_language_title",
+  "settings_language_label",
+  "settings_language_saved",
+  "settings_language_error",
 ];
 
 interface QuestionContext {
@@ -372,6 +378,19 @@ function validateSectionAssets(
   if (section.example !== undefined && !String(section.example).trim()) {
     warn(`${label}: example is empty. Remove the line.`);
   }
+}
+
+// The [language] block describes the language itself for the settings picker.
+// It belongs to the file, not to a level, so it is checked once per language.
+export function validateLanguageMeta(ui: RawUiFile, uiFile: string): ValidationReport {
+  const errors: string[] = [];
+  const name = typeof ui.language?.name === "string" ? ui.language.name.trim() : "";
+  if (!name) {
+    errors.push(
+      `${uiFile} [language]: you forgot name = "..." (the language's own name, e.g. "Українська").`,
+    );
+  }
+  return { errors, warnings: [] };
 }
 
 export function validateContent(

@@ -9,13 +9,19 @@
 # Задания к разделам лежат в content/ru/level-N.toml.
 #
 # Подстановки в фигурных скобках: {expected}, {name}, {aus}, {keywords},
-# {n}, {correct}, {total}, {answered} — их заполняет приложение.
+# {n}, {correct}, {total}, {answered}, {language} — их заполняет приложение.
+
+# [language] — как язык называется сам по себе. Отсюда приложение собирает
+# список языков в настройках, поэтому новая папка content/<код>/ с этим
+# блоком появляется в переключателе сама.
+[language]
+name = "Русский"
 
 [ui]
 # Оболочка приложения: шапка, нижняя навигация, пропуск к содержанию.
 skip_link = "К содержанию"
 logo_home_label = "SpikyGerman — на главную"
-brand_subtitle = "Немецкий без острых углов · Deutsch A0"
+brand_subtitle = "Немецкий без острых углов"
 level_chip = "Уровень {level}"
 theme_to_dark = "Тёмная тема"
 theme_to_light = "Светлая тема"
@@ -75,3 +81,11 @@ reset_confirm = "Удалить все ответы? Это нельзя отм�
 reset_level = "Сбросить уровень"
 reset_level_label = "Сбросить ответы уровня {level}"
 reset_level_confirm = "Удалить ответы уровня {level}? Это нельзя отменить."
+
+# Настройки: сейчас это только выбор языка.
+settings_open = "Настройки"
+settings_title = "Настройки"
+settings_language_title = "Язык"
+settings_language_label = "Выберите язык интерфейса"
+settings_language_saved = "Язык интерфейса: {language}"
+settings_language_error = "Не удалось переключить язык. Попробуйте ещё раз."

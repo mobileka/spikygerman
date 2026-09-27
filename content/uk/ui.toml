@@ -9,13 +9,19 @@
 # Завдання до розділів лежать у content/uk/level-N.toml.
 #
 # Підстановки у фігурних дужках: {expected}, {name}, {aus}, {keywords},
-# {n}, {correct}, {total}, {answered} — їх заповнює застосунок.
+# {n}, {correct}, {total}, {answered}, {language} — їх заповнює застосунок.
+
+# [language] — як мова називається сама собою. Звідси застосунок збирає
+# список мов у налаштуваннях, тому нова папка content/<код>/ із цим блоком
+# з'являється в перемикачі автоматично.
+[language]
+name = "Українська"
 
 [ui]
 # Оболонка застосунку: шапка, нижня навігація, пропуск до вмісту.
 skip_link = "До вмісту"
 logo_home_label = "SpikyGerman — на головну"
-brand_subtitle = "Німецька без гострих кутів · Deutsch A0"
+brand_subtitle = "Німецька без гострих кутів"
 level_chip = "Рівень {level}"
 theme_to_dark = "Темна тема"
 theme_to_light = "Світла тема"
@@ -75,3 +81,11 @@ reset_confirm = "Видалити всі відповіді? Це не можн�
 reset_level = "Скинути рівень"
 reset_level_label = "Скинути відповіді рівня {level}"
 reset_level_confirm = "Видалити відповіді рівня {level}? Це не можна скасувати."
+
+# Налаштування: наразі це лише вибір мови.
+settings_open = "Налаштування"
+settings_title = "Налаштування"
+settings_language_title = "Мова"
+settings_language_label = "Виберіть мову інтерфейсу"
+settings_language_saved = "Мова інтерфейсу: {language}"
+settings_language_error = "Не вдалося перемкнути мову. Спробуйте ще раз."

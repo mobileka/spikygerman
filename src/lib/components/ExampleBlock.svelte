@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "../content";
+  import { t } from "../content.svelte";
   import ImageBlock from "./ImageBlock.svelte";
 
   let {

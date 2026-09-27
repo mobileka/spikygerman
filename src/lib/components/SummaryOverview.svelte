@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { countries, levels, t } from "../content";
+  import { getCountries, getLevels, t } from "../content.svelte";
   import { summarizeProgress } from "../grading/summary";
   import { progressFor } from "../state.svelte";
   import { format } from "../format";
@@ -9,14 +9,14 @@
   let heading: HTMLHeadingElement | undefined = $state();
 
   const rows = $derived(
-    levels.map((level) => {
+    getLevels().map((level) => {
       const store = progressFor(level.id);
       return {
         level,
         counts: summarizeProgress(
           level.sections,
           store.answers,
-          countries,
+          getCountries(),
           store.checked,
         ),
       };

@@ -5,6 +5,7 @@ import { parse } from "smol-toml";
 import {
   validateContent,
   validateLanguageConsistency,
+  validateLanguageMeta,
   type LanguageCountries,
   type LanguageLevel,
 } from "../src/lib/content/validate.ts";
@@ -12,6 +13,7 @@ import type {
   CompiledContent,
   CompiledLevel,
   Country,
+  LanguageInfo,
   PriceTable,
   Pronoun,
   Question,
@@ -169,10 +171,17 @@ const languages = languageDirs().map(loadLanguage);
 const errors: string[] = [];
 const warnings: string[] = [];
 
+if (!languages.length) {
+  errors.push("content/: no language folder with ui.toml — create content/ru/ui.toml (or add a language).");
+}
+
 for (const language of languages) {
   if (!language.levels.length) {
     errors.push(`${language.countriesPath.replace(/countries\.toml$/, "")}: no level-*.toml file.`);
   }
+  const metaReport = validateLanguageMeta(language.ui, `content/${language.lang}/ui.toml`);
+  errors.push(...metaReport.errors);
+  warnings.push(...metaReport.warnings);
   for (const level of language.levels) {
     const report = validateContent(level.raw, language.ui, language.countries, {
       publicDir: join(root, "public"),
@@ -210,6 +219,10 @@ if (errors.length) {
 
 mkdirSync(generatedDir, { recursive: true });
 
+// The settings picker reads only this index: one folder per language, and a
+// new content/<code>/ shows up without any code change.
+const languageIndex: LanguageInfo[] = [];
+
 for (const language of languages) {
   const levels: CompiledLevel[] = language.levels.map((entry) => ({
     id: String(entry.raw.level?.id),
@@ -235,6 +248,10 @@ for (const language of languages) {
 
   const file = join(generatedDir, `content.${language.lang}.json`);
   writeFileSync(file, `${JSON.stringify(content, null, 2)}\n`);
+  languageIndex.push({
+    code: language.lang,
+    name: String(language.ui.language?.name ?? "").trim(),
+  });
 
   const questionCount = levels.reduce(
     (total, level) =>
@@ -245,3 +262,11 @@ for (const language of languages) {
     `content: ${language.lang} — ${levels.length} level(s), ${questionCount} questions, ${countries.length} countries → src/generated/content.${language.lang}.json`,
   );
 }
+
+writeFileSync(
+  join(generatedDir, "languages.json"),
+  `${JSON.stringify(languageIndex, null, 2)}\n`,
+);
+console.log(
+  `content: ${languageIndex.length} language(s) → src/generated/languages.json`,
+);

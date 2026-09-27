@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { CompiledLevel } from "../content/types";
-  import { levels, t } from "../content";
+  import { getLevels, t } from "../content.svelte";
   import { continueSectionId } from "../progress";
   import { sectionHash, summaryHash, SUMMARY_HASH, type Route } from "../routing";
   import { progressFor } from "../state.svelte";
@@ -21,7 +21,8 @@
   // with unanswered questions, otherwise the first level.
   const active = $derived.by(() => {
     if (level) return level;
-    return levels.find((candidate) => hasUnfinished(candidate)) ?? levels[0] ?? null;
+    const all = getLevels();
+    return all.find((candidate) => hasUnfinished(candidate)) ?? all[0] ?? null;
   });
 
   const continueId = $derived(

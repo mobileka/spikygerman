@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "smol-toml";
@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   validateContent,
   validateLanguageConsistency,
+  validateLanguageMeta,
 } from "../src/lib/content/validate.ts";
 import type {
   CompiledContent,
@@ -14,6 +15,7 @@ import type {
   RawUiFile,
 } from "../src/lib/content/types.ts";
 import content from "../src/generated/content.ru.json";
+import languages from "../src/generated/languages.json";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative: string) => readFileSync(join(root, relative), "utf8");
@@ -52,6 +54,37 @@ describe("content validation", () => {
       expect(report.errors, path).toEqual([]);
       expect(report.warnings, path).toEqual([]);
     }
+  });
+});
+
+describe("language index", () => {
+  it("lists exactly the content folders that have a ui.toml", () => {
+    const folders = readdirSync(join(root, "content"), { withFileTypes: true })
+      .filter(
+        (entry) =>
+          entry.isDirectory() &&
+          existsSync(join(root, "content", entry.name, "ui.toml")),
+      )
+      .map((entry) => entry.name)
+      .sort();
+    expect(languages.map((entry) => entry.code).sort()).toEqual(folders);
+  });
+
+  it("gives every language a name", () => {
+    for (const entry of languages) {
+      expect(entry.name.trim(), entry.code).not.toBe("");
+    }
+  });
+
+  it("names the two current languages in their own script", () => {
+    expect(languages.find((entry) => entry.code === "ru")?.name).toBe("Русский");
+    expect(languages.find((entry) => entry.code === "uk")?.name).toBe("Українська");
+  });
+
+  it("explains a missing [language] name", () => {
+    const report = validateLanguageMeta({}, "content/ru/ui.toml");
+    expect(report.errors.some((error) => error.includes("[language]"))).toBe(true);
+    expect(report.warnings).toEqual([]);
   });
 });
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { CompiledLevel } from "../content/types";
-  import { countries, t } from "../content";
+  import { getCountries, t } from "../content.svelte";
   import { summarize, type IssueStatus } from "../grading/summary";
   import { progressFor } from "../state.svelte";
   import { format } from "../format";
@@ -16,7 +16,7 @@
 
   const summary = $derived.by(() => {
     const store = progressFor(level.id);
-    return summarize(level.sections, store.answers, countries, store.checked);
+    return summarize(level.sections, store.answers, getCountries(), store.checked);
   });
   const visibleIssues = $derived(summary.issues.slice(0, shown));
   const remaining = $derived(summary.issues.length - shown);

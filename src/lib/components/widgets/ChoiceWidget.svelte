@@ -3,7 +3,7 @@
   import type { Question } from "../../content/types";
   import type { QuestionResult } from "../../grading/grade";
   import { CHOICE_FIELD, fieldStatus } from "../../grading/grade";
-  import { t } from "../../content";
+  import { t } from "../../content.svelte";
   import { setAnswer } from "../../state.svelte";
 
   let {

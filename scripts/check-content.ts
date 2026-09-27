@@ -5,6 +5,7 @@ import { parse } from "smol-toml";
 import {
   validateContent,
   validateLanguageConsistency,
+  validateLanguageMeta,
   type LanguageCountries,
   type LanguageLevel,
 } from "../src/lib/content/validate.ts";
@@ -38,13 +39,22 @@ const levelEntries: LanguageLevel[] = [];
 const countryEntries: LanguageCountries[] = [];
 const summaries: string[] = [];
 
-for (const lang of languageDirs()) {
+const languages = languageDirs();
+if (!languages.length) {
+  errors.push("content/: no language folder with ui.toml — create content/ru/ui.toml (or add a language).");
+}
+
+for (const lang of languages) {
   const dir = join(contentDir, lang);
   const ui = parse(readFileSync(join(dir, "ui.toml"), "utf8")) as unknown as RawUiFile;
   const countriesPath = `content/${lang}/countries.toml`;
   const countries =
     (parse(read(countriesPath)) as unknown as { country?: RawCountry[] }).country ?? [];
   countryEntries.push({ lang, path: countriesPath, countries });
+
+  const metaReport = validateLanguageMeta(ui, `content/${lang}/ui.toml`);
+  errors.push(...metaReport.errors);
+  warnings.push(...metaReport.warnings);
 
   const files = levelFiles(lang);
   if (!files.length) errors.push(`content/${lang}/: no level-*.toml file.`);

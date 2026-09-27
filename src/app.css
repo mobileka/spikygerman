@@ -193,7 +193,6 @@ main.screen {
 }
 
 .topbar > .brand-row,
-.topbar > .lvl-progress,
 .app > footer .umlaut {
   width: 100%;
   max-width: var(--content-max);
@@ -236,6 +235,52 @@ a {
 
 .muted {
   color: var(--muted);
+}
+
+/* Settings language picker: the DS has the .choice rows, but no wrapper
+   stack for them (frozen einstellungen markup used an inline grid). */
+.choice-group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Topbar chrome cluster: gear + theme toggle travel together, right-pinned,
+   8px apart (the DS adjacency margins double up with .brand-row's flex gap,
+   which used to leave the two buttons 18px apart). */
+.bar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  flex: none;
+}
+
+/* Brand text never breaks mid-word: it ellipsizes, and when the chrome does
+   not fit next to it (narrow screens, large system font scaling) the whole
+   cluster wraps to its own line instead of squeezing the name. */
+.brand-row {
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
+}
+
+.brand-name,
+.brand-sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Level chip labels the progress of that level: chip left, counter right,
+   bar underneath. */
+.lvl-progress-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lvl-progress-head .progress-text {
+  margin-left: auto;
+  text-align: right;
 }
 
 button,

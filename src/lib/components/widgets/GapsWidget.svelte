@@ -3,7 +3,7 @@
   import type { Question } from "../../content/types";
   import type { QuestionResult } from "../../grading/grade";
   import { fieldStatus, gapField } from "../../grading/grade";
-  import { t } from "../../content";
+  import { t } from "../../content.svelte";
   import { setAnswer } from "../../state.svelte";
   import AnswerInput from "../AnswerInput.svelte";
 

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { levels } from "../src/lib/content";
+import { getLevels, initLanguage } from "../src/lib/content.svelte";
 import {
   getValues,
   isQuestionChecked,
@@ -9,6 +9,10 @@ import {
   setAnswer,
 } from "../src/lib/state.svelte";
 
+// main.ts loads the content bundle before mounting; tests do the same.
+await initLanguage();
+
+const levels = getLevels();
 const first = levels[0];
 const second = levels[1];
 const firstQuestion = first.sections[0].questions[0].id;

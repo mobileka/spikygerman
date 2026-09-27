@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { countries, levels, t } from "../content";
+  import { getCountries, getLevels, t } from "../content.svelte";
   import { summarizeProgress } from "../grading/summary";
   import { totalQuestions } from "../progress";
   import { progressFor, resetAll, resetLevel } from "../state.svelte";
@@ -9,7 +9,7 @@
   import ProgressRing from "./ProgressRing.svelte";
 
   const rows = $derived(
-    levels.map((level) => {
+    getLevels().map((level) => {
       const store = progressFor(level.id);
       return {
         level,
@@ -17,14 +17,15 @@
         counts: summarizeProgress(
           level.sections,
           store.answers,
-          countries,
+          getCountries(),
           store.checked,
         ),
       };
     }),
   );
 
-  const firstLevelId = levels.find((level) => level.number === 1)?.id ?? null;
+  // Level ids are the same in every language, so capturing this once is fine.
+  const firstLevelId = getLevels().find((level) => level.number === 1)?.id ?? null;
 
   let expandedId = $state<string | null>(
     typeof window !== "undefined" && window.location.hash === LEVEL_HASH

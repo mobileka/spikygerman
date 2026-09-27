@@ -1,10 +1,12 @@
 export type Route =
   | { name: "home" }
+  | { name: "settings" }
   | { name: "summary"; level?: number }
   | { name: "section"; level: number; id: string; questionId?: string };
 
 export const LEVEL_HASH = "#level-1";
 export const SUMMARY_HASH = "#/summary";
+export const SETTINGS_HASH = "#/settings";
 
 // Level 1 keeps its original section hashes; every later level is namespaced.
 export function sectionHash(
@@ -23,6 +25,7 @@ export function summaryHash(level: number): string {
 export function parseHash(hash: string): Route | null {
   if (hash === "" || hash === "#" || hash === "#/") return { name: "home" };
   if (hash === LEVEL_HASH) return { name: "home" };
+  if (hash === SETTINGS_HASH) return { name: "settings" };
   // The bare summary is the overview of every level.
   if (hash === SUMMARY_HASH) return { name: "summary" };
 
