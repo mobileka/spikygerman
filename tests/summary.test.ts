@@ -14,7 +14,7 @@ const countries: Country[] = [
     name: "Ukraine",
     article: "die",
     aus: "aus der Ukraine",
-    ru: "Украина",
+    local: "Украина",
   },
 ];
 

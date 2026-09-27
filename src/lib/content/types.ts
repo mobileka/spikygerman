@@ -67,7 +67,7 @@ export interface Country {
   name: string;
   article: "" | "die" | "der" | "plural";
   aus: string;
-  ru: string;
+  local: string;
 }
 
 export interface CompiledLevel {
@@ -112,7 +112,7 @@ export interface RawCountry {
   name?: string;
   article?: string;
   aus?: string;
-  ru?: string;
+  local?: string;
 }
 
 export interface RawPriceTable {

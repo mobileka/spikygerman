@@ -223,7 +223,7 @@ for (const language of languages) {
     name: String(country.name),
     article: (country.article ?? "") as Country["article"],
     aus: String(country.aus),
-    ru: String(country.ru ?? ""),
+    local: String(country.local ?? ""),
   }));
 
   const content: CompiledContent = {

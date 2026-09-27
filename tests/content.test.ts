@@ -353,7 +353,7 @@ describe("language consistency", () => {
   });
 
   it("flags a country whose article differs", () => {
-    const country = { name: "Ukraine", article: "die", aus: "aus der Ukraine", ru: "Украина" };
+    const country = { name: "Ukraine", article: "die", aus: "aus der Ukraine", local: "Украина" };
     const report = validateLanguageConsistency(
       [],
       [

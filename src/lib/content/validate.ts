@@ -308,7 +308,9 @@ function validateCountries(
     else if (!country.aus.startsWith("aus ")) {
       err(`${label}: aus = "${country.aus}" must start with "aus " (e.g. "aus der Ukraine").`);
     }
-    if (!country.ru) warn(`${label}: no ru = "…" (Russian label for hints).`);
+    if (!country.local) {
+      warn(`${label}: no local = "…" (label in the file's language, for hints).`);
+    }
     if (!["", "die", "der", "plural"].includes(String(country.article ?? ""))) {
       err(
         `${label}: article = "${country.article}" is not valid. Use "", "die", "der" or "plural".`,
