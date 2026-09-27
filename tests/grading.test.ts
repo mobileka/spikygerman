@@ -226,10 +226,11 @@ describe("patterns about yourself (q01-q05)", () => {
     expect(result.fields[0].hint).toEqual({ kind: "start_with", expected: "Ich heiße" });
   });
 
-  it("fails when the age sentence is not finished", () => {
-    const result = grade(byId("q05"), { answer: "Ich bin 25" });
-    expect(result.status).toBe("incorrect");
-    expect(result.fields[0].hint).toEqual({ kind: "end_with", expected: "Jahre alt" });
+  it("accepts the age with or without Jahre alt", () => {
+    expect(grade(byId("q05"), { answer: "Ich bin 25" }).status).toBe("correct");
+    expect(grade(byId("q05"), { answer: "Ich bin 25 Jahre alt." }).status).toBe(
+      "correct",
+    );
   });
 
   it("corrects a missing country article to yellow", () => {
@@ -421,6 +422,48 @@ describe("yes/no answers (q13-q21)", () => {
     });
     expect(result.status).toBe("incorrect");
   });
+
+  it("is almost for a bare Nein pointing the right way", () => {
+    const result = grade(byId("q19"), { answer: "Nein" });
+    expect(result.status).toBe("almost");
+    expect(result.fields[0].hint).toEqual({
+      kind: "missing_sentence",
+      expected: "Nein, das ist kein Brötchen. Das ist ein Fisch.",
+    });
+  });
+
+  it("is almost for a bare Ja on a yes answer", () => {
+    const result = grade(byId("q13"), { answer: "Ja" });
+    expect(result.status).toBe("almost");
+    expect(result.fields[0].hint).toEqual({
+      kind: "missing_sentence",
+      expected: "Ja, wir haben Bananen.",
+    });
+  });
+
+  it("stays incorrect for a bare Ja pointing the wrong way", () => {
+    expect(grade(byId("q19"), { answer: "Ja" }).status).toBe("incorrect");
+  });
+
+  it("is almost for a bare Ja or Nein on either alternative", () => {
+    const level2 = data.levels[1];
+    const kaffee = level2.sections
+      .flatMap((section) => section.questions)
+      .find((question) => question.id === "q15");
+    if (!kaffee) throw new Error("level 2 q15 not found");
+    const nein = gradeQuestion(kaffee, { answer: "Nein" }, data.countries);
+    expect(nein.status).toBe("almost");
+    expect(nein.fields[0].hint).toEqual({
+      kind: "missing_sentence",
+      expected: "Nein, ich trinke keinen Kaffee.",
+    });
+    const ja = gradeQuestion(kaffee, { answer: "Ja." }, data.countries);
+    expect(ja.status).toBe("almost");
+    expect(ja.fields[0].hint).toEqual({
+      kind: "missing_sentence",
+      expected: "Ja, ich trinke Kaffee.",
+    });
+  });
 });
 
 describe("prices (q22-q25)", () => {
@@ -437,6 +480,19 @@ describe("prices (q22-q25)", () => {
   it("accepts the same with und", () => {
     expect(
       grade(byId("q22"), { answer: "Die Tomaten kosten ein Euro und elf Cent." }).status,
+    ).toBe("correct");
+  });
+
+  it("accepts a price without the word Cent", () => {
+    expect(
+      grade(byId("q25"), { answer: "Der Kaffee kostet drei Euro zweiundvierzig." })
+        .status,
+    ).toBe("correct");
+    expect(
+      grade(byId("q25"), { answer: "drei Euro zweiundvierzig" }).status,
+    ).toBe("correct");
+    expect(
+      grade(byId("q23"), { answer: "Der Käse kostet sechsundsechzig." }).status,
     ).toBe("correct");
   });
 
@@ -483,12 +539,17 @@ describe("translations (q17, q40)", () => {
     expect(result.fields[0].hint).toEqual({ kind: "missing", keywords: ["keine"] });
   });
 
-  it("requires the Akkusativ article in q40", () => {
-    const result = grade(byId("q40"), {
-      answer: "Ich brauche Joghurt, aber ich habe keine Milch.",
-    });
-    expect(result.status).toBe("incorrect");
-    expect(result.fields[0].hint).toEqual({ kind: "missing", keywords: ["einen"] });
+  it("accepts q40 with and without the Akkusativ article", () => {
+    expect(
+      grade(byId("q40"), {
+        answer: "Ich brauche Joghurt, aber ich habe keine Milch.",
+      }).status,
+    ).toBe("correct");
+    expect(
+      grade(byId("q40"), {
+        answer: "Ich brauche einen Joghurt, aber ich habe keine Milch.",
+      }).status,
+    ).toBe("correct");
   });
 
   it("accepts the model answer of q40", () => {

@@ -241,12 +241,44 @@ function gradeYesNo(q: Question, values: Record<string, string>): QuestionResult
     }
   }
 
+  // A bare "Ja" or "Nein" pointing the right way is on track, not wrong: the
+  // learner knows the answer, the full sentence is what is missing. The hint
+  // shows the sentence to write.
+  const particle = bareParticle(input);
+  if (particle) {
+    for (const alternative of alternatives) {
+      if (firstWord(alternative) !== particle) continue;
+      return {
+        status: "almost",
+        fields: [
+          field(ANSWER_FIELD, "almost", {
+            kind: "missing_sentence",
+            expected: alternative,
+          }),
+        ],
+        model,
+      };
+    }
+  }
+
   return { status: "incorrect", fields: [field(ANSWER_FIELD, "incorrect")], model };
 }
 
-function stripUnd(text: string): string {
+function bareParticle(input: string): string | null {
+  const cleaned = normalize(input);
+  return cleaned === "ja" || cleaned === "nein" ? cleaned : null;
+}
+
+function firstWord(sentence: string): string {
+  return normalize(splitSentences(sentence)[0] ?? "").split(" ")[0] ?? "";
+}
+
+// "und" and "Cent" are optional in a price: "ein Euro und elf Cent",
+// "ein Euro elf Cent", "ein Euro elf" and "elf" all match the same number.
+function stripPriceFillers(text: string): string {
   return normalize(text)
     .replace(/\bund\b/g, " ")
+    .replace(/\bcent\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -268,7 +300,7 @@ function gradePrice(q: Question, values: Record<string, string>): QuestionResult
     return { status: "empty", fields: [field(ANSWER_FIELD, "empty")], model };
   }
   for (const alternative of priceAlternatives(expected)) {
-    if (stripUnd(input) !== stripUnd(alternative)) continue;
+    if (stripPriceFillers(input) !== stripPriceFillers(alternative)) continue;
     const tip = umlautTip(input, alternative);
     return {
       status: "correct",

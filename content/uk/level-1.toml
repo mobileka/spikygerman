@@ -190,9 +190,8 @@ starts_with = "Ich spreche"
 id = "q05"
 type = "sentence"
 ask = "Wie alt sind Sie?"
-explanation = "Не забудьте: Ich bin … Jahre alt."
+explanation = "«Jahre alt» можна не писати: і «Ich bin 30», і «Ich bin 30 Jahre alt» — правильно."
 starts_with = "Ich bin"
-ends_with = "Jahre alt"
 
 
 # ── Abschnitt 2 ─────────────────────────────────────────────────────────────
@@ -534,7 +533,7 @@ ask = "Мені потрібен йогурт, але в мене немає м�
 explanation = "Joghurt — чоловічий рід: einen Joghurt. Milch — жіночий рід: keine Milch."
 instruction = "Перекладіть німецькою."
 frame = "ich brauche"
-answer_keywords = ["Joghurt", "einen", "keine", "Milch"]
+answer_keywords = ["Joghurt", "keine", "Milch"]
 answer = "Ich brauche einen Joghurt, aber ich habe keine Milch."
 example = "Мені потрібен сік, але в мене немає води. → Ich brauche einen Saft, aber ich habe kein Wasser."
 
