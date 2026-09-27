@@ -255,6 +255,14 @@ a {
   background-position: right 12px center;
 }
 
+/* The DS .food-photo tile is 4:3 with object-fit: cover. That crops every
+   real photo, and here the photos are task data: the flyer hides prices
+   (q22–q25), the fridge and the cake lose their top and bottom. Show the
+   whole picture at its own ratio instead. */
+.food-photo {
+  aspect-ratio: auto;
+}
+
 /* Topbar chrome cluster: gear + theme toggle travel together, right-pinned,
    8px apart (the DS adjacency margins double up with .brand-row's flex gap,
    which used to leave the two buttons 18px apart). */
