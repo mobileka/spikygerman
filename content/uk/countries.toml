@@ -1,0 +1,179 @@
+# Länder-Tabelle (P0) — die Quelle für die „aus …“-Formen.
+#
+# Diese Datei ist ukrainisch: sie liegt in content/uk/. Die russische Liste
+# liegt in content/ru/countries.toml — der deutsche Test ändert sich nicht.
+#
+# article: "" (kein Artikel), "die", "der" oder "plural"
+# aus:     fertige Form nach „Ich komme aus …“
+# local:   Bezeichnung in der Sprache der Datei (für Hinweise)
+#
+# Neue Länder einfach unten anhängen.
+# P1 (später): die vollständige Liste des Auswärtigen Amts.
+
+[[country]]
+name = "Deutschland"
+article = ""
+aus = "aus Deutschland"
+local = "Німеччина"
+
+[[country]]
+name = "Ukraine"
+article = "die"
+aus = "aus der Ukraine"
+local = "Україна"
+
+[[country]]
+name = "Türkei"
+article = "die"
+aus = "aus der Türkei"
+local = "Туреччина"
+
+[[country]]
+name = "Polen"
+article = ""
+aus = "aus Polen"
+local = "Польща"
+
+[[country]]
+name = "Russland"
+article = ""
+aus = "aus Russland"
+local = "Росія"
+
+[[country]]
+name = "Vietnam"
+article = ""
+aus = "aus Vietnam"
+local = "В'єтнам"
+
+[[country]]
+name = "Togo"
+article = ""
+aus = "aus Togo"
+local = "Того"
+
+[[country]]
+name = "Österreich"
+article = ""
+aus = "aus Österreich"
+local = "Австрія"
+
+[[country]]
+name = "Italien"
+article = ""
+aus = "aus Italien"
+local = "Італія"
+
+[[country]]
+name = "Frankreich"
+article = ""
+aus = "aus Frankreich"
+local = "Франція"
+
+[[country]]
+name = "Syrien"
+article = ""
+aus = "aus Syrien"
+local = "Сирія"
+
+[[country]]
+name = "Schweiz"
+article = "die"
+aus = "aus der Schweiz"
+local = "Швейцарія"
+
+[[country]]
+name = "Slowakei"
+article = "die"
+aus = "aus der Slowakei"
+local = "Словаччина"
+
+[[country]]
+name = "USA"
+article = "plural"
+aus = "aus den USA"
+local = "США"
+
+[[country]]
+name = "Niederlande"
+article = "plural"
+aus = "aus den Niederlanden"
+local = "Нідерланди"
+
+[[country]]
+name = "Iran"
+article = "der"
+aus = "aus dem Iran"
+local = "Іран"
+
+[[country]]
+name = "Irak"
+article = "der"
+aus = "aus dem Irak"
+local = "Ірак"
+
+[[country]]
+name = "Jemen"
+article = "der"
+aus = "aus dem Jemen"
+local = "Ємен"
+
+[[country]]
+name = "Sudan"
+article = "der"
+aus = "aus dem Sudan"
+local = "Судан"
+
+[[country]]
+name = "Rumänien"
+article = ""
+aus = "aus Rumänien"
+local = "Румунія"
+
+[[country]]
+name = "Bulgarien"
+article = ""
+aus = "aus Bulgarien"
+local = "Болгарія"
+
+[[country]]
+name = "Ungarn"
+article = ""
+aus = "aus Ungarn"
+local = "Угорщина"
+
+[[country]]
+name = "Tschechien"
+article = ""
+aus = "aus Tschechien"
+local = "Чехія"
+
+[[country]]
+name = "Belarus"
+article = ""
+aus = "aus Belarus"
+local = "Білорусь"
+
+[[country]]
+name = "Georgien"
+article = ""
+aus = "aus Georgien"
+local = "Грузія"
+
+[[country]]
+name = "Afghanistan"
+article = ""
+aus = "aus Afghanistan"
+local = "Афганістан"
+
+[[country]]
+name = "Albanien"
+article = ""
+aus = "aus Albanien"
+local = "Албанія"
+
+[[country]]
+name = "Kosovo"
+article = "der"
+aus = "aus dem Kosovo"
+local = "Косово"

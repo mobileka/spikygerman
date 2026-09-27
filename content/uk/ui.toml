@@ -1,0 +1,77 @@
+# ============================================================================
+# Українські тексти інтерфейсу.
+# ============================================================================
+#
+# Одна мова = одна папка: content/uk/. Російська версія — це content/ru/,
+# німецький тест змінювати не потрібно.
+#
+# [ui] — кнопки та підписи в інтерфейсі.
+# Завдання до розділів лежать у content/uk/level-N.toml.
+#
+# Підстановки у фігурних дужках: {expected}, {name}, {aus}, {keywords},
+# {n}, {correct}, {total}, {answered} — їх заповнює застосунок.
+
+[ui]
+# Оболонка застосунку: шапка, нижня навігація, пропуск до вмісту.
+skip_link = "До вмісту"
+logo_home_label = "SpikyGerman — на головну"
+brand_subtitle = "Німецька без гострих кутів · Deutsch A0"
+level_chip = "Рівень {level}"
+theme_to_dark = "Темна тема"
+theme_to_light = "Світла тема"
+progress_answered = "Відповідей: {answered} з {total}"
+home_hero = "Виберіть рівень"
+level_summary = "Рівень {level} · {sections} розділів · {questions} питань"
+main_nav_label = "Основна навігація"
+tab_home = "Головна"
+tab_continue = "Продовжити"
+
+check = "Перевірити"
+back = "Назад"
+next = "Далі"
+home = "До розділів"
+section_picker_label = "Розділ"
+select_placeholder = "Виберіть…"
+example_label = "Приклад"
+model_answer = "Правильна відповідь"
+explanation_label = "Пояснення"
+result_correct = "Правильно"
+result_almost = "Майже!"
+result_incorrect = "Помилка"
+result_empty = "Немає відповіді"
+hint_start_with = "Почніть з «{expected}…»"
+hint_end_with = "Не забудьте: «…{expected}»"
+hint_country = "Майже! {name} — {article}: {aus}."
+hint_missing = "Бракує: {keywords}."
+hint_missing_sentence = "Майже! Бракує: «{expected}»"
+hint_frame = "Потрібна конструкція «{expected}»."
+hint_umlaut = "Можна й так, але правильно: {expected}."
+article_die = "жіночий рід"
+article_der = "чоловічий рід"
+article_plural = "множина"
+gap_label = "Пропуск {n}"
+answer_label = "Ваша відповідь"
+pronoun_label = "Займенник"
+pronoun_er = "er (він)"
+pronoun_sie = "sie (вона)"
+pronoun_sie_plural = "sie (вони)"
+name_label = "Ім'я"
+from_label = "Звідки"
+residence_label = "Країна (де живе)"
+city_label = "Місто"
+street_label = "Вулиця"
+question_label = "Питання {n}"
+summary_title = "Результати"
+summary_count_correct = "Правильно"
+summary_count_almost = "Майже"
+summary_count_incorrect = "Помилки"
+summary_count_empty = "Без відповіді"
+summary_section_line = "правильно {correct} з {total}"
+summary_issues_title = "Над чим ще попрацювати"
+summary_show_more = "Показати ще {n}"
+summary_no_issues = "Помилок немає — усе правильно."
+reset = "Скинути всі відповіді"
+reset_confirm = "Видалити всі відповіді? Це не можна скасувати."
+reset_level = "Скинути рівень"
+reset_level_label = "Скинути відповіді рівня {level}"
+reset_level_confirm = "Видалити відповіді рівня {level}? Це не можна скасувати."

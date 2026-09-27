@@ -1,0 +1,491 @@
+# ============================================================================
+# SpikyGerman — Niveau 2: Familie und Einkaufen (für den Lehrer)
+# ============================================================================
+#
+# Eine Datei = ein Niveau in einer Sprache. Aufbau wie in level-1.toml:
+#   [level]              = das Niveau (id, number, title)
+#   [[section]]          = ein Abschnitt mit instruction auf Ukrainisch
+#   [[section.question]] = eine Frage mit ask (deutsch), explanation und
+#                          translation (ukrainisch) und der Lösung
+#   [table.*]            = Preistabelle
+#
+# Diese Datei ist ukrainisch. Die deutschen Aufgaben und Antworten müssen in
+# allen Sprachen gleich sein — „bun run check“ vergleicht sie.
+#
+# Antworten mit mehreren richtigen Varianten (z. B. Ja/Nein-Fragen):
+#   answer  = "Ja, Anna ist seine Schwester."      # Musterlösung
+#   answers = ["Ja, Anna ist seine Schwester.",   # erste = answer
+#              "Ja, sie ist seine Schwester."]
+#
+# Пояснення (explanation) пишемо звичайними зрозумілими реченнями, без стрілок
+# і скорочень: учень читає їх один раз і після помилки.
+#
+# Die fünf Konzepte: Verbkonjugation, Akkusativ, Bitten (Gib mir / Geben Sie
+# mir), Ja/Nein-Fragen, Possessivpronomen.
+#
+# Nach jeder Änderung:  bun run check
+# ============================================================================
+
+
+[level]
+id = "level-2"
+number = 2
+title = "Familie und Einkaufen"
+
+
+# ── Abschnitt 1: Familie ────────────────────────────────────────────────────
+
+[[section]]
+id = "familie"
+title = "Meine Familie"
+instruction = "Подивіться на слова у прикладі й напишіть про свою сім'ю. Пам'ятайте: Ich habe einen … / eine … / zwei …"
+example = "der Vater, die Mutter, die Eltern, das Kind, die Kinder\nder Sohn, die Tochter, der Bruder, die Schwester\n\nIch habe eine Tochter und zwei Söhne.\nDas ist mein Bruder. Das ist meine Schwester."
+
+[[section.question]]
+id = "q01"
+type = "choice"
+ask = "Das ist ___ Vater."
+instruction = "Виберіть правильний означений артикль."
+explanation = "Слово Vater чоловічого роду, тому говоримо der Vater."
+translation = "Це батько."
+options = ["der", "die", "das"]
+answer = "der"
+
+[[section.question]]
+id = "q02"
+type = "gaps"
+ask = "Ich habe ___ Tochter und zwei ___."
+instruction = "Впишіть артикль і слово у множині."
+explanation = "Слово Tochter жіночого роду, тому eine Tochter.\nУ множині артикль не потрібен: zwei Söhne."
+translation = "У мене є дочка і два сини."
+answers = ["eine", "Söhne"]
+
+[[section.question]]
+id = "q03"
+type = "gaps"
+ask = "Meine Schwester ___ (heißen) Anna."
+instruction = "Виберіть правильну форму дієслова heißen."
+explanation = "Після «вона» (sie) дієслово heißen має закінчення -t: sie heißt."
+translation = "Мою сестру звати Анна."
+answers = ["heißt"]
+gap_choices = ["heiße|heißt|heißen"]
+
+[[section.question]]
+id = "q04"
+type = "gaps"
+ask = "Das ist ___ Bruder. Das ist ___ Mutter."
+instruction = "Впишіть mein або meine."
+explanation = "Слово Bruder чоловічого роду, тому mein Bruder.\nСлово Mutter жіночого роду, тому meine Mutter."
+translation = "Це мій брат. Це моя мама."
+answers = ["mein", "meine"]
+
+[[section.question]]
+id = "q05"
+type = "translate"
+ask = "У мене є дружина і син."
+instruction = "Перекладіть німецькою."
+explanation = "Слово Frau жіночого роду: eine Frau.\nСлово Sohn чоловічого роду; у знахідному відмінку (Akkusativ) артикль стає einen: einen Sohn."
+frame = "ich habe"
+answer_keywords = ["Frau", "einen", "Sohn"]
+answer = "Ich habe eine Frau und einen Sohn."
+
+[[section.question]]
+id = "q06"
+type = "yesno"
+ask = "Tom hat eine Schwester. Sie heißt Anna. Ist Anna seine Schwester?"
+instruction = "Дайте відповідь повним реченням."
+explanation = "«Його сестра» — це seine Schwester: слово Schwester жіночого роду.\nЗамість імені можна сказати sie: «Ja, sie ist seine Schwester»."
+translation = "Так, Анна — його сестра."
+answer = "Ja, Anna ist seine Schwester."
+answers = ["Ja, Anna ist seine Schwester.", "Ja, sie ist seine Schwester."]
+
+[[section.question]]
+id = "q07"
+type = "sentence"
+ask = "Erzählen Sie von Ihrer Familie."
+instruction = "Напишіть два речення про свою сім'ю. Почніть з «Ich habe …»."
+explanation = "Підійде будь-який варіант: «Ich habe einen Sohn», «Ich habe eine Tochter», «Ich habe zwei Kinder»."
+starts_with = "Ich habe"
+
+[[section.question]]
+id = "q08"
+type = "gaps"
+ask = "Das ist Petro. ___ Frau heißt Olena. Das ist Anna. ___ Mann heißt Tom."
+instruction = "Впишіть sein або ihr."
+explanation = "Петро — чоловік, про нього говоримо seine Frau («його дружина»).\nАнна — жінка, про неї говоримо ihr Mann («її чоловік»)."
+translation = "Це Петро. Його дружину звати Олена. Це Анна. Її чоловіка звати Том."
+answers = ["Seine", "Ihr"]
+
+
+# ── Abschnitt 2: Verben und Fragen ──────────────────────────────────────────
+
+[[section]]
+id = "verben-fragen"
+title = "Verben und Fragen"
+instruction = "Впишіть правильну форму дієслова. Зі стверджувального речення зробіть питання: дієслово стоїть на першому місці."
+example = "ich mache, du machst, er macht, wir machen\n\nDu gehst ins Kino.\nGehst du ins Kino?"
+
+[[section.question]]
+id = "q09"
+type = "gaps"
+ask = "Ich ___ (arbeiten) in Berlin."
+instruction = "Виберіть правильну форму дієслова arbeiten."
+explanation = "Після «я» (ich) дієслово arbeiten має закінчення -e: ich arbeite."
+translation = "Я працюю в Берліні."
+answers = ["arbeite"]
+gap_choices = ["arbeite|arbeitest|arbeitet|arbeiten"]
+
+[[section.question]]
+id = "q10"
+type = "gaps"
+ask = "Du ___ (kaufen) Brot."
+instruction = "Виберіть правильну форму дієслова kaufen."
+explanation = "Після «ти» (du) дієслово kaufen має закінчення -st: du kaufst."
+translation = "Ти купуєш хліб."
+answers = ["kaufst"]
+gap_choices = ["kaufe|kaufst|kauft|kaufen"]
+
+[[section.question]]
+id = "q11"
+type = "gaps"
+ask = "Er ___ (spielen) Fußball."
+instruction = "Виберіть правильну форму дієслова spielen."
+explanation = "Після «він» (er) дієслово spielen має закінчення -t: er spielt."
+translation = "Він грає у футбол."
+answers = ["spielt"]
+gap_choices = ["spiele|spielst|spielt|spielen"]
+
+[[section.question]]
+id = "q12"
+type = "gaps"
+ask = "Wir ___ (machen) Frühstück."
+instruction = "Виберіть правильну форму дієслова machen."
+explanation = "Після «ми» (wir) дієслово стоїть в основній формі: wir machen."
+translation = "Ми готуємо сніданок."
+answers = ["machen"]
+gap_choices = ["mache|machst|macht|machen"]
+
+[[section.question]]
+id = "q13"
+type = "sentence"
+ask = "Sie lernt Deutsch. Schreiben Sie die Frage."
+instruction = "Зробіть зі стверджувального речення питання: дієслово стоїть на першому місці."
+explanation = "У питанні без питального слова дієслово стоїть на першому місці: «Lernt sie Deutsch?»"
+starts_with = "Lernt sie"
+
+[[section.question]]
+id = "q14"
+type = "sentence"
+ask = "Du kaufst Milch. Schreiben Sie die Frage."
+instruction = "Зробіть зі стверджувального речення питання: дієслово стоїть на першому місці."
+explanation = "Дієслово на першому місці: «Kaufst du Milch?» Так стверджувальне речення перетворюється на питання."
+starts_with = "Kaufst du"
+
+[[section.question]]
+id = "q15"
+type = "yesno"
+ask = "Trinkst du Kaffee?"
+instruction = "Дайте відповідь за себе повним реченням. Можливі обидві відповіді."
+explanation = "Відповідь «так»: «Ja, ich trinke Kaffee». Відповідь «ні»: «Nein, ich trinke keinen Kaffee».\nСлово Kaffee чоловічого роду, тому в запереченні keinen."
+translation = "Так, я п'ю каву."
+answer = "Ja, ich trinke Kaffee."
+answers = ["Ja, ich trinke Kaffee.", "Nein, ich trinke keinen Kaffee."]
+
+[[section.question]]
+id = "q16"
+type = "gaps"
+ask = "Er ___ (trinken) Tee."
+instruction = "Виберіть правильну форму дієслова trinken."
+explanation = "Після «він» (er) дієслово trinken має закінчення -t: er trinkt."
+translation = "Він п'є чай."
+answers = ["trinkt"]
+gap_choices = ["trinke|trinkst|trinkt|trinken"]
+
+
+# ── Abschnitt 3: Supermarkt ─────────────────────────────────────────────────
+
+[[section]]
+id = "supermarkt"
+title = "Im Supermarkt"
+instruction = "Ви в супермаркеті. Впишіть артикль або кількість і напишіть ціну словами."
+table = "markt"
+example = "ein Kilo Tomaten, ein Kilo Äpfel\n\nIch kaufe einen Apfel.\nIch brauche einen Joghurt."
+
+[[section.question]]
+id = "q17"
+type = "gaps"
+ask = "Ich kaufe ___ Kilo Tomaten und ___ Flasche Wasser."
+instruction = "Впишіть ein або eine."
+explanation = "Слово Kilo середнього роду: ein Kilo.\nСлово Flasche жіночого роду: eine Flasche."
+translation = "Я купую кілограм помідорів і пляшку води."
+answers = ["ein", "eine"]
+
+[[section.question]]
+id = "q18"
+type = "gaps"
+ask = "Ich brauche ___ Joghurt und ___ Tomate."
+instruction = "Впишіть неозначений артикль (ein, eine або einen)."
+explanation = "Слово Joghurt чоловічого роду; в Akkusativ артикль einen: einen Joghurt.\nСлово Tomate жіночого роду: eine Tomate."
+translation = "Мені потрібні йогурт і помідор."
+answers = ["einen", "eine"]
+
+[[section.question]]
+id = "q19"
+type = "choice"
+ask = "Ich kaufe ___ Äpfel."
+instruction = "Виберіть правильний артикль у множині."
+explanation = "У множині артикль завжди die: die Äpfel."
+translation = "Я купую яблука."
+options = ["den", "die", "das"]
+answer = "die"
+
+[[section.question]]
+id = "q20"
+type = "gaps"
+ask = "Es ___ hier keinen Käse."
+instruction = "Виберіть правильну форму дієслова geben."
+explanation = "Зворот es gibt перекладається як «є, існує».\n«Es gibt keinen Käse» — «Сира немає»."
+translation = "Тут немає сиру."
+answers = ["gibt"]
+gap_choices = ["gebe|gibst|gibt|geben"]
+
+[[section.question]]
+id = "q21"
+type = "yesno"
+ask = "Ist das ein Apfel?"
+instruction = "Подивіться на фотографію й дайте відповідь повним реченням."
+explanation = "На фотографії помідор, а не яблуко: «Das ist kein Apfel» (слово Apfel чоловічого роду).\nПравильно: «Das ist eine Tomate» — слово Tomate жіночого роду."
+translation = "Ні, це не яблуко. Це помідор."
+answer = "Nein, das ist kein Apfel. Das ist eine Tomate."
+photo = "img/food-tomate.webp"
+alt = "Фотографія: помідор."
+sr_data = "На фотографії помідор: червоний, круглий, із зеленою плодоніжкою. Це не яблуко."
+
+[[section.question]]
+id = "q22"
+type = "price"
+ask = "Wie viel kostet der Käse?"
+instruction = "Напишіть ціну словами."
+explanation = "Слово Käse вживається в однині, тому kostet: «Der Käse kostet …».\nЦіна словами: drei Euro neunundvierzig Cent."
+translation = "Сир коштує 3,49 €."
+answer = "Der Käse kostet drei Euro neunundvierzig Cent."
+
+[[section.question]]
+id = "q23"
+type = "price"
+ask = "Wie viel kosten die Tomaten?"
+instruction = "Напишіть ціну словами."
+explanation = "Слово Tomaten вживається в множині, тому kosten: «Die Tomaten kosten …».\nЦіна словами: ein Euro neunundneunzig Cent."
+translation = "Помідори коштують 1,99 €."
+answer = "Die Tomaten kosten ein Euro neunundneunzig Cent."
+
+[[section.question]]
+id = "q24"
+type = "translate"
+ask = "Є хліб, але немає молока."
+instruction = "Перекладіть німецькою."
+explanation = "Зворот es gibt означає «є, існує»: «Es gibt Brot».\nСлово Milch жіночого роду, тому в запереченні keine Milch."
+frame = "es gibt"
+answer_keywords = ["Brot", "keine", "Milch"]
+answer = "Es gibt Brot, aber es gibt keine Milch."
+
+
+# ── Abschnitt 4: Bitten und Wünsche ─────────────────────────────────────────
+
+[[section]]
+id = "bitten"
+title = "Bitten und Wünsche"
+instruction = "Попросіть ввічливо. З «du» — Gib/Nimm, з «Sie» — Geben Sie/Nehmen Sie."
+example = "du: Gib mir bitte das Brot.\ndu: Nimm deine Tasche!\n\nSie: Geben Sie mir bitte die Milch.\nSie: Nehmen Sie das Buch."
+
+[[section.question]]
+id = "q25"
+type = "gaps"
+ask = "___ mir bitte das Brot."
+instruction = "Виберіть форму для «du»."
+explanation = "Прохання до «ти» (du): «Gib mir bitte das Brot» — «Дай мені, будь ласка, хліб»."
+translation = "Дай мені, будь ласка, хліб."
+answers = ["Gib"]
+gap_choices = ["Gib|Gibst|Geben"]
+
+[[section.question]]
+id = "q26"
+type = "gaps"
+ask = "___ Sie mir bitte die Milch."
+instruction = "Виберіть форму для «Sie»."
+explanation = "Ввічливе прохання до «Ви» (Sie): «Geben Sie mir bitte die Milch». Дієслово geben стоїть у формі geben."
+translation = "Дайте мені, будь ласка, молоко."
+answers = ["Geben"]
+gap_choices = ["Gebe|Gib|Geben"]
+
+[[section.question]]
+id = "q27"
+type = "gaps"
+ask = "___ deine Tasche!"
+instruction = "Виберіть форму для «du»."
+explanation = "Прохання до «ти» (du): «Nimm deine Tasche!» Дієслово nehmen у цій формі — nimm."
+translation = "Візьми свою сумку!"
+answers = ["Nimm"]
+gap_choices = ["Nimm|Nimmst|Nehmen"]
+
+[[section.question]]
+id = "q28"
+type = "gaps"
+ask = "___ Sie bitte das Buch."
+instruction = "Виберіть форму для «Sie»."
+explanation = "Ввічливе прохання до «Ви» (Sie): «Nehmen Sie bitte das Buch». Дієслово nehmen стоїть у формі nehmen."
+translation = "Візьміть, будь ласка, книгу."
+answers = ["Nehmen"]
+gap_choices = ["Nehme|Nimm|Nehmen"]
+
+[[section.question]]
+id = "q29"
+type = "sentence"
+ask = "Sie sind im Laden. Bitten Sie höflich um zwei Brötchen."
+instruction = "Почніть з «Geben Sie mir …»."
+explanation = "Ввічливе прохання: «Geben Sie mir bitte zwei Brötchen» — «Дайте мені, будь ласка, дві булочки»."
+starts_with = "Geben Sie mir"
+
+[[section.question]]
+id = "q30"
+type = "translate"
+ask = "Дайте мені, будь ласка, яблуко."
+instruction = "Перекладіть німецькою."
+explanation = "Слово Apfel чоловічого роду; в Akkusativ артикль einen: einen Apfel."
+frame = "geben sie mir"
+answer_keywords = ["einen", "Apfel"]
+answer = "Geben Sie mir bitte einen Apfel."
+
+[[section.question]]
+id = "q31"
+type = "translate"
+ask = "Візьми свою куртку."
+instruction = "Перекладіть німецькою."
+explanation = "Слово Jacke жіночого роду, тому deine Jacke.\nФорма nimm — для «ти» (du): «Nimm deine Jacke!»"
+frame = "nimm"
+answer_keywords = ["deine", "Jacke"]
+answer = "Nimm deine Jacke."
+
+[[section.question]]
+id = "q32"
+type = "gaps"
+ask = "Was möchten Sie?\n— Ich ___ ein Kilo Äpfel, bitte.\n— Sonst noch etwas?\n— ___, danke."
+instruction = "Заповніть діалог."
+explanation = "З «я» (ich) дієслово möchten стає möchte: «Ich möchte …».\n«Nein, danke» — ввічлива відмова."
+translation = "— Що б ви хотіли?\n— Я хочу кілограм яблук, будь ласка.\n— Щось іще?\n— Ні, дякую."
+answers = ["möchte", "Nein"]
+gap_choices = ["möchte|möchtest|möchten", ""]
+
+
+# ── Abschnitt 5: Akkusativ und Possessivpronomen ────────────────────────────
+
+[[section]]
+id = "akkusativ-possessiv"
+title = "Akkusativ und Possessivpronomen"
+instruction = "Впишіть артикль або займенник в Akkusativ. У кожному завданні вказано, що саме: означений артикль, неозначений, заперечення або присвійний займенник."
+example = "Ich kaufe den Käse.\nIch kaufe einen Apfel.\nIch brauche keinen Zucker.\n\nIch sehe meinen Bruder.\nIch nehme meine Jacke."
+
+[[section.question]]
+id = "q33"
+type = "choice"
+ask = "Ich kaufe ___ Käse."
+instruction = "Виберіть означений артикль в Akkusativ."
+explanation = "Слово Käse чоловічого роду; в Akkusativ артикль den: den Käse."
+translation = "Я купую сир."
+options = ["den", "die", "das"]
+answer = "den"
+
+[[section.question]]
+id = "q34"
+type = "gaps"
+ask = "Ich sehe ___ Mann."
+instruction = "Впишіть неозначений артикль (ein, eine або einen)."
+explanation = "Слово Mann чоловічого роду; в Akkusativ артикль einen: einen Mann."
+translation = "Я бачу чоловіка."
+answers = ["einen"]
+
+[[section.question]]
+id = "q35"
+type = "gaps"
+ask = "Ich habe ___ Zeit."
+instruction = "Впишіть заперечення (kein, keine або keinen)."
+explanation = "Слово Zeit жіночого роду, тому в запереченні keine Zeit."
+translation = "У мене немає часу."
+answers = ["keine"]
+
+[[section.question]]
+id = "q36"
+type = "gaps"
+ask = "Wir brauchen ___ Zucker."
+instruction = "Впишіть заперечення (kein, keine або keinen)."
+explanation = "Слово Zucker чоловічого роду; в Akkusativ заперечення keinen: keinen Zucker."
+translation = "Нам не потрібен цукор."
+answers = ["keinen"]
+
+[[section.question]]
+id = "q37"
+type = "gaps"
+ask = "Ich nehme ___ Jacke."
+instruction = "Впишіть присвійний займенник (mein, meine або meinen)."
+explanation = "Слово Jacke жіночого роду, тому meine Jacke."
+translation = "Я беру свою куртку."
+answers = ["meine"]
+
+[[section.question]]
+id = "q38"
+type = "gaps"
+ask = "Ich sehe ___ Bruder."
+instruction = "Впишіть присвійний займенник (mein, meine або meinen)."
+explanation = "Слово Bruder чоловічого роду; в Akkusativ присвійний займенник отримує -en: meinen Bruder."
+translation = "Я бачу свого брата."
+answers = ["meinen"]
+
+[[section.question]]
+id = "q39"
+type = "yesno"
+ask = "Hast du deinen Schlüssel?"
+instruction = "Дайте відповідь за себе повним реченням. Можливі обидві відповіді."
+explanation = "Слово Schlüssel чоловічого роду; в Akkusativ meinen Schlüssel.\nВідповідь «ні»: «Nein, ich habe meinen Schlüssel nicht»."
+translation = "Так, у мене є (свій) ключ."
+answer = "Ja, ich habe meinen Schlüssel."
+answers = ["Ja, ich habe meinen Schlüssel.", "Nein, ich habe meinen Schlüssel nicht."]
+
+[[section.question]]
+id = "q40"
+type = "translate"
+ask = "Я беру свій паспорт."
+instruction = "Перекладіть німецькою."
+explanation = "Слово Pass чоловічого роду; в Akkusativ meinen Pass."
+frame = "ich nehme"
+answer_keywords = ["meinen", "Pass"]
+answer = "Ich nehme meinen Pass."
+
+
+# ── Preistabelle (sichtbar, weil es kein Flyer-Bild gibt) ───────────────────
+
+[table.markt]
+title = "Supermarkt"
+
+[[table.markt.row]]
+item = "Tomaten (1 Kilo)"
+price = "1,99 €"
+
+[[table.markt.row]]
+item = "Äpfel (1 Kilo)"
+price = "2,49 €"
+
+[[table.markt.row]]
+item = "Käse"
+price = "3,49 €"
+
+[[table.markt.row]]
+item = "Milch"
+price = "1,09 €"
+
+[[table.markt.row]]
+item = "Brot"
+price = "2,79 €"
+
+[[table.markt.row]]
+item = "Wasser"
+price = "0,79 €"

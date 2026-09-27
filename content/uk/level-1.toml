@@ -1,0 +1,569 @@
+# ============================================================================
+# SpikyGerman — Niveau 1 (für den Lehrer)
+# ============================================================================
+#
+# Eine Datei = ein Niveau in einer Sprache. Hier steht alles zusammen:
+# die deutschen Aufgaben und die ukrainischen Texte. Du kannst sie in Zed
+# öffnen und ändern.
+#
+# Diese Datei ist ukrainisch. Die russische Version ist
+# content/ru/level-1.toml: die deutschen Aufgaben bleiben gleich, nur die
+# Texte in der Landessprache werden übersetzt. „bun run check“ prüft, dass
+# die Antworten in allen Sprachen gleich sind.
+#
+# So ist die Datei aufgebaut:
+#   [level]              = das Niveau selbst
+#   [[section]]          = ein Abschnitt (z. B. „Dialoge“)
+#   [[section.question]] = eine Frage in diesem Abschnitt
+#
+# Das Niveau hat:
+#   id     = kurzer Name, z. B. "sample-test-1"
+#   number = die Nummer des Niveaus (1, 2, …) — in allen Sprachen gleich
+#   title  = Name auf Deutsch
+#
+# Ein Abschnitt hat:
+#   id          = kurzer Name, z. B. "dialoge"
+#   title       = Überschrift auf Deutsch
+#   instruction = Aufgabe in der Sprache der Datei (hier Ukrainisch)
+#   example     = Beispiel, das immer sichtbar ist (freiwillig)
+#   example_photo / example_alt = Bild zum Beispiel (freiwillig)
+#   photo / alt / sr_data / table = Bild und Text für die ganze Aufgabe
+#
+# Jede Frage hat:
+#   type        = die Art der Aufgabe (siehe Liste unten)
+#   ask         = die Aufgabe auf Deutsch (bei „translate“: der Satz in der
+#                 Sprache der Datei, der übersetzt werden soll)
+#   explanation = kurze Erklärung in der Sprache der Datei (nach dem Prüfen)
+#   translation = Übersetzung der Lösung in der Sprache der Datei (nach dem
+#                 Prüfen). Nicht bei „translate“ (der Satz steht schon in der
+#                 Aufgabe) und nicht bei „sentence“ (die Lösung ist ein Anfang).
+#   answer      = die Lösung (je nach type)
+#   example     = nur wenn die Frage eine eigene Aufgabe hat (z. B. Übersetzen);
+#                 Beispiele stehen sonst oben im Abschnitt, nicht in der Frage.
+#
+# ----------------------------------------------------------------------------
+# Die sieben Aufgabentypen mit Beispiel
+# ----------------------------------------------------------------------------
+#
+# 1) type = "sentence" — der Lernende schreibt einen ganzen Satz.
+#    Du prüfst den Satzanfang, der Rest ist frei.
+#
+#      starts_with = "Ich heiße"        # so muss der Satz anfangen
+#      ends_with   = "Jahre alt"        # nur wenn nötig
+#      country     = true               # nur bei „Ich komme aus …“
+#
+#    „country = true“ bedeutet: Der App schaut in content/uk/countries.toml nach
+#    (pro Sprache eine eigene Liste).
+#    Schreibt jemand „Ich komme aus Ukraine“, kommt ein gelber Hinweis:
+#    „Майже! die Ukraine — aus der Ukraine.“
+#
+# 2) type = "gaps" — Lücken im Satz.
+#    Schreibe ___ (drei Unterstriche) für das GANZE fehlende Wort.
+#    answers löst die Lücken der Reihe nach auf. Mehrere Varianten gehen auch:
+#    dann schreibe eine kleine Liste. Die erste Variante ist die Musterlösung.
+#
+#      answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+#
+#    Für Formen (z. B. Konjugation) kannst du gap_choices ergänzen: eine
+#    Zeile pro Lücke. Leere Zeile ("") = der Lernende schreibt selbst.
+#    Sonst werden die mit | getrennten Wörter als Auswahl angezeigt; die
+#    richtige Antwort (jede Variante) muss dabei sein.
+#
+#      ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
+#      answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+#      gap_choices = ["kommen|kommst|komme", "", ""]
+#
+# 3) type = "person" — über eine Person schreiben (er / sie / sie-Plural).
+#    Der Lernende wählt das Pronomen und füllt die Felder:
+#    name, from, residence, city, street.
+#    Das Verb (kommt/kommen, wohnt/wohnen) ergibt sich aus dem Pronomen.
+#
+# 4) type = "choice" — Auswahl (Radio-Knöpfe).
+#
+#      options = ["der", "die", "das"]
+#      answer  = "der"
+#
+# 5) type = "yesno" — Antwort mit „Ja …“ oder „Nein …“ als ganzer Satz.
+#    Groß/klein, Kommas und Punkte sind egal. Endungen sind wichtig.
+#
+#      answer = "Ja, das ist eine Tomate."
+#
+# 6) type = "price" — ganzer Satz mit Preis, die Zahl in Worten.
+#    „ein Euro und elf Cent“ und „ein Euro elf Cent“ sind beide richtig.
+#    Auch nur der Preis ohne Satz ist richtig: „elf Cent“.
+#
+#      answer = "Der Käse kostet sechsundsechzig Cent."
+#
+# 7) type = "translate" — Übersetzung Ukrainisch → Deutsch.
+#    Geprüft wird: die Konstruktion (frame) und alle Stichwörter.
+#    Die Reihenfolge der Wörter ist frei.
+#
+#      frame           = "wir brauchen"
+#      answer_keywords = ["Paprika", "Eier", "Fisch"]
+#      answer          = "Wir brauchen Paprika, Eier und Fisch."   # Musterlösung
+#
+# ----------------------------------------------------------------------------
+# Bilder
+# ----------------------------------------------------------------------------
+#
+#   photo   = "img/tomate.webp"   # Datei in public/img/
+#   alt     = "Одна фраза для тих, у кого картинка не завантажилася."
+#   sr_data = "Що чує незрячий учень замість картинки. Пиши так, щоб
+#              за описом можна було відповісти на питання: що видно,
+#              скільки предметів, якого кольору, чого немає."
+#
+# Bilder für eine ganze Aufgabe stehen am Abschnitt (z. B. der Kühlschrank),
+# Bilder für eine einzelne Frage stehen an der Frage (z. B. das Foto).
+# photo + alt + sr_data stehen immer zusammen, damit sie nicht auseinander
+# laufen. Bei sr_data lieber einen Satz zu viel als zu wenig: der Text ist
+# die Augen der nicht sehenden Lernenden. Für die Preistabelle genügt
+# table = "rewe": die Tabelle liest nur der Screenreader, die anderen sehen
+# das Flyer-Bild.
+#
+# ----------------------------------------------------------------------------
+# Erklärungen
+# ----------------------------------------------------------------------------
+#
+# Jede Frage hat direkt unter „ask“ eine explanation in der Sprache der Datei:
+#
+#   ask = "Herr Meier, woher ___ ___?"
+#   explanation = "du → -st; formelles Sie → -en"
+#
+# Diese Erklärung sieht der Lernende nach dem Prüfen. Fehlt sie, meldet
+# „bun run check“ eine Warnung.
+#
+# ----------------------------------------------------------------------------
+# Prüfen
+# ----------------------------------------------------------------------------
+#
+# Nach jeder Änderung:  bun run check
+# Die Prüfung spricht klar: „q22: … did you mean one of der/die/das?“
+# Sie vergleicht auch alle Sprachen: gleiche Fragen, gleiche Antworten darin.
+#
+# ============================================================================
+
+
+[level]
+id = "sample-test-1"
+number = 1
+title = "Test 1"
+
+
+# ── Abschnitt 1 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "sich-vorstellen"
+title = "Sich vorstellen"
+instruction = "Дайте відповіді на питання повними реченнями, як у прикладі."
+example = "Wie heißen Sie? — Ich heiße Anna.\nWoher kommen Sie? — Ich komme aus Syrien.\nWo wohnen Sie? — Ich wohne in Berlin.\nWas sprechen Sie? — Ich spreche Russisch.\nWie alt sind Sie? — Ich bin 30 Jahre alt."
+
+[[section.question]]
+id = "q01"
+type = "sentence"
+ask = "Wie heißen Sie?"
+explanation = "Дайте відповідь повним реченням: Ich heiße + ім'я."
+starts_with = "Ich heiße"
+
+[[section.question]]
+id = "q02"
+type = "sentence"
+ask = "Woher kommen Sie?"
+explanation = "die Ukraine — жіночий рід: aus der Ukraine."
+starts_with = "Ich komme aus"
+country = true
+
+[[section.question]]
+id = "q03"
+type = "sentence"
+ask = "Wo wohnen Sie?"
+explanation = "Ich wohne in … — де ви живете."
+starts_with = "Ich wohne in"
+
+[[section.question]]
+id = "q04"
+type = "sentence"
+ask = "Was sprechen Sie?"
+explanation = "Ich spreche … — якою мовою ви говорите."
+starts_with = "Ich spreche"
+
+[[section.question]]
+id = "q05"
+type = "sentence"
+ask = "Wie alt sind Sie?"
+explanation = "Не забудьте: Ich bin … Jahre alt."
+starts_with = "Ich bin"
+ends_with = "Jahre alt"
+
+
+# ── Abschnitt 2 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "dialoge"
+title = "Dialoge"
+instruction = "Заповніть пропуски в діалогах. Де потрібно, виберіть правильну форму дієслова зі списку."
+example = "Herr Ali, woher kommst du?\nIch komme aus Syrien."
+
+[[section.question]]
+id = "q06"
+type = "gaps"
+ask = "Herr Meier, woher ___ ___?\nIch komme ___ Deutschland."
+explanation = "Ввічливо (Sie): kommen Sie. З «du» теж правильно: kommst du."
+translation = "Пане Маєр, звідки ви? Я з Німеччини."
+answers = [["kommen", "kommst"], ["Sie", "du"], "aus"]
+gap_choices = ["kommen|kommst|komme", "", ""]
+
+[[section.question]]
+id = "q07"
+type = "gaps"
+ask = "Petro, woher ___ du?\nIch ___ aus ___ Ukraine."
+explanation = "du → форма на -st: kommst. die Ukraine — жіночий рід, тому aus der Ukraine."
+translation = "Петро, звідки ти? Я з України."
+answers = ["kommst", "komme", "der"]
+gap_choices = ["kommen|kommst|komme", "kommen|kommst|komme", ""]
+
+[[section.question]]
+id = "q08"
+type = "gaps"
+ask = "Frau Saccon, woher ___ ___?\nAus Italien."
+explanation = "Ввічливо: kommen Sie. Розмовно: kommst du."
+translation = "Пані Саккон, звідки ви? З Італії."
+answers = [["kommen", "kommst"], ["Sie", "du"]]
+gap_choices = ["kommen|kommst|komme", ""]
+
+
+# ── Abschnitt 3 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "einkaufen"
+title = "Einkaufen"
+instruction = "Допоможіть Сандрі та Тому скласти список покупок. Подивіться на холодильник і дайте відповіді на питання повними реченнями."
+photo = "img/fridge.webp"
+alt = "Малюнок: холодильник із продуктами."
+sr_data = "На малюнку холодильник. У холодильнику лежать банани й помідори. Яєць у холодильнику немає. Перцю (Paprika) у холодильнику теж немає."
+example = "Haben wir Milch?\nJa, wir haben Milch. / Nein, wir haben keine Milch."
+
+[[section.question]]
+id = "q13"
+type = "yesno"
+ask = "Haben wir Bananen?"
+explanation = "Банани є: Ja, wir haben Bananen."
+translation = "Так, у нас є банани."
+answer = "Ja, wir haben Bananen."
+
+[[section.question]]
+id = "q14"
+type = "yesno"
+ask = "Haben wir Eier?"
+explanation = "Eier — множина: keine Eier."
+translation = "Ні, у нас немає яєць."
+answer = "Nein, wir haben keine Eier."
+
+[[section.question]]
+id = "q15"
+type = "yesno"
+ask = "Haben wir Paprika?"
+explanation = "Paprika — без артикля: keine Paprika."
+translation = "Ні, у нас немає болгарського перцю."
+answer = "Nein, wir haben keine Paprika."
+
+[[section.question]]
+id = "q16"
+type = "yesno"
+ask = "Haben wir Tomaten?"
+explanation = "Помідори є: Ja, wir haben Tomaten."
+translation = "Так, у нас є помідори."
+answer = "Ja, wir haben Tomaten."
+
+[[section.question]]
+id = "q17"
+type = "translate"
+ask = "Нам потрібні перець, яйця та риба."
+explanation = "Paprika і Fisch — без артикля. Eier — множина, теж без артикля."
+instruction = "Перекладіть німецькою."
+frame = "wir brauchen"
+answer_keywords = ["Paprika", "Eier", "Fisch"]
+answer = "Wir brauchen Paprika, Eier und Fisch."
+example = "Нам потрібен сир. → Wir brauchen Käse."
+
+
+# ── Abschnitt 4 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "was-ist-das"
+title = "Was ist das?"
+instruction = "Подивіться на фотографію й дайте відповідь повним реченням. Якщо предмет названо правильно, напишіть: «Ja, das ist ein/eine …». Якщо неправильно, напишіть: «Nein, das ist kein/keine …» і вкажіть, що це насправді."
+example = "Ist das eine Birne? — Ja, das ist eine Birne.\nIst das ein Apfel? — Nein, das ist kein Apfel. Das ist eine Birne."
+
+[[section.question]]
+id = "q18"
+type = "yesno"
+ask = "Ist das eine Tomate?"
+explanation = "eine Tomate — жіночий рід."
+translation = "Так, це помідор."
+answer = "Ja, das ist eine Tomate."
+photo = "img/food-tomate.webp"
+alt = "Фотографія: помідор."
+sr_data = "На фотографії помідор: червоний, круглий, із зеленою плодоніжкою."
+
+[[section.question]]
+id = "q19"
+type = "yesno"
+ask = "Ist das ein Brötchen?"
+explanation = "kein Brötchen (das), ein Fisch (der)."
+translation = "Ні, це не булочка. Це риба."
+answer = "Nein, das ist kein Brötchen. Das ist ein Fisch."
+photo = "img/food-fisch.webp"
+alt = "Фотографія: риба."
+sr_data = "На фотографії риба на тарілці. Це не хліб і не булочка."
+
+[[section.question]]
+id = "q20"
+type = "yesno"
+ask = "Ist das ein Kuchen?"
+explanation = "ein Kuchen — чоловічий рід."
+translation = "Так, це пиріг."
+answer = "Ja, das ist ein Kuchen."
+photo = "img/food-kuchen.webp"
+alt = "Фотографія: пиріг."
+sr_data = "На фотографії пиріг (Kuchen) — солодка випічка."
+
+[[section.question]]
+id = "q21"
+type = "yesno"
+ask = "Ist das eine Banane?"
+explanation = "keine Banane (жіночий рід), eine Paprika (жіночий рід)."
+translation = "Ні, це не банан. Це болгарський перець."
+answer = "Nein, das ist keine Banane. Das ist eine Paprika."
+photo = "img/food-paprika.webp"
+alt = "Фотографія: червоний перець."
+sr_data = "На фотографії червоний болгарський перець. Це не банан."
+
+
+# ── Abschnitt 5 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "preise"
+title = "Preise"
+instruction = "Подивіться на рекламний проспект і дайте відповіді повними реченнями, скільки що коштує. Ціни напишіть словами."
+photo = "img/rewe.webp"
+alt = "Фотографія: рекламний проспект REWE з цінами."
+table = "rewe"
+example = "Wie viel kosten die Pringles? — Die Pringles kosten ein Euro vierunddreißig Cent.\nWie viel kostet der Wirsing? — Der Wirsing kostet fünfundsiebzig Cent."
+
+[[section.question]]
+id = "q22"
+type = "price"
+ask = "Wie viel kosten Tomaten?"
+explanation = "kosten — для множини: Die Tomaten kosten. Словами: ein Euro elf Cent."
+translation = "Помідори коштують 1,11 €."
+answer = "Die Tomaten kosten ein Euro elf Cent."
+
+[[section.question]]
+id = "q23"
+type = "price"
+ask = "Wie viel kostet der Käse?"
+explanation = "kostet — для однини: Der Käse kostet. Словами: sechsundsechzig Cent."
+translation = "Сир коштує 66 центів."
+answer = "Der Käse kostet sechsundsechzig Cent."
+
+[[section.question]]
+id = "q24"
+type = "price"
+ask = "Wie viel kostet der Joghurt?"
+explanation = "kostet — однина: Der Joghurt kostet. Словами: achtundzwanzig Cent."
+translation = "Йогурт коштує 28 центів."
+answer = "Der Joghurt kostet achtundzwanzig Cent."
+
+[[section.question]]
+id = "q25"
+type = "price"
+ask = "Wie viel kostet der Kaffee?"
+explanation = "kostet — однина: Der Kaffee kostet. Словами: drei Euro zweiundvierzig Cent."
+translation = "Кава коштує 3,42 €."
+answer = "Der Kaffee kostet drei Euro zweiundvierzig Cent."
+
+
+# ── Abschnitt 6 ─────────────────────────────────────────────────────────────
+
+[[section]]
+id = "artikel-und-verben"
+title = "Artikel und Verben"
+instruction = "Заповніть пропуски або виберіть правильний варіант. Слова пишіть повністю."
+example = "Ich möchte eine Orange. Ich habe keine Orange.\nHunger (haben) → Ich habe Hunger."
+
+[[section.question]]
+id = "q26"
+type = "choice"
+ask = "___ Käse ist gelb."
+explanation = "der Käse — чоловічий рід."
+translation = "Сир жовтий."
+instruction = "Виберіть правильний означений артикль."
+options = ["der", "die", "das"]
+answer = "der"
+
+[[section.question]]
+id = "q27"
+type = "choice"
+ask = "Ist das ___ Tomate?"
+explanation = "eine Tomate — жіночий рід."
+translation = "Це помідор?"
+instruction = "Виберіть правильний неозначений артикль."
+options = ["ein", "eine"]
+answer = "eine"
+
+[[section.question]]
+id = "q28"
+type = "gaps"
+ask = "Ich möchte ___ Apfel."
+explanation = "Akkusativ, чоловічий рід: einen Apfel."
+translation = "Я хочу яблуко."
+instruction = "Впишіть правильний артикль в Akkusativ."
+answers = ["einen"]
+
+[[section.question]]
+id = "q29"
+type = "gaps"
+ask = "Ich brauche ___ Joghurt."
+explanation = "Akkusativ, чоловічий рід: einen Joghurt."
+translation = "Мені потрібен йогурт."
+instruction = "Впишіть правильний артикль в Akkusativ."
+answers = ["einen"]
+
+[[section.question]]
+id = "q30"
+type = "gaps"
+ask = "a) Das ist ___ Apfel.\nb) Ich habe ___ Apfel."
+explanation = "kein Apfel (Nominativ), keinen Apfel (Akkusativ)."
+translation = "а) Це не яблуко. б) У мене немає яблука."
+instruction = "Впишіть kein або keinen."
+answers = ["kein", "keinen"]
+
+[[section.question]]
+id = "q31"
+type = "gaps"
+ask = "Ich brauche Milch, aber ich habe ___ Milch."
+explanation = "Milch — жіночий рід: keine Milch."
+translation = "Мені потрібне молоко, але в мене немає молока."
+instruction = "Впишіть правильну форму заперечення."
+answers = ["keine"]
+
+[[section.question]]
+id = "q32"
+type = "gaps"
+ask = "Ich ___ (sein) müde."
+explanation = "sein: ich bin."
+translation = "Я втомився (втомилася)."
+instruction = "Виберіть правильну форму дієслова sein."
+answers = ["bin"]
+gap_choices = ["bin|bist|ist|sind"]
+
+[[section.question]]
+id = "q33"
+type = "gaps"
+ask = "Wir ___ (haben) keine Tomaten."
+explanation = "haben: wir haben."
+translation = "У нас немає помідорів."
+instruction = "Виберіть правильну форму дієслова haben."
+answers = ["haben"]
+gap_choices = ["habe|hast|hat|haben"]
+
+[[section.question]]
+id = "q34"
+type = "gaps"
+ask = "Er ___ (wohnen) in Berlin."
+explanation = "wohnen: er/sie/es wohnt."
+translation = "Він живе в Берліні."
+instruction = "Виберіть правильну форму дієслова wohnen."
+answers = ["wohnt"]
+gap_choices = ["wohne|wohnst|wohnt|wohnen"]
+
+[[section.question]]
+id = "q35"
+type = "gaps"
+ask = "Du ___ (kommen) aus Polen?"
+explanation = "kommen: du kommst."
+translation = "Ти з Польщі?"
+instruction = "Виберіть правильну форму дієслова kommen."
+answers = ["kommst"]
+gap_choices = ["komme|kommst|kommt|kommen"]
+
+[[section.question]]
+id = "q36"
+type = "gaps"
+ask = "Ich ___ (möchten) einen Apfel."
+explanation = "möchten: ich möchte."
+translation = "Я хочу яблуко."
+instruction = "Виберіть правильну форму дієслова möchten."
+answers = ["möchte"]
+gap_choices = ["möchte|möchtest|möchten"]
+
+[[section.question]]
+id = "q37"
+type = "gaps"
+ask = "Wir ___ (brauchen) Milch."
+explanation = "brauchen: wir brauchen."
+translation = "Нам потрібне молоко."
+instruction = "Виберіть правильну форму дієслова brauchen."
+answers = ["brauchen"]
+gap_choices = ["brauche|brauchst|braucht|brauchen"]
+
+[[section.question]]
+id = "q38"
+type = "gaps"
+ask = "Das ist Anna. Sie ___ (essen) gern Obst."
+explanation = "essen — неправильне дієслово: er/sie/es isst."
+translation = "Вона любить фрукти."
+instruction = "Виберіть правильну форму дієслова essen."
+answers = ["isst"]
+gap_choices = ["esse|isst|esst|essen"]
+
+[[section.question]]
+id = "q39"
+type = "choice"
+ask = "___ Äpfel sind rot."
+explanation = "Множина завжди die: die Äpfel."
+translation = "Яблука червоні."
+instruction = "Виберіть правильний артикль у множині."
+options = ["der", "die", "das"]
+answer = "die"
+
+[[section.question]]
+id = "q40"
+type = "translate"
+ask = "Мені потрібен йогурт, але в мене немає молока."
+explanation = "Joghurt — чоловічий рід: einen Joghurt. Milch — жіночий рід: keine Milch."
+instruction = "Перекладіть німецькою."
+frame = "ich brauche"
+answer_keywords = ["Joghurt", "einen", "keine", "Milch"]
+answer = "Ich brauche einen Joghurt, aber ich habe keine Milch."
+example = "Мені потрібен сік, але в мене немає води. → Ich brauche einen Saft, aber ich habe kein Wasser."
+
+
+# ── Preistabelle (nur für den Screenreader) ─────────────────────────────────
+
+[table.rewe]
+title = "REWE"
+
+[[table.rewe.row]]
+item = "Tomaten"
+price = "1,11 €"
+
+[[table.rewe.row]]
+item = "Käse"
+price = "66 Cent"
+
+[[table.rewe.row]]
+item = "Joghurt"
+price = "28 Cent"
+
+[[table.rewe.row]]
+item = "Kaffee"
+price = "3,42 €"
+
+[[table.rewe.row]]
+item = "Pringles"
+price = "1,34 €"
+
+[[table.rewe.row]]
+item = "Wirsing"
+price = "75 Cent"
