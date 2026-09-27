@@ -7,7 +7,7 @@ description: Regenerate the README preview screenshots — the light and dark co
 
 Produces two files, both committed and both shown in the README:
 
-- `docs/screenshots/preview.png` — light theme, three phones side by side: Home (level 1 expanded), Was ist das? with a checked answer, Summary.
+- `docs/screenshots/preview.png` — light theme, three phones side by side: Home (level 1 expanded), Was ist das? with a checked answer, Level 1 summary (`#/l1/summary`; the bare `#/summary` is the all-levels overview now).
 - `docs/screenshots/preview-dark.png` — the same three screens in dark theme.
 
 The phones are real app renderings: each screen is an iframe of the live dev server placed inside the `.phone-frame` mockup from `src/styles/components/design-stage.css` (the same shell the files in `designs/` use). Nothing is hand-drawn in an image editor.
@@ -50,6 +50,7 @@ sips -g pixelWidth -g pixelHeight docs/screenshots/preview.png   # 2908 x 2088 a
 - **The harness must be served by the dev server, never injected with `page.setContent`.** The app reads/writes `localStorage` on module load; a page loaded from `about:blank` has an opaque origin, and the iframe then throws `SecurityError: Access is denied for this document`, so the app never mounts and the phones come out blank. Serving `screenshot-harness.html` from the Vite origin keeps the iframe same-origin.
 - **Phone chrome comes from the design system.** `design-stage.css` defines `.phone-frame`, `.phone-screen`, `.status-bar`, `.status-cutout-zone`, `.gesture-indicator` and `.hardware-button`. The harness links the same CSS layers, in the same order, as the frozen pages in `designs/`.
 - **The iframe is 390 x 765.** The phone screen is 390 x 844 (`--phone-screen-width/height`); `.app { padding: var(--phone-safe-top) 0 var(--phone-safe-bottom) }` reserves 50 px at the top and 29 px at the bottom for the status bar and gesture indicator, leaving 765 px for the app.
+- **The readiness probe waits for `.topbar`, not `.progress-text`.** Only Home and the section view render a progress line; the summary screens never did, so probing for it hangs until the deadline.
 - **Never deep-link a question in the middle phone.** `#/s/was-ist-das/q18` makes `SectionView` call `scrollIntoView` on the question, which scrolls the app top bar out of the iframe and leaves the screenshot looking "off". Use the plain section route `#/s/was-ist-das`; the seeded answer means q18 still shows its checked feedback first.
 - **Scroll every frame back to the top before shooting**, then wait a moment, then screenshot the `.od-stage` element (`deviceScaleFactor: 2`, viewport 1600 x 1300).
 - **Wait for lazy images with a timeout.** Some content images are `loading="lazy"` and never fire `load` inside a short iframe; waiting on them without a `Promise.race` timeout hangs forever.

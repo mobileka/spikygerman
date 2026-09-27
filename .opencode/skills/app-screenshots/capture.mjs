@@ -39,7 +39,7 @@ const seed = {
 const ROUTES = [
   ["Home", "/#level-1"],
   ["Section", "/#/s/was-ist-das"],
-  ["Summary", "/#/summary"]
+  ["Summary", "/#/l1/summary"]
 ];
 
 const CSS = [
@@ -163,7 +163,7 @@ async function run(browser, theme) {
       ready = true;
       for (const f of frames) {
         try {
-          await f.waitForSelector(".progress-text", { timeout: 800 });
+          await f.waitForSelector(".topbar", { timeout: 800 });
         } catch (e) {
           ready = false;
         }
