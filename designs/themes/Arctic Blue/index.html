@@ -3,20 +3,63 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<script>
+/* theme boot — applied before first paint, so there is no light flash */
+(function(){try{var t=localStorage.getItem("spiky-theme");if(t!=="dark"&&t!=="light"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
 <title>Главная · Test 1 — SpikyGerman</title>
 <meta name="description" content="SpikyGerman: разделы теста" />
 
 <!-- SpikyGerman design system layers (tokens first, components last).
      Screen-specific rules follow and win ties. -->
-<link rel="stylesheet" href="../../../../src/styles/tokens/tokens.css" />
-<link rel="stylesheet" href="../../../../src/styles/tokens/legacy-bridge.css" />
-<link rel="stylesheet" href="../../../../src/styles/tokens/od-layout-primitives.css" />
-<link rel="stylesheet" href="../../../../src/styles/components/components.css" />
-<link rel="stylesheet" href="../../../../src/styles/components/design-stage.css" />
-<link rel="stylesheet" href="../../../../src/styles/components/modules.css" />
+<link rel="stylesheet" href="../../../src/styles/tokens/tokens.css" />
+<link rel="stylesheet" href="../../../src/styles/tokens/legacy-bridge.css" />
+<link rel="stylesheet" href="../../../src/styles/tokens/od-layout-primitives.css" />
+<link rel="stylesheet" href="../../../src/styles/components/components.css" />
+<link rel="stylesheet" href="../../../src/styles/components/design-stage.css" />
+<link rel="stylesheet" href="../../../src/styles/components/modules.css" />
 
 
 
+
+
+
+<script>
+/* theme toggle wiring — system preference is the default, an explicit
+   choice is remembered under "spiky-theme". */
+(function(){
+  var KEY="spiky-theme";
+  function systemDark(){return !!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);}
+  function saved(){try{var v=localStorage.getItem(KEY);return (v==="dark"||v==="light")?v:null;}catch(e){return null;}}
+  function apply(t){
+    document.documentElement.setAttribute("data-theme",t);
+    var dark=t==="dark",label=dark?"Светлая тема":"Тёмная тема";
+    Array.prototype.forEach.call(document.querySelectorAll("[data-theme-toggle]"),function(b){
+      b.setAttribute("aria-pressed",dark?"true":"false");
+      b.setAttribute("aria-label",label);
+      b.setAttribute("title",label);
+    });
+  }
+  function wire(){
+    apply(saved()||(systemDark()?"dark":"light"));
+    Array.prototype.forEach.call(document.querySelectorAll("[data-theme-toggle]"),function(b){
+      b.addEventListener("click",function(){
+        var next=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+        try{localStorage.setItem(KEY,next);}catch(e){}
+        apply(next);
+      });
+    });
+    if(window.matchMedia){
+      var mq=window.matchMedia("(prefers-color-scheme: dark)");
+      var onChange=function(){if(!saved())apply(systemDark()?"dark":"light");};
+      if(mq.addEventListener)mq.addEventListener("change",onChange);
+      else if(mq.addListener)mq.addListener(onChange);
+    }
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire);else wire();
+})();
+</script>
 </head>
 <body>
 <div class="od-stage">
@@ -62,10 +105,10 @@
             <circle cx="26" cy="22.8" r="0.22" fill="#ffffff" />
             <circle cx="23.8" cy="25.4" r="0.65" fill="#2e3138" />
             <path d="M23.8 26v.3m0 0c-.2.5-1.2.6-1.5.2m1.5-.2c.2.5 1.2.6 1.5.2" stroke="#2e3138" stroke-width="0.45" fill="none" stroke-linecap="round" />
-          </svg></a><span class="od-fill" style="display:grid;gap:1px">
-<span class="brand-name">SpikyGerman</span><span class="brand-sub">Немецкий без острых углов · Deutsch A0</span></span></div></header>
-<div><div class="progress-line is-segmented" aria-hidden="true"><span class="progress-seg seg-correct" id="pgCorrect"></span><span class="progress-seg seg-almost" id="pgAlmost"></span><span class="progress-seg seg-incorrect" id="pgIncorrect"></span></div><p class="progress-text" id="progressText" role="status">Прогресс сохраняется на Вашем устройстве</p></div>
-<main class="screen" id="screens" tabindex="-1"><header class="hero" data-od-id="home-hero"><h1>Выберите уровень</h1></header><button class="btn btn-primary is-block" id="level-1" data-od-id="level-1-toggle" type="button" aria-expanded="false" aria-controls="level-1-panel"><span>Уровень 1 · 6 разделов · 36 вопросов</span><svg class="chev" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="level-1-panel" hidden><ol class="sec-grid"><li><a class="sec-tile is-home" href="sich-vorstellen.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>01</span><span class="sec-t">Sich vorstellen</span></a></li><li><a class="sec-tile is-home" href="dialoge.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>02</span><span class="sec-t">Dialoge</span></a></li><li><a class="sec-tile is-home" href="einkaufen.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>03</span><span class="sec-t">Einkaufen</span></a></li><li><a class="sec-tile is-home" href="was-ist-das.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>04</span><span class="sec-t">Was ist das?</span></a></li><li><a class="sec-tile is-home" href="preise.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>05</span><span class="sec-t">Preise</span></a></li><li><a class="sec-tile is-home" href="artikel-und-verben.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>06</span><span class="sec-t">Artikel und Verben</span></a></li></ol></div><!-- level-2: следующий уровень добавить здесь. level-chip станет кликабельным переключателем уровня (список уровней, текущий отмечен). См. design-spec.md --><button class="btn btn-secondary" id="resetBtn" type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.8-4.3M16 3v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Сбросить все ответы</span></button><script>document.addEventListener("DOMContentLoaded",function(){var b=document.getElementById("resetBtn");if(b)b.onclick=function(){if(confirm("Удалить все ответы? Это нельзя отменить.")){localStorage.removeItem("spiky-redesign-v1");location.reload();}};});</script><script type="application/json" id="explData">{}</script><script type="application/json" id="modelData">{}</script></main>
+          </svg></a><span class="brand-text">
+<span class="brand-name">SpikyGerman</span><span class="brand-sub">Немецкий без острых углов · Deutsch A0</span></span><button class="theme-toggle" type="button" data-theme-toggle data-od-id="theme-toggle" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg class="tt-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg><svg class="tt-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.4A8.2 8.2 0 1 1 9.6 3.8a6.6 6.6 0 0 0 10.6 10.6Z"/></svg></button></div></header>
+
+<main class="screen" id="screens" tabindex="-1"><header class="hero" data-od-id="home-hero"><h1>Выберите уровень</h1></header><button class="btn btn-primary is-block" id="level-1" data-od-id="level-1-toggle" type="button" aria-expanded="false" aria-controls="level-1-panel"><span>Уровень 1 · 6 разделов · 36 вопросов</span><svg class="chev" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="lvl-progress"><div class="progress-line is-segmented" aria-hidden="true"><span class="progress-seg seg-correct" id="pgCorrect"></span><span class="progress-seg seg-almost" id="pgAlmost"></span><span class="progress-seg seg-incorrect" id="pgIncorrect"></span></div><p class="progress-text" id="progressText" role="status">Прогресс сохраняется на Вашем устройстве</p></div><div class="lvl-panel" id="level-1-panel" hidden><ol class="sec-grid"><li><a class="sec-tile is-home" href="sich-vorstellen.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>01</span><span class="sec-t">Sich vorstellen</span></a></li><li><a class="sec-tile is-home" href="dialoge.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>02</span><span class="sec-t">Dialoge</span></a></li><li><a class="sec-tile is-home" href="einkaufen.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>03</span><span class="sec-t">Einkaufen</span></a></li><li><a class="sec-tile is-home" href="was-ist-das.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>04</span><span class="sec-t">Was ist das?</span></a></li><li><a class="sec-tile is-home" href="preise.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>05</span><span class="sec-t">Preise</span></a></li><li><a class="sec-tile is-home" href="artikel-und-verben.html"><span class="sec-n"><svg class="sec-ring" viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-90 28 28)"><circle class="ring-track" cx="28" cy="28" r="24"/><circle class="ring-seg ring-correct" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-almost" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/><circle class="ring-seg ring-incorrect" cx="28" cy="28" r="24" stroke-dasharray="0 150.8" stroke-dashoffset="0"/></g></svg>06</span><span class="sec-t">Artikel und Verben</span></a></li></ol></div><!-- level-2: следующий уровень добавить здесь. level-chip станет кликабельным переключателем уровня (список уровней, текущий отмечен). См. design-spec.md --><button class="btn btn-secondary" id="resetBtn" type="button"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.8-4.3M16 3v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Сбросить все ответы</span></button><script>document.addEventListener("DOMContentLoaded",function(){var b=document.getElementById("resetBtn");if(b)b.onclick=function(){if(confirm("Удалить все ответы? Это нельзя отменить.")){localStorage.removeItem("spiky-redesign-v1");location.reload();}};});</script><script type="application/json" id="explData">{}</script><script type="application/json" id="modelData">{}</script></main>
 <footer><nav class="tabbar" aria-label="Основная навигация"><a class="tab" href="index.html" aria-current="page"><svg viewBox="0 0 20 20"><path d="M3 10.5 10 3.5l7 7M5 9.5V16h4v-4h2v4h4V9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Главная</span></a><a class="tab" id="continueTab" href="sich-vorstellen.html"><svg viewBox="0 0 20 20"><path d="M4 5h12v7H9l-3 3v-3H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Продолжить</span></a><a class="tab" href="summary.html"><svg viewBox="0 0 20 20"><path d="M4 16V9m4 7V5m4 11v-6m4 6V7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Итоги</span></a></nav></footer>
 </div>
 <span class="gesture-indicator" aria-hidden="true"></span>
