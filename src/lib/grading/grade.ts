@@ -29,6 +29,12 @@ export interface QuestionResult {
   status: Status;
   fields: FieldResult[];
   model: string;
+  /**
+   * The correct answer as the learner produced it, when the task allows more
+   * than one wording (gaps, person) or the model is only a pattern (sentence).
+   * Set on correct answers only; the UI speaks this instead of `model`.
+   */
+  assembled?: string;
 }
 
 export const ANSWER_FIELD = "answer";
@@ -172,10 +178,20 @@ function gradeSentence(
       };
     }
     if (check && check.status === "correct") {
-      return { status: "correct", fields: [field(ANSWER_FIELD, "correct")], model };
+      return {
+        status: "correct",
+        fields: [field(ANSWER_FIELD, "correct")],
+        model,
+        assembled: input.trim(),
+      };
     }
   }
-  return { status: "correct", fields: [field(ANSWER_FIELD, "correct")], model };
+  return {
+    status: "correct",
+    fields: [field(ANSWER_FIELD, "correct")],
+    model,
+    assembled: input.trim(),
+  };
 }
 
 function gradeGaps(q: Question, values: Record<string, string>): QuestionResult {
@@ -183,14 +199,24 @@ function gradeGaps(q: Question, values: Record<string, string>): QuestionResult 
   const fields = answers.map((alternatives, index) =>
     exactAny(gapField(index), values[gapField(index)] ?? "", alternatives),
   );
-  return {
-    status: aggregate(fields),
+  const status = aggregate(fields);
+  const result: QuestionResult = {
+    status,
     fields,
     model: fillBlanks(
       q.ask,
       answers.map((alternatives) => alternatives[0] ?? ""),
     ),
   };
+  if (status === "correct") {
+    result.assembled = fillBlanks(
+      q.ask,
+      answers.map((_alternatives, index) =>
+        (values[gapField(index)] ?? "").trim(),
+      ),
+    );
+  }
+  return result;
 }
 
 function gradeChoice(q: Question, values: Record<string, string>): QuestionResult {
@@ -342,20 +368,45 @@ function gradeTranslate(q: Question, values: Record<string, string>): QuestionRe
   return { status: "correct", fields: [field(ANSWER_FIELD, "correct")], model };
 }
 
-function personModel(q: Question, countries: Country[]): string {
-  const plural = q.pronoun === "sie-plural";
-  const pronoun = plural ? "Sie" : q.pronoun === "er" ? "Er" : "Sie";
+interface PersonParts {
+  pronoun?: string;
+  name?: string;
+  from?: string;
+  residence?: string;
+  city?: string;
+  street?: string;
+}
+
+// Both the canonical model (from the question) and the assembled answer (from
+// the learner's fields) go through here, so "aus", "in" and "in der" are never
+// doubled when the learner typed the prefix again.
+function stripLeading(value: string | undefined, pattern: RegExp): string {
+  return (value ?? "").trim().replace(pattern, "").trim();
+}
+
+function personSentence(person: PersonParts, countries: Country[]): string {
+  const plural = person.pronoun === "sie-plural";
+  const pronoun = plural ? "Sie" : person.pronoun === "er" ? "Er" : "Sie";
   const kommt = plural ? "kommen" : "kommt";
   const wohnt = plural ? "wohnen" : "wohnt";
   const first = plural ? "Das sind" : "Das ist";
-  const country = q.from ? findCountry(q.from, countries) : undefined;
-  const aus = country ? country.aus : `aus ${q.from ?? ""}`;
+  const country = person.from ? findCountry(person.from, countries) : undefined;
+  const from = (person.from ?? "").trim();
+  const aus = country
+    ? country.aus
+    : /^aus\s+/i.test(from)
+      ? from
+      : `aus ${from}`;
   return [
-    `${first} ${q.name ?? ""}.`,
+    `${first} ${(person.name ?? "").trim()}.`,
     `${pronoun} ${kommt} ${aus}.`,
-    `${pronoun} ${wohnt} in ${q.residence ?? ""}.`,
-    `${pronoun} ${wohnt} in ${q.city ?? ""}, in der ${q.street ?? ""}.`,
+    `${pronoun} ${wohnt} in ${stripLeading(person.residence, /^in\s+/i)}.`,
+    `${pronoun} ${wohnt} in ${stripLeading(person.city, /^in\s+/i)}, in der ${stripLeading(person.street, /^(in\s+der\s+|in\s+|der\s+)/i)}.`,
   ].join(" ");
+}
+
+function personModel(q: Question, countries: Country[]): string {
+  return personSentence(q, countries);
 }
 
 function gradePerson(
@@ -401,7 +452,22 @@ function gradePerson(
     ),
   );
 
-  return { status: aggregate(fields), fields, model };
+  const status = aggregate(fields);
+  const result: QuestionResult = { status, fields, model };
+  if (status === "correct") {
+    result.assembled = personSentence(
+      {
+        pronoun: values[PRONOUN_FIELD],
+        name: values.name,
+        from: values.from,
+        residence: values.residence,
+        city: values.city,
+        street: values.street,
+      },
+      countries,
+    );
+  }
+  return result;
 }
 
 export function gradeQuestion(
