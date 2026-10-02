@@ -58,7 +58,8 @@ One question from the paper test is explicitly **skipped**:
 
 - **Q12 — phone-number dictation.** The paper says “record a voice message.”
   We decided: no dictation, no audio upload, no text-to-speech in the MVP.
-  So the online test has 39 questions, not 40.
+  So the online test has 39 questions, not 40. (The TTS part was revisited
+  later — tap-to-hear shipped with section 21.)
 
 ---
 
@@ -585,3 +586,38 @@ above where they disagree:
 - «Повторить ошибки» is deliberately not built yet.
 - Bug found on the way: a half-filled answer (some gaps filled, some empty)
   used to count as correct. It is now «Почти!» and never counts as correct.
+
+---
+
+## 21. Grill 1.6 — German pronunciation (tap-to-hear)
+
+- **Reversal of the MVP scope:** German pronunciation is now in, using the
+  browser's built-in **Web Speech API**. No audio files, no backend. The
+  setting «Произношение» lives in Settings and is **on by default**.
+- **German-only.** The switch is about German words; Russian asks,
+  translations and interface text are never spoken.
+- **Two ways to listen.** Any static German word can be tapped (examples,
+  questions, model answers), and real speaker buttons read whole phrases:
+  next to «Пример», next to a question **without blanks** (blanks make a
+  sentence unpronounceable — those questions only allow word taps), and next
+  to «Верно» **only when the answer is correct**. Almost/wrong answers get
+  no speaker.
+- **The engine prefers a locally installed German voice** and speaks lines
+  one utterance at a time. Some browsers silently ignore the chosen voice
+  for queued utterances and fall back to the system language (the "American
+  accent" bug), so the voice is re-applied for every line and remote/network
+  voices are skipped when a local one exists. Vivaldi on macOS reports an
+  empty voice list until the engine has spoken once, so the first click
+  primes it with a silent utterance and only then speaks the real text.
+- **Same icon stops, another one switches.** One utterance at a time:
+  re-clicking the active speaker stops it; any other speaker cancels and
+  starts. Navigation away from a screen stops playback too.
+- **Patterns and gaps are assembled, not read verbatim.** When the model is
+  a pattern («Ich heiße …») the speaker reads the learner's own answer.
+  For gaps and person tasks it reads the question with the learner's fields
+  filled in; «Верно» shows that assembled sentence first and the teacher's
+  canonical wording under «Другие правильные варианты», only when it differs.
+- **Words stay out of the tab order on purpose.** Tapped words are plain
+  spans (`tabindex="-1"`, no button role) so keyboard and screen-reader
+  users are not forced through every word; the speaker buttons are the
+  keyboard path and carry `aria-pressed` plus play/stop labels.

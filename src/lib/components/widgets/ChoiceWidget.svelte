@@ -5,6 +5,7 @@
   import { CHOICE_FIELD, fieldStatus } from "../../grading/grade";
   import { t } from "../../content.svelte";
   import { setAnswer } from "../../state.svelte";
+  import SpeakableText from "../SpeakableText.svelte";
 
   let {
     levelId,
@@ -39,7 +40,7 @@
         ><span class="sr-only">{selected || "пропуск"}</span></span
       >
     {:else}
-      <span>{part}</span>
+      <span><SpeakableText text={part} id={`${question.id}-ask-${index}`} /></span>
     {/if}
   {/each}
 </span>

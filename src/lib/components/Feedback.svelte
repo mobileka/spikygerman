@@ -2,6 +2,8 @@
   import type { Question } from "../content/types";
   import type { Hint, QuestionResult, Status } from "../grading/grade";
   import { t } from "../content.svelte";
+  import SpeakableText from "./SpeakableText.svelte";
+  import SpeakButton from "./SpeakButton.svelte";
 
   let {
     question,
@@ -61,6 +63,25 @@
   });
 
   const explanation = $derived(question.explanation);
+  // The speaker always reads the learner's own correct sentence when there is
+  // one; patterns like "Ich heiße …" would be read literally otherwise.
+  const speakText = $derived(result.assembled ?? result.model);
+  // Gaps and person tasks accept wording variants, so the learner's assembled
+  // sentence becomes the primary answer and the canonical one shows below.
+  const variantTask = $derived(
+    question.type === "gaps" || question.type === "person",
+  );
+  const displayText = $derived(
+    variantTask && result.assembled ? result.assembled : result.model,
+  );
+  const otherAnswers = $derived(
+    variantTask &&
+      result.status === "correct" &&
+      result.assembled &&
+      result.assembled !== result.model
+      ? result.model
+      : null,
+  );
 </script>
 
 <div
@@ -72,14 +93,24 @@
 >
   <span class="fb-glyph" aria-hidden="true">{statusIcon[result.status]}</span>
   <div class="fb-main">
-    <strong>{t(statusLabel[result.status])}</strong>
+    <div class="fb-verdict">
+      <strong>{t(statusLabel[result.status])}</strong>
+      {#if result.status === "correct"}
+        <SpeakButton id={`${question.id}-model`} text={speakText} />
+      {/if}
+    </div>
     {#if result.status !== "empty"}
       <p class="model">
-        {t("model_answer")}: <code lang="de">{result.model}</code>
+        {t("model_answer")}: <code lang="de"><SpeakableText text={displayText} id={`${question.id}-model`} /></code>
         {#if question.translation}
           <span class="translation" lang="ru">({question.translation})</span>
         {/if}
       </p>
+      {#if otherAnswers}
+        <p class="model">
+          {t("other_answers")}: <code lang="de"><SpeakableText text={otherAnswers} id={`${question.id}-other`} /></code>
+        </p>
+      {/if}
       {#each hints as hint (hint)}
         <p class="tip">{hint}</p>
       {/each}

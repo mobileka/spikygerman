@@ -6,6 +6,7 @@
   import { t } from "../../content.svelte";
   import { setAnswer } from "../../state.svelte";
   import AnswerInput from "../AnswerInput.svelte";
+  import SpeakableText from "../SpeakableText.svelte";
 
   let {
     levelId,
@@ -38,7 +39,7 @@
 <span class="q-ask" id={askId} lang="de">
   <span class="qn">{number}.</span>
   {#each parts as part, index (index)}
-    <span>{part}</span>{#if index < parts.length - 1}<span class="blank-chip"
+    <span><SpeakableText text={part} id={`${question.id}-ask-${index}`} /></span>{#if index < parts.length - 1}<span class="blank-chip"
         ><span aria-hidden="true">{index + 1}</span
         ><span class="sr-only">пропуск {index + 1}</span></span
       >{/if}

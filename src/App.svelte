@@ -2,6 +2,7 @@
   import { getLevels, t } from "./lib/content.svelte";
   import { format } from "./lib/format";
   import { parseHash, type Route } from "./lib/routing";
+  import { stopSpeech } from "./lib/speech.svelte";
   import Home from "./lib/components/Home.svelte";
   import Settings from "./lib/components/Settings.svelte";
   import SectionView from "./lib/components/SectionView.svelte";
@@ -29,6 +30,7 @@
 
   $effect(() => {
     const onHashChange = () => {
+      stopSpeech();
       const next = parseHash(window.location.hash);
       if (next) route = next;
     };

@@ -6,6 +6,7 @@
   import { t } from "../../content.svelte";
   import { setAnswer } from "../../state.svelte";
   import { noAutoCorrect } from "../../html-attrs";
+  import SpeakableText from "../SpeakableText.svelte";
 
   let {
     levelId,
@@ -67,7 +68,7 @@
 <div>
   <label class="field-label" for={`${question.id}-name`}>{t("name_label")}</label>
   <div class="field-line">
-    <span class="de" lang="de">Das ist</span>
+    <span class="de" lang="de"><SpeakableText text="Das ist" id={`${question.id}-name-frame`} /></span>
     <input
       class="field"
       id={`${question.id}-name`}
@@ -84,7 +85,7 @@
 <div>
   <label class="field-label" for={`${question.id}-from`}>{t("from_label")}</label>
   <div class="field-line">
-    <span class="de" lang="de">{subject} {kommt}</span>
+    <span class="de" lang="de"><SpeakableText text={`${subject} ${kommt}`} id={`${question.id}-from-frame`} /></span>
     <input
       class="field"
       id={`${question.id}-from`}
@@ -103,7 +104,7 @@
     {t("residence_label")}
   </label>
   <div class="field-line">
-    <span class="de" lang="de">{subject} {wohnt} in</span>
+    <span class="de" lang="de"><SpeakableText text={`${subject} ${wohnt} in`} id={`${question.id}-residence-frame`} /></span>
     <input
       class="field"
       id={`${question.id}-residence`}
@@ -121,7 +122,7 @@
 <div>
   <label class="field-label" for={`${question.id}-city`}>{t("city_label")}</label>
   <div class="field-line">
-    <span class="de" lang="de">{subject} {wohnt} in</span>
+    <span class="de" lang="de"><SpeakableText text={`${subject} ${wohnt} in`} id={`${question.id}-city-frame`} /></span>
     <input
       class="field"
       id={`${question.id}-city`}
@@ -138,7 +139,7 @@
 <div>
   <label class="field-label" for={`${question.id}-street`}>{t("street_label")}</label>
   <div class="field-line">
-    <span class="de" lang="de">…, in der</span>
+    <span class="de" lang="de"><SpeakableText text="…, in der" id={`${question.id}-street-frame`} /></span>
     <input
       class="field"
       id={`${question.id}-street`}
