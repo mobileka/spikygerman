@@ -1,6 +1,8 @@
 <script lang="ts">
   import { t } from "../content.svelte";
   import ImageBlock from "./ImageBlock.svelte";
+  import SpeakableText from "./SpeakableText.svelte";
+  import SpeakButton from "./SpeakButton.svelte";
 
   let {
     example,
@@ -16,13 +18,18 @@
 </script>
 
 <div class="example">
-  <strong>{t("example_label")}</strong>
+  <div class="example-head">
+    <strong>{t("example_label")}</strong>
+    {#if german}
+      <SpeakButton id={`example:${example}`} text={example} />
+    {/if}
+  </div>
   {#if photo}
     <ImageBlock {photo} {alt} />
   {/if}
   {#if german}
-    <br /><span class="example-text" lang="de">{example}</span>
+    <span class="example-text" lang="de"><SpeakableText text={example} id={`example-text:${example}`} /></span>
   {:else}
-    <br /><span class="example-text">{example}</span>
+    <span class="example-text">{example}</span>
   {/if}
 </div>

@@ -2,6 +2,11 @@
   import type { LanguageInfo } from "../content/types";
   import { availableLanguages, getLang, setLanguage, t } from "../content.svelte";
   import { format } from "../format";
+  import {
+    isSpeechEnabled,
+    speechSupported,
+    toggleSpeech,
+  } from "../speech.svelte";
 
   let status = $state("");
   let busy = $state(false);
@@ -49,5 +54,46 @@
       {/each}
     </div>
     <p class="set-status" role="status" aria-live="polite">{status}</p>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="set-speech-h" data-od-id="settings-speech">
+  <div class="panel-h">
+    <span id="set-speech-h">{t("settings_speech_title")}</span>
+  </div>
+  <div class="panel-b">
+    {#if speechSupported}
+      <button
+        class="choice"
+        type="button"
+        aria-pressed={isSpeechEnabled()}
+        onclick={toggleSpeech}
+      >
+        <span class="choice-key" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+            <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+          </svg>
+        </span>
+        <span>{t("settings_speech_label")}</span>
+        <span
+          class="toggle"
+          data-on={isSpeechEnabled() ? "" : undefined}
+          aria-hidden="true"
+        ><span></span></span>
+      </button>
+      <p class="set-note">{t("settings_speech_desc")}</p>
+    {:else}
+      <p class="set-note">{t("settings_speech_unsupported")}</p>
+    {/if}
   </div>
 </section>

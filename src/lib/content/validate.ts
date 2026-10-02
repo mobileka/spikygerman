@@ -103,6 +103,13 @@ const REQUIRED_UI_KEYS = [
   "settings_language_label",
   "settings_language_saved",
   "settings_language_error",
+  "settings_speech_title",
+  "settings_speech_label",
+  "settings_speech_desc",
+  "settings_speech_unsupported",
+  "other_answers",
+  "speech_play",
+  "speech_stop",
 ];
 
 interface QuestionContext {

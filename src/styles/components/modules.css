@@ -70,6 +70,10 @@
   font-size: var(--text-base);
 }
 .feedback strong { display: block; }
+/* Verdict line: the status word and its speaker button sit together. The button
+   is kept small and nudged up so the ✓ glyph stays level with the word. */
+.fb-verdict { display: flex; align-items: flex-start; gap: var(--space-1); }
+.fb-verdict .speak-btn { width: 28px; height: 28px; margin-top: -3px; }
 .feedback .fb-body { color: var(--fg-2); }
 .fb-icon { flex: none; width: 20px; height: 20px; }
 
