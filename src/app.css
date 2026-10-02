@@ -184,8 +184,13 @@ html {
 }
 
 /* One shared column. Header rows, main content and footer chrome all use
-   --content-max, so every left/right edge lines up on every route. */
+   --content-max, so every left/right edge lines up on every route.
+   position: relative makes this scroll container the containing block for its
+   absolutely positioned descendants (.sr-only). Without it they resolve
+   against the viewport, escape the scroll clip and stretch the document —
+   which gave desktop users a second scrollbar down to empty space. */
 main.screen {
+  position: relative;
   width: 100%;
   max-width: var(--app-max);
   margin: 0 auto;
