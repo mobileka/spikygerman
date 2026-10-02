@@ -561,6 +561,63 @@ describe("translations (q17, q40)", () => {
   });
 });
 
+describe("assembled answers", () => {
+  it("assembles gaps from the learner's own wording", () => {
+    const result = grade(byId("q06"), { g0: "kommst", g1: "du", g2: "aus" });
+    expect(result.status).toBe("correct");
+    expect(result.assembled).toBe(
+      "Herr Meier, woher kommst du?\nIch komme aus Deutschland.",
+    );
+    expect(result.model).toBe(
+      "Herr Meier, woher kommen Sie?\nIch komme aus Deutschland.",
+    );
+  });
+
+  it("has no assembled answer unless the result is correct", () => {
+    expect(
+      grade(byId("q07"), { g0: "kommst", g1: "komme", g2: "die" }).assembled,
+    ).toBeUndefined();
+    expect(grade(byId("q06"), { g0: "kommen", g1: "Sie" }).assembled).toBeUndefined();
+    expect(grade(byId("q06"), {}).assembled).toBeUndefined();
+  });
+
+  it("keeps the learner's sentence for pattern tasks", () => {
+    const result = grade(byId("q01"), { answer: "Ich heiße Maria" });
+    expect(result.status).toBe("correct");
+    expect(result.assembled).toBe("Ich heiße Maria");
+    expect(result.model).toBe("Ich heiße …");
+  });
+
+  it("assembles a person answer without doubling aus/in prefixes", () => {
+    const question: Question = {
+      id: "x-person",
+      type: "person",
+      ask: "",
+      pronoun: "sie",
+      name: "Thi Giang",
+      from: "Vietnam",
+      residence: "Deutschland",
+      city: "Dresden",
+      street: "Müllerstraße",
+    };
+    const result = grade(question, {
+      pronoun: "sie",
+      name: "Thi Giang",
+      from: "aus Vietnam",
+      residence: "in Deutschland",
+      city: "Dresden",
+      street: "in der Müllerstraße",
+    });
+    expect(result.status).toBe("correct");
+    expect(result.assembled).toBe(
+      "Das ist Thi Giang. Sie kommt aus Vietnam. Sie wohnt in Deutschland. Sie wohnt in Dresden, in der Müllerstraße.",
+    );
+    expect(result.model).toBe(
+      "Das ist Thi Giang. Sie kommt aus Vietnam. Sie wohnt in Deutschland. Sie wohnt in Dresden, in der Müllerstraße.",
+    );
+  });
+});
+
 describe("text helpers", () => {
   it("counts and fills blanks", () => {
     expect(countBlanks("a ___ b ___ c")).toBe(2);
