@@ -309,6 +309,32 @@ describe("gap fill (q06-q08, q28-q38)", () => {
   });
 });
 
+describe("teacher hints in blanks", () => {
+  it("drops the (verb) hint from a level 1 answer", () => {
+    const result = grade(byId("q32"), { g0: "bin" });
+    expect(result.status).toBe("correct");
+    expect(result.model).toBe("Ich bin müde.");
+    expect(result.assembled).toBe("Ich bin müde.");
+  });
+
+  it("keeps the hint in the question, drops it from the answer", () => {
+    const level2 = data.levels[1];
+    const question = level2.sections
+      .flatMap((section) => section.questions)
+      .find((candidate) => candidate.id === "q03");
+    if (!question) throw new Error("level 2 q03 not found");
+    expect(question.ask).toBe("Meine Schwester ___ (heißen) Anna.");
+    const result = gradeQuestion(question, { g0: "heißt" }, data.countries);
+    expect(result.status).toBe("correct");
+    expect(result.model).toBe("Meine Schwester heißt Anna.");
+    expect(result.assembled).toBe("Meine Schwester heißt Anna.");
+  });
+
+  it("keeps parentheses the learner typed themselves", () => {
+    expect(fillBlanks("Ich ___ (sein) müde.", ["(bin)"])).toBe("Ich (bin) müde.");
+  });
+});
+
 describe("person widget engine (no longer used by Test 1)", () => {
   const basePerson: Question = {
     id: "qx-person",

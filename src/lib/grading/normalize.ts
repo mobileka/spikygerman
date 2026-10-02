@@ -57,11 +57,19 @@ export function countBlanks(ask: string): number {
   return splitBlanks(ask).length - 1;
 }
 
+// Teacher-authored asks carry the verb hint in parentheses, e.g.
+// "Meine Schwester ___ (heißen) Anna." The hint belongs to the question, not
+// to the answer the blank is filled into, so it is stripped from the template
+// parts only — parentheses the learner typed themselves stay.
+function stripHints(part: string): string {
+  return part.replace(/[ \t]*\([^()]*\)/g, "");
+}
+
 export function fillBlanks(ask: string, answers: string[]): string {
   const parts = splitBlanks(ask);
-  let out = parts[0] ?? "";
+  let out = stripHints(parts[0] ?? "");
   for (let i = 1; i < parts.length; i++) {
-    out += (answers[i - 1] ?? "…") + (parts[i] ?? "");
+    out += (answers[i - 1] ?? "…") + stripHints(parts[i] ?? "");
   }
   return out;
 }
